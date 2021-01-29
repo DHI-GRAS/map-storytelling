@@ -1,0 +1,44 @@
+{
+	"name": "react-storytelling",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./src/app/index.tsx",
+	"scripts": {
+		"lint": "eslint --ext ts,tsx ./src --cache",
+		"lint:fix": "eslint --ext ts,tsx ./src --fix --cache",
+		"start": "env-cmd -f .env build-cfg start",
+		"build": "build-cfg build"
+	},
+	"eslintConfig": {
+		"extends": [
+			"@dhi-gras/ts",
+			"@dhi-gras/react"
+		]
+	},
+	"dependencies": {
+		"@danmarshall/deckgl-typings": "^4.5.1",
+		"@bit/dhi-solutions.shared.ui.theme-provider": "^0.0.7",
+		"@material-ui/core": "^4.11.2",
+		"@material-ui/icons": "^4.11.2",
+		"d3-ease": "^2.0.0",
+		"deck.gl": "^8.3.15",
+		"react": "^17.0.1",
+		"react-dom": "17.0.1",
+		"react-map-gl": "^6.1.0",
+		"typeface-roboto": "^1.1.13",
+		"typescript": "~3.7.2"
+	},
+	"devDependencies": {
+		"@dhi-gras/build-cfg": "^0.1.2",
+		"@dhi-gras/eslint-config-react": "^1.0.3",
+		"@dhi-gras/eslint-config-ts": "^1.0.6",
+		"@types/d3-ease": "^2.0.0",
+		"@types/react": "^17.0.0",
+		"@types/react-dom": "^17.0.0",
+		"@types/react-map-gl": "^5.2.9",
+		"@typescript-eslint/eslint-plugin": "^4.9.0",
+		"env-cmd": "^10.1.0"
+	},
+	"author": "",
+	"license": "ISC"
+}
