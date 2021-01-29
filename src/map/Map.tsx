@@ -61,7 +61,7 @@ const Map: FC<Props> = ({ view }) => {
 		>
 			<StaticMap
 				mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
-			 />
+			/>
 		</DeckGL>
 	)
 }
