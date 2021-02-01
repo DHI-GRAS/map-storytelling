@@ -16,15 +16,16 @@
 		]
 	},
 	"dependencies": {
-		"@danmarshall/deckgl-typings": "^4.5.1",
 		"@bit/dhi-solutions.shared.ui.theme-provider": "^0.0.7",
+		"@danmarshall/deckgl-typings": "^4.5.1",
 		"@material-ui/core": "^4.11.2",
 		"@material-ui/icons": "^4.11.2",
 		"d3-ease": "^2.0.0",
 		"deck.gl": "^8.3.15",
 		"react": "^17.0.1",
 		"react-dom": "17.0.1",
-		"react-map-gl": "^6.1.0",
+		"react-map-gl": "^6.1.1",
+		"react-scrollama": "^2.2.15",
 		"typeface-roboto": "^1.1.13",
 		"typescript": "~3.7.2"
 	},
@@ -33,6 +34,7 @@
 		"@dhi-gras/eslint-config-react": "^1.0.3",
 		"@dhi-gras/eslint-config-ts": "^1.0.6",
 		"@types/d3-ease": "^2.0.0",
+		"@types/material-ui": "^0.21.8",
 		"@types/react": "^17.0.0",
 		"@types/react-dom": "^17.0.0",
 		"@types/react-map-gl": "^5.2.9",

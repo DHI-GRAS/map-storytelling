@@ -4,9 +4,6 @@ var config = {
   markerColor: '#3FB1CE',
   theme: 'light',
   use3dTerrain: false,
-  // title: 'The Title Text of this Story',
-  // subtitle: 'A descriptive and interesting subtitle to draw in the reader',
-  // byline: 'By a Digital Storyteller',
   footer: 'Source: source citations, etc.',
   chapters: [
     {
@@ -80,7 +77,7 @@ var config = {
     },
     {
       id: 'other-identifier-3',
-      alignment: 'left',
+      alignment: 'right',
       hidden: false,
       title: 'The city filled with tiny and dynamic objects',
       // image: './path/to/image/source.png',

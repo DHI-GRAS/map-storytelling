@@ -1,29 +1,24 @@
-import React, { FC, useState, useEffect } from "react"
+import React, { FC, useContext } from "react"
 import DeckGL from '@deck.gl/react';
-import { StaticMap, FlyToInterpolator, ViewportProps, _MapContext  } from 'react-map-gl';
-import { easeCubicInOut } from 'd3-ease'
+import { Box } from "@material-ui/core"
+import  { StaticMap  } from 'react-map-gl';
 import { IconLayer } from '@deck.gl/layers';
 import configFile from "common/data/config"
+import { AppContext } from "app-screen/AppScreen"
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
 interface Props {
-	view: ViewportProps
 }
 
-const Map: FC<Props> = ({ view }) => {
-
-	const [viewport, setViewport] = useState(view)
-
-	useEffect(() => {
-		setViewport((passViewport: ViewportProps) => (
-			{
-			...passViewport,
-			transitionDuration: 2000,
-			transitionInterpolator: new FlyToInterpolator(),
-			transitionEasing: easeCubicInOut,
+const Map: FC<Props> = () => {
+	const {
+		state: {
+			viewport
+		},
+		actions: {
+			setViewport
 		}
-		))
-	}, [view])
+	} = useContext(AppContext)
 
 	const markerItems = configFile.chapters.map((chapter) => ({
 		coordinates: chapter.location.center,
@@ -31,7 +26,7 @@ const Map: FC<Props> = ({ view }) => {
 	}))
 
 	const markersLayer = new IconLayer({
-		id: "blahblah",
+		id: "markers-layer",
 		data: markerItems,
 		iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
 		iconMapping: {
@@ -45,24 +40,31 @@ const Map: FC<Props> = ({ view }) => {
 		},
 		getIcon: d => 'marker',
 		sizeScale: 15,
-		getPosition: d => d.coordinates,
+		getPosition: (d: any) => d.coordinates,
 		getSize: d => 5,
 	})
 
 
 	return (
-		<DeckGL
-			viewState={viewport as any}
-			controller={true}
+		<Box
 			width={"100vw"}
 			height={"100vh"}
-			onViewStateChange={(arg) => setViewport(arg.viewState)}
-			layers={[markersLayer]}
+			position={"fixed"}
 		>
-			<StaticMap
-				mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
-			/>
-		</DeckGL>
+			<DeckGL
+				viewState={viewport as any}
+				controller={true}
+				width={"100%"}
+				height={"100%"}
+				onViewStateChange={(arg) => setViewport(arg.viewState)}
+				layers={[markersLayer]}
+			>
+				<StaticMap
+					mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+				/>
+			</DeckGL>
+		</Box>
+
 	)
 }
 
