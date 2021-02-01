@@ -64,7 +64,7 @@ const Story: FC<Story> = ({ stepIndex }) => {
 	}
 
 	return <Box className={classes.storiesWrapper}>
-		<Scrollama onStepEnter={onStepEnter} debug>
+		<Scrollama onStepEnter={onStepEnter} debug={undefined}>
 			{
 				configFile.chapters.map((item, i) => (
 					<Step
