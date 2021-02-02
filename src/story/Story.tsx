@@ -4,8 +4,10 @@ import { makeStyles } from "@material-ui/core/styles"
 import { Scrollama, Step } from 'react-scrollama';
 import configFile from "common/data/config"
 import {AppContext} from "app-screen/AppScreen"
-import{ FlyToInterpolator } from 'react-map-gl';
+import { FlyToInterpolator } from 'react-map-gl';
+import { IconLayer } from '@deck.gl/layers';
 import { easeCubicInOut } from 'd3-ease'
+import generateMarkerLayer from "common/layers/generateMarkerLayer"
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -44,27 +46,61 @@ interface Story {
 const Story: FC<Story> = ({ stepIndex }) => {
 	const classes = useStyles()
 
-	const { actions: { setViewport } } = useContext(AppContext)
-
+	const { state: { layers }, actions: { setViewport, setLayers } } = useContext(AppContext)
 
 	const [currentStepIndex, setCurrentStepIndex] = useState<StepIndex>(stepIndex ?? 0);
 
 	const onStepEnter = ({ data }: {data: dataType}) => {
+
+		const onEnter = data.data.onChapterEnter;
+		if(onEnter.length > 0){
+			let layersCopy = layers;
+			onEnter.forEach((item: any) => {
+				const isFound = layers.findIndex((stateLayer) => item.layer === stateLayer.props.id)
+				console.log(isFound)
+				const foundData = (layers[isFound]?.props.data || item.data) ?? undefined
+				const newLayer = generateMarkerLayer(item.layer, foundData, item.visible)
+
+				layersCopy = [...layersCopy, newLayer]
+			})
+
+			setLayers([...layersCopy])
+		}
+
 		const dataCenter = data.data.location.center
 		const {center, ...rest} = data.data.location
+
 		setCurrentStepIndex(data.step)
 		setViewport({
 			longitude: dataCenter[0],
 			latitude: dataCenter[1],
-			transitionDuration: 2000,
+			transitionDuration: 4000,
 			transitionInterpolator: new FlyToInterpolator(),
 			transitionEasing: easeCubicInOut,
 			...rest
 		})
 	}
 
+	const onStepExit = ({ data }: {data: dataType}) => {
+
+		const onExit = data.data.onChapterExit;
+		if(onExit.length > 0){
+
+			let layersCopy = layers;
+			onExit.forEach((item: any) => {
+				const isFound = layers.findIndex((stateLayer) => item.layer === stateLayer.props.id)
+				const foundData = (layers[isFound]?.props.data || item.data) ?? undefined
+				const newLayer = generateMarkerLayer(item.layer, foundData, item.visible)
+
+				layersCopy = [...layersCopy, newLayer]
+			})
+
+			setLayers([...layersCopy])
+		}
+	}
+
 	return <Box className={classes.storiesWrapper}>
-		<Scrollama onStepEnter={onStepEnter} debug={undefined}>
+		<Scrollama onStepEnter={onStepEnter} onStepExit={onStepExit} debug={undefined}>
 			{
 				configFile.chapters.map((item, i) => (
 					<Step

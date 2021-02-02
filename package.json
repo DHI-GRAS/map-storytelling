@@ -18,6 +18,7 @@
 	"dependencies": {
 		"@bit/dhi-solutions.shared.ui.theme-provider": "^0.0.7",
 		"@danmarshall/deckgl-typings": "^4.5.1",
+		"@loaders.gl/3d-tiles": "^2.3.10",
 		"@material-ui/core": "^4.11.2",
 		"@material-ui/icons": "^4.11.2",
 		"d3-ease": "^2.0.0",

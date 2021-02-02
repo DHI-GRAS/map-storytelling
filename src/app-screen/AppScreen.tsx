@@ -33,16 +33,17 @@ type Viewport = {
 interface DefaultState {
 	state: {
 		isJourneyMode: boolean,
-		viewport: Viewport
+		viewport: Viewport,
+		layers: any[]
 	},
 	actions: any
 }
 
 const defaultViewport = {
-	latitude: 55.513295,
-	longitude: 10.165798,
-	zoom: 7.5,
-	bearing: 35,
+	latitude: 49.915862,
+	longitude: 10.046997,
+	zoom: 4,
+	bearing: 0,
 	pitch: 60,
 	transitionDuration: 2000,
 	transitionInterpolator: new FlyToInterpolator(),
@@ -52,7 +53,8 @@ const defaultViewport = {
 const defaultState: DefaultState = {
 	state: {
 		isJourneyMode: false,
-		viewport: defaultViewport
+		viewport: defaultViewport,
+		layers: []
 	},
 	actions: {}
 }
@@ -64,6 +66,7 @@ const AppScreen: FC = () => {
 	const classes = useStyles()
 	const [viewport, setViewport] = useState(defaultViewport)
 	const [isJourneyMode, setIsJourneyMode] = useState(false)
+	const [layers, setLayers] = useState([])
 
 	const onSetStoryMode = (mode: boolean) => {
 		console.log(mode)
@@ -71,6 +74,7 @@ const AppScreen: FC = () => {
 			setViewport({
 				...defaultViewport
 			})
+			setLayers([])
 			setIsJourneyMode(false)
 		}else setIsJourneyMode(true)
 	}
@@ -79,11 +83,13 @@ const AppScreen: FC = () => {
 		<AppContext.Provider value={{
 			state: {
 				isJourneyMode: isJourneyMode,
-				viewport: viewport
+				viewport: viewport,
+				layers: layers
 			},
 			actions: {
 				setIsJourneyMode: setIsJourneyMode,
-				setViewport: setViewport
+				setViewport: setViewport,
+				setLayers: setLayers
 			}
 		}}>
 			<div className={classes.root} >
