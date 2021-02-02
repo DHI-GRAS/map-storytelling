@@ -9,6 +9,7 @@ import { IconLayer } from '@deck.gl/layers';
 import { easeCubicInOut } from 'd3-ease'
 import generateMarkerLayer from "common/layers/generateMarkerLayer"
 import generateRasterLayer from "common/layers/generateRasterLayer"
+// import StatisticsCounter from "./StatisticsCounter"
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -172,11 +173,11 @@ const Story: FC<Story> = ({ stepIndex }) => {
 						key={`step-${i}`}
 					>
 						<Box
-						className={classes.stepBox}
-							style={{
-							opacity: currentStepIndex === i ? 1 : 0.2,
-							justifyContent: item.alignment === "left" ? "flex-start" : "flex-end"
-						}}>
+							className={classes.stepBox}
+								style={{
+								opacity: currentStepIndex === i ? 1 : 0.2,
+								justifyContent: item.id && item.id === "forest-national-scale-layer" ? "space-between" : item.alignment === "left" ? "flex-start" : "flex-end"
+							}}>
 							<Paper className={classes.stepBoxItem}
 							>
 								<Typography variant="h3" gutterBottom>
@@ -186,6 +187,11 @@ const Story: FC<Story> = ({ stepIndex }) => {
 									{item.description}
 								</Typography>
 							</Paper>
+							{/* {item.id === "forest-national-scale-layer" && (
+								<Paper className={classes.stepBoxItem}>
+									<StatisticsCounter />
+								</Paper>
+							)} */}
 						</Box>
 					</Step>
 				))

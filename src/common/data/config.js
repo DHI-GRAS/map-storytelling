@@ -3,6 +3,7 @@ var config = {
   footer: 'Source: source citations, etc.',
   chapters: [
 		{
+			id: 'forest-national-scale-layer',
 			alignment: 'left',
       title: 'National forest mapping',
       // image: './path/to/image/source.png',
@@ -20,6 +21,11 @@ var config = {
 					visible: true,
 					type: "raster",
 					url: 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]'
+				},
+				{
+					id: 'all-markers-forest-national-scale-layer',
+					visible: false,
+					type: "marker"
 				}
 			],
       onChapterExit: [
@@ -83,7 +89,7 @@ var config = {
       onChapterExit: [
 				{
 					id: 'all-markers-forest-national-scale-layer',
-					visible: false,
+					visible: true,
 					type: "marker"
 				}
 			],
