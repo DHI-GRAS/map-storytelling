@@ -2,11 +2,8 @@ import React, { FC, useContext, useEffect, useRef } from "react"
 import DeckGL from '@deck.gl/react';
 import { Box } from "@material-ui/core"
 import  { StaticMap  } from 'react-map-gl';
-import { IconLayer } from '@deck.gl/layers';
 import configFile from "common/data/config"
 import { AppContext } from "app-screen/AppScreen"
-import generateMarkerLayer from "common/layers/generateMarkerLayer"
-import { Tile3DLayer } from '@deck.gl/geo-layers';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
 const CESIUM_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZDc1YjYzZS1lNTQyLTQ0ODgtYmEzNy0zMDViZmFkODhmOTQiLCJpZCI6NDMwNjYsImlhdCI6MTYxMjE5MzU0OH0.t8NZJnF7S80peYPunssqQt0u0lL6QTbpYxB_SqleXz4'
@@ -19,9 +16,27 @@ const Map: FC = () => {
 		},
 		actions: {
 			setViewport,
-			setLayers
 		}
 	} = useContext(AppContext)
+
+	// console.log(layers)
+	// const rasterLayer = new TileLayer({
+	// 	data: 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]',
+	// 	minZoom: 0,
+	// 	maxZoom: 19,
+	// 	tileSize: 512,
+	// 	visible: true,
+	// 	renderSubLayers: props => {
+	// 		const {
+	// 		  bbox: {west, south, east, north}
+	// 		} = props.tile;
+	// 		return new BitmapLayer(props, {
+	// 		  data: null,
+	// 		  image: props.data,
+	// 		  bounds: [west, south, east, north]
+	// 		});
+	// 	  }
+	// })
 
 	// const markerItems = configFile.chapters.map((chapter) => ({
 	// 	coordinates: chapter.location.center,
@@ -71,11 +86,11 @@ const Map: FC = () => {
 	// 	getPosition: (d: any) => d.coordinates,
 	// 	getSize: d => 5,
 	// })
+	// console.log(layers)
 
-
-	useEffect(() => {
-		setLayers((layers: any) => [...layers])
-	}, [])
+	// useEffect(() => {
+	// 	setLayers((layers: any) => [...layers ])
+	// }, [])
 	// const terrainLayer = new Tile3DLayer({
 	// 	id: 'terrain-3d-layer',
 	// 	// tileset json file url
@@ -131,7 +146,7 @@ const Map: FC = () => {
 				width={"100%"}
 				height={"100%"}
 				onViewStateChange={(arg) => setViewport(arg.viewState)}
-				layers={layers}
+				layers={layers ? [...layers] : []}
 			>
 				<StaticMap
 					mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}

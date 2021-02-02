@@ -69,7 +69,6 @@ const AppScreen: FC = () => {
 	const [layers, setLayers] = useState([])
 
 	const onSetStoryMode = (mode: boolean) => {
-		console.log(mode)
 		if(mode === true){
 			setViewport({
 				...defaultViewport

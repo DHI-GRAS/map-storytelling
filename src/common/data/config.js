@@ -3,7 +3,6 @@ var config = {
   footer: 'Source: source citations, etc.',
   chapters: [
 		{
-			id: "forest-national-scale",
 			alignment: 'left',
       title: 'National forest mapping',
       // image: './path/to/image/source.png',
@@ -15,41 +14,37 @@ var config = {
         bearing: 0,
       },
       callback: '',
-      onChapterEnter: [],
-      onChapterExit: [],
+      onChapterEnter: [
+				{
+					id: 'raster-forest-national-scale-layer',
+					visible: true,
+					type: "raster",
+					url: 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]'
+				}
+			],
+      onChapterExit: [
+				{
+					id: 'raster-forest-national-scale-layer',
+					visible: true,
+					type: "raster",
+				}
+			],
 		},
 		{
-			id: "forest-national-scale-1",
 			alignment: 'right',
       title: 'National forest mapping',
       // image: './path/to/image/source.png',
 			description: 'National forest mapping 2nd version',
 			location: {
-        center: [10.165798, 55.513295],
+				center: [10.165798, 55.513295],
         zoom: 6,
-        pitch: 60,
-        bearing: 0,
-      },
-      callback: '',
-      onChapterEnter: [],
-      onChapterExit: [],
-		},
-		{
-			id: "markers-forest-national-scale",
-			alignment: 'right',
-      title: 'National forest mapping',
-      // image: './path/to/image/source.png',
-			description: 'National forest mapping 2nd version',
-			location: {
-        center: [10.165798, 55.513295],
-        zoom: 12,
         pitch: 60,
         bearing: 0,
       },
       callback: '',
       onChapterEnter: [
 				{
-					layer: 'all-markers-forest-national-scale-layer',
+					id: 'all-markers-forest-national-scale-layer',
 					visible: true,
 					type: "marker",
 					data:
@@ -59,20 +54,12 @@ var config = {
 								name: "National forest mapping"
 							},
 							{
-								coordinates: [10.165798,55.513295],
-								name: "National forest mapping"
-							},
-							{
 								coordinates: [11.931931451403903,54.575430797189625],
 								name: "A: The sand dune that disappeared"
 							},
 							{
 								coordinates: [11.947387726660498,54.57506135095206],
 								name: "B: Dynamic danish landscape"
-							},
-							{
-								coordinates: [10.1788330078125,56.18225387824831],
-								name: "The dynamic evolving city"
 							},
 							{
 								coordinates: [9.81878839989416,54.904766036118524],
@@ -94,14 +81,14 @@ var config = {
 			},
 			],
       onChapterExit: [
-				// {
-				// 	layer: 'all-markers-forest-national-scale-layer',
-				// 	visible: false
-				// }
+				{
+					id: 'all-markers-forest-national-scale-layer',
+					visible: false,
+					type: "marker"
+				}
 			],
 		},
     {
-      id: 'sand-dune-id',
       alignment: 'left',
       title: 'A: The sand dune that disappeared',
       // image: './path/to/image/source.png',
@@ -128,7 +115,6 @@ var config = {
       ],
     },
     {
-      id: 'other-identifier',
       alignment: 'right',
       title: 'B: Dynamic danish landscape',
       // image: './path/to/image/source.png',
@@ -144,24 +130,22 @@ var config = {
       onChapterEnter: [],
       onChapterExit: [],
     },
+    // {
+    //   alignment: 'left',
+    //   title: 'The dynamic evolving city',
+    //   // image: './path/to/image/source.png',
+    //   description: 'The dynamic evolving city',
+    //   location: {
+    //     center: [10.1788330078125, 56.18225387824831],
+    //     zoom: 14,
+    //     pitch: 60,
+    //     bearing: -43.2,
+    //   },
+    //   callback: '',
+    //   onChapterEnter: [],
+    //   onChapterExit: [],
+    // },
     {
-      id: 'other-identifier-2',
-      alignment: 'left',
-      title: 'The dynamic evolving city',
-      // image: './path/to/image/source.png',
-      description: 'The dynamic evolving city',
-      location: {
-        center: [10.1788330078125, 56.18225387824831],
-        zoom: 14,
-        pitch: 60,
-        bearing: -43.2,
-      },
-      callback: '',
-      onChapterEnter: [],
-      onChapterExit: [],
-    },
-    {
-      id: 'other-identifier-3',
       alignment: 'right',
       hidden: false,
       title: 'C: The city filled with tiny and dynamic objects',
@@ -178,7 +162,6 @@ var config = {
       onChapterExit: [],
     },
     {
-      id: 'other-identifier-4',
       alignment: 'left',
       hidden: false,
       title: 'D: The country side',
@@ -195,7 +178,6 @@ var config = {
       onChapterExit: [],
 		},
 		{
-      id: 'other-identifier-4',
       alignment: 'left',
       hidden: false,
       title: 'E: The country side',
@@ -212,7 +194,6 @@ var config = {
       onChapterExit: [],
 		},
 		{
-      id: 'other-identifier-4',
       alignment: 'left',
       hidden: false,
       title: 'F: The country side',

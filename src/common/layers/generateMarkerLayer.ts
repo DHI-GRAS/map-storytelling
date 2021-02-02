@@ -12,6 +12,8 @@ const generateMarkerLayer = (id: string, data: any[] = [], visible: boolean = tr
 				y: 5,
 				width: 128,
 				height: 128,
+				anchorX: 128,
+				anchorY: 128,
 				mask: false
 			}
 		},

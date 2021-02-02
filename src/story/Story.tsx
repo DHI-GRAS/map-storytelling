@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from "react"
+import React, { FC, useState, useContext, useEffect } from "react"
 import { Box, Typography, Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { Scrollama, Step } from 'react-scrollama';
@@ -8,6 +8,7 @@ import { FlyToInterpolator } from 'react-map-gl';
 import { IconLayer } from '@deck.gl/layers';
 import { easeCubicInOut } from 'd3-ease'
 import generateMarkerLayer from "common/layers/generateMarkerLayer"
+import generateRasterLayer from "common/layers/generateRasterLayer"
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -46,25 +47,55 @@ interface Story {
 const Story: FC<Story> = ({ stepIndex }) => {
 	const classes = useStyles()
 
-	const { state: { layers }, actions: { setViewport, setLayers } } = useContext(AppContext)
+	const {
+		state: { layers },
+		actions: { setViewport, setLayers }
+	} = useContext(AppContext)
 
 	const [currentStepIndex, setCurrentStepIndex] = useState<StepIndex>(stepIndex ?? 0);
 
 	const onStepEnter = ({ data }: {data: dataType}) => {
-
+		// console.log("ENTER", localLayer)
 		const onEnter = data.data.onChapterEnter;
+
+		// console.log(layersCopy, layers)
 		if(onEnter.length > 0){
-			let layersCopy = layers;
-			onEnter.forEach((item: any) => {
-				const isFound = layers.findIndex((stateLayer) => item.layer === stateLayer.props.id)
-				console.log(isFound)
-				const foundData = (layers[isFound]?.props.data || item.data) ?? undefined
-				const newLayer = generateMarkerLayer(item.layer, foundData, item.visible)
+		setLayers((ls: any[]) => {
+			let layersCopy = [...ls]
+				onEnter.forEach((item: any) => {
+					const isFound = layersCopy?.findIndex((stateLayer) => item.id === stateLayer.id)
+					if(item.type === "marker"){
+						if (item.visible === false) {
 
-				layersCopy = [...layersCopy, newLayer]
+							layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
+						} else if(isFound === -1){
+
+							const foundData = (layersCopy[isFound]?.props.data || item.data) ?? undefined
+
+							const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+							layersCopy = [...layersCopy, newLayer]
+
+						}
+					}
+
+					if(item.type === "raster"){
+						if (item.visible === false) {
+
+							layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
+						} else if(isFound === -1){
+
+							const newLayer = generateRasterLayer(item.id, item.url, item.visible)
+							layersCopy = [...layersCopy, newLayer]
+
+						}
+
+					}
+				})
+				return [...layersCopy]
+
 			})
-
-			setLayers([...layersCopy])
 		}
 
 		const dataCenter = data.data.location.center
@@ -82,25 +113,55 @@ const Story: FC<Story> = ({ stepIndex }) => {
 	}
 
 	const onStepExit = ({ data }: {data: dataType}) => {
-
 		const onExit = data.data.onChapterExit;
 		if(onExit.length > 0){
+			setLayers((lrs: any) => {
+				let layersCopy = [...lrs];
+				onExit.forEach((item: any) => {
+					const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
+					if(item.type === "marker"){
+						if (item.visible === false) {
 
-			let layersCopy = layers;
-			onExit.forEach((item: any) => {
-				const isFound = layers.findIndex((stateLayer) => item.layer === stateLayer.props.id)
-				const foundData = (layers[isFound]?.props.data || item.data) ?? undefined
-				const newLayer = generateMarkerLayer(item.layer, foundData, item.visible)
+							layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+							console.log(layersCopy[0].id, item)
 
-				layersCopy = [...layersCopy, newLayer]
+						} else if(isFound === -1){
+
+							const foundData = (layersCopy[isFound]?.props.data || item.data) ?? undefined
+
+							const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+							layersCopy = [...layersCopy, newLayer]
+
+						}
+
+					}
+
+					if(item.type === "raster"){
+
+						if (item.visible === false) {
+
+							layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
+						} else if(isFound === -1){
+
+							const newLayer = generateRasterLayer(item.id, item.url, item.visible)
+							layersCopy = [...layersCopy, newLayer]
+
+						}
+					}
+				})
+
+				return [...layersCopy]
 			})
-
-			setLayers([...layersCopy])
 		}
 	}
 
 	return <Box className={classes.storiesWrapper}>
-		<Scrollama onStepEnter={onStepEnter} onStepExit={onStepExit} debug={undefined}>
+		<Scrollama
+			onStepEnter={onStepEnter}
+			onStepExit={onStepExit}
+			debug={undefined}
+		>
 			{
 				configFile.chapters.map((item, i) => (
 					<Step
