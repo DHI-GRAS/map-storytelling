@@ -1,29 +1,29 @@
-import { ForestArea } from "./forestAreaData"
+import { ForestArea } from './forestAreaData'
 
 export const forestPerInhabitant: ForestArea[] = [
 	{
-		name: "København",
+		name: 'København',
 		maxVal: 5,
-		duration: 2
+		duration: 2,
 	},
 	{
-		name: "Aalborg",
+		name: 'Aalborg',
 		maxVal: 5,
-		duration: 4
+		duration: 4,
 	},
 	{
-		name: "Aarhus",
+		name: 'Aarhus',
 		maxVal: 147,
-		duration: 6
+		duration: 6,
 	},
 	{
 		name: 'Odense',
 		maxVal: 196,
-		duration: 8
+		duration: 8,
 	},
 	{
 		name: 'Esbjerg',
 		maxVal: 595,
-		duration: 10
+		duration: 10,
 	},
 ]

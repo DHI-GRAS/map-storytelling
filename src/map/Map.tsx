@@ -1,4 +1,5 @@
 import React, { FC, useContext, useEffect, useRef } from "react"
+
 import DeckGL from '@deck.gl/react';
 import { Box } from "@material-ui/core"
 import  { StaticMap  } from 'react-map-gl';
@@ -19,78 +20,22 @@ const Map: FC = () => {
 		}
 	} = useContext(AppContext)
 
-	// console.log(layers)
-	// const rasterLayer = new TileLayer({
-	// 	data: 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]',
-	// 	minZoom: 0,
-	// 	maxZoom: 19,
-	// 	tileSize: 512,
-	// 	visible: true,
-	// 	renderSubLayers: props => {
-	// 		const {
-	// 		  bbox: {west, south, east, north}
-	// 		} = props.tile;
-	// 		return new BitmapLayer(props, {
-	// 		  data: null,
-	// 		  image: props.data,
-	// 		  bounds: [west, south, east, north]
-	// 		});
-	// 	  }
-	// })
+	// const dklayer = new GeoJsonLayer({
+	// 	id: 'dk-layer',
+	// 	data: dkGeoJson,
+	// 	pickable: false,
+	// 	stroked: true,
+	// 	filled: false,
+	// 	extruded: false,
+	// 	// lineWidthScale: 20,
+	// 	lineWidthMinPixels: 4,
+	// 	// getFillColor: [160, 160, 180, 200],
+	// 	getLineColor: [ 151, 219, 249, 255],
+	// 	// getRadius: 100,
+	// 	getLineWidth: 1,
+	// 	// getElevation: 30
+	//   });
 
-	// const markerItems = configFile.chapters.map((chapter) => ({
-	// 	coordinates: chapter.location.center,
-	// 	name: chapter.title
-	// }))
-
-	// console.log(layers)
-	// console.log(markerItems)
-	// const markersLayer = generateMarkerLayer("markers-layer", markerItems, false)
-
-	// new IconLayer({
-	// 	id: "markers-layer",
-	// 	visible: false,
-	// 	data: markerItems,
-	// 	iconAtlas: 'https://grasdatastorage.blob.core.windows.net/images/marker_gras.png',
-	// 	iconMapping: {
-	// 		marker: {
-	// 			x: 0,
-	// 			y: 0,
-	// 			width: 128,
-	// 			height: 128,
-	// 			mask: false
-	// 		}
-	// 	},
-	// 	getIcon: d => 'marker',
-	// 	sizeScale: 15,
-	// 	getPosition: (d: any) => d.coordinates,
-	// 	getSize: d => 5,
-	// })
-
-	// const markersLayer2 = new IconLayer({
-	// 	id: "markers-layer2",
-	// 	visible: false,
-	// 	data: markerItems,
-	// 	iconAtlas: 'https://grasdatastorage.blob.core.windows.net/images/marker_gras.png',
-	// 	iconMapping: {
-	// 		marker: {
-	// 			x: 0,
-	// 			y: 0,
-	// 			width: 60,
-	// 			height: 60,
-	// 			mask: false
-	// 		}
-	// 	},
-	// 	getIcon: d => 'marker',
-	// 	sizeScale: 15,
-	// 	getPosition: (d: any) => d.coordinates,
-	// 	getSize: d => 5,
-	// })
-	// console.log(layers)
-
-	// useEffect(() => {
-	// 	setLayers((layers: any) => [...layers ])
-	// }, [])
 	// const terrainLayer = new Tile3DLayer({
 	// 	id: 'terrain-3d-layer',
 	// 	// tileset json file url
@@ -146,9 +91,10 @@ const Map: FC = () => {
 				width={"100%"}
 				height={"100%"}
 				onViewStateChange={(arg) => setViewport(arg.viewState)}
-				layers={layers ? [...layers] : []}
+				layers={[...layers]}
 			>
 				<StaticMap
+
 					width={"100%"}
 					height={"100%"}
 					mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
