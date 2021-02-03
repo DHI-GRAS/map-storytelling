@@ -1,9 +1,11 @@
-import React, { FC, useState, createContext, SetStateAction, Dispatch } from 'react'
+import React, {
+	FC, useState, createContext, SetStateAction, Dispatch,
+} from 'react'
 import { Box, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import Map from "map/Map"
-import Story from "story/Story"
-import{ FlyToInterpolator } from 'react-map-gl';
+import Map from 'map/Map'
+import Story from 'story/Story'
+import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 
 const useStyles = makeStyles({
@@ -34,9 +36,9 @@ interface DefaultState {
 	state: {
 		isJourneyMode: boolean,
 		viewport: Viewport,
-		layers: any[]
+		layers: any[],
 	},
-	actions: any
+	actions: any,
 }
 
 const defaultViewport = {
@@ -54,9 +56,9 @@ const defaultState: DefaultState = {
 	state: {
 		isJourneyMode: false,
 		viewport: defaultViewport,
-		layers: []
+		layers: [],
 	},
-	actions: {}
+	actions: {},
 }
 
 export const AppContext = createContext(defaultState)
@@ -64,37 +66,42 @@ export const AppContext = createContext(defaultState)
 const AppScreen: FC = () => {
 
 	const classes = useStyles()
-	const [viewport, setViewport] = useState(defaultViewport)
-	const [isJourneyMode, setIsJourneyMode] = useState(false)
-	const [layers, setLayers] = useState([])
+	const [ viewport, setViewport ] = useState(defaultViewport)
+	const [ isJourneyMode, setIsJourneyMode ] = useState(false)
+	const [ layers, setLayers ] = useState([])
 
 	const onSetStoryMode = (mode: boolean) => {
-		if(mode === true){
+
+		if (mode) {
+
 			setViewport({
-				...defaultViewport
+				...defaultViewport,
 			})
 			setLayers([])
 			setIsJourneyMode(false)
-		}else setIsJourneyMode(true)
+
+		} else setIsJourneyMode(true)
+
 	}
 
 	return (
 		<AppContext.Provider value={{
 			state: {
-				isJourneyMode: isJourneyMode,
-				viewport: viewport,
-				layers: layers
+				isJourneyMode,
+				viewport,
+				layers,
 			},
 			actions: {
-				setIsJourneyMode: setIsJourneyMode,
-				setViewport: setViewport,
-				setLayers: setLayers
-			}
-		}}>
+				setIsJourneyMode,
+				setViewport,
+				setLayers,
+			},
+		}}
+		>
 			<div className={classes.root} >
-				<Box position="fixed" style={{ top: "1rem", right: "1rem", zIndex: 10000 }}>
-					<Button variant="contained" onClick={() => onSetStoryMode(isJourneyMode)}>
-						{!isJourneyMode ? "Start journey" : "End journey"}
+				<Box position={'fixed'} style={{ top: '1rem', right: '1rem', zIndex: 10000 }}>
+					<Button variant={'contained'} onClick={() => onSetStoryMode(isJourneyMode)}>
+						{!isJourneyMode ? 'Start journey' : 'End journey'}
 					</Button>
 				</Box>
 				<Map />

@@ -1,29 +1,29 @@
-export type ForestArea = { name: string,  maxVal: number, duration: number }
+export type ForestArea = { name: string; maxVal: number; duration: number }
 
 export const forestArea: ForestArea[] = [
 	{
-		name: "Ringk.-Skj.",
+		name: 'Ringk.-Skj.',
 		maxVal: 184,
-		duration: 2
+		duration: 2,
 	},
 	{
 		name: 'Vejle',
 		maxVal: 209,
-		duration: 3
+		duration: 3,
 	},
 	{
 		name: 'Viborg',
 		maxVal: 239,
-		duration: 4
+		duration: 4,
 	},
 	{
-		name: "Herning",
+		name: 'Herning',
 		maxVal: 251,
-		duration: 5
+		duration: 5,
 	},
 	{
-		name: "Silkeborg",
+		name: 'Silkeborg',
 		maxVal: 251,
-		duration: 5.5
+		duration: 5.5,
 	},
 ]

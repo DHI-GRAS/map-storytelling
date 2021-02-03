@@ -6,7 +6,7 @@
 	"scripts": {
 		"lint": "eslint --ext ts,tsx ./src --cache",
 		"lint:fix": "eslint --ext ts,tsx ./src --fix --cache",
-		"start": "env-cmd -f .env build-cfg start",
+		"start": "env-cmd -f .env build-cfg start --max-old-space-size=4096",
 		"build": "build-cfg build"
 	},
 	"eslintConfig": {
@@ -40,7 +40,9 @@
 		"@types/react-dom": "^17.0.0",
 		"@types/react-map-gl": "^5.2.9",
 		"@typescript-eslint/eslint-plugin": "^4.9.0",
-		"env-cmd": "^10.1.0"
+		"env-cmd": "^10.1.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-react": "^7.22.0"
 	},
 	"author": "",
 	"license": "ISC"
