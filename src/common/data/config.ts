@@ -1,6 +1,5 @@
 import denmarkGeoJSon from './Denmark.json'
-import euNoDk from "./EU-DK.json"
-// console.log(denmarkGeoJSon)
+
 const config = {
 	style: 'mapbox://styles/mapbox/satellite-v9',
 	footer: 'Source: source citations, etc.',
@@ -20,11 +19,11 @@ const config = {
 			callback: '',
 			onChapterEnter: [
 				{
-					id: "denmark-country-border",
-					type: "geojson",
+					id: 'denmark-country-border',
+					type: 'geojson',
 					data: denmarkGeoJSon,
 					fill: false,
-					visible: true
+					visible: true,
 				},
 				{
 					id: 'all-markers-forest-national-scale-layer',
@@ -50,11 +49,11 @@ const config = {
 			callback: '',
 			onChapterEnter: [
 				{
-					id: "denmark-country-border",
-					type: "geojson",
+					id: 'denmark-country-border',
+					type: 'geojson',
 					data: denmarkGeoJSon,
 					fill: false,
-					visible: true
+					visible: true,
 				},
 			// 	// {
 			// 	// 		id: 'raster-forest-national-scale-layer',
@@ -85,7 +84,7 @@ const config = {
 		{
 			id: 'forest-national-scale-layer-2',
 			alignmentX: 'flex-end',
-			alignmentY: "center",
+			alignmentY: 'center',
 			title: 'Classification of different trees',
 			description: 'Classification of different trees on national scale',
 			location: {
@@ -102,11 +101,11 @@ const config = {
 				// 	type: "raster"
 				// }
 				{
-					id: "denmark-country-border",
-					type: "geojson",
+					id: 'denmark-country-border',
+					type: 'geojson',
 					data: denmarkGeoJSon,
 					fill: false,
-					visible: true
+					visible: true,
 				},
 			],
 			onChapterExit: [
@@ -183,17 +182,17 @@ const config = {
 			],
 			onChapterExit: [
 				{
-					id: "denmark-country-border",
-					type: "geojson",
+					id: 'denmark-country-border',
+					type: 'geojson',
 					data: denmarkGeoJSon,
 					fill: false,
-					visible: false
+					visible: false,
 				},
 			],
 		},
 		{
 			alignmentX: 'flex-start',
-			alignmentY: "center",
+			alignmentY: 'center',
 			title: 'A: The sand dune that disappeared',
 			description: 'The sand dune that disappeared - uncovered by SDFE data. Animated tile',
 			location: {
@@ -206,40 +205,40 @@ const config = {
 			onChapterEnter: [
 				// main layer id defines how do the rasters id's start
 				{
-					id: "layers-animation",
-					type: "raster",
+					id: 'layers-animation',
+					type: 'raster',
 					animation: true,
 					timeout: 2,
 					rasters: [
 						{
-							id: "layers-animation-animation-1",
-							type: "raster",
-							url: ['https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]']
+							id: 'layers-animation-animation-1',
+							type: 'raster',
+							url: [ 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/composite/20180501/1/{z}/{x}/{y}.png?r=B04&g=B03&b=B02&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]' ],
 						},
 						{
-							id: "layers-animation-animation-2",
-							type: "raster",
-							url: ['https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/singleband/index/20180716/1/ndvi/{z}/{x}/{y}.png?stretch_range=[0,10000]&colormap=rdylgn']
+							id: 'layers-animation-animation-2',
+							type: 'raster',
+							url: [ 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/singleband/index/20180716/1/ndvi/{z}/{x}/{y}.png?stretch_range=[0,10000]&colormap=rdylgn' ],
 						},
 						{
-							id: "layers-animation-animation-3",
-							type: "raster",
-							url: ['https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/reflectance/20180716/1/{z}/{x}/{y}.png?r=B08&g=B03&b=B02&r_range=%5B0,10000%5D&g_range=%5B0,3000%5D&b_range=%5B0,3000%5D']
+							id: 'layers-animation-animation-3',
+							type: 'raster',
+							url: [ 'https://ix8zgaqqe1.execute-api.eu-central-1.amazonaws.com/production/rgb/reflectance/20180716/1/{z}/{x}/{y}.png?r=B08&g=B03&b=B02&r_range=%5B0,10000%5D&g_range=%5B0,3000%5D&b_range=%5B0,3000%5D' ],
 						},
-					]
+					],
 				},
 			],
 			onChapterExit: [
 				{
-					id: "layers-animation",
-					type: "raster",
+					id: 'layers-animation',
+					type: 'raster',
 					animation: true,
 				},
 			],
 		},
 		{
 			alignmentX: 'flex-end',
-			alignmentY: "flex-end",
+			alignmentY: 'flex-end',
 			title: 'B: Dynamic danish landscape',
 			// image: './path/to/image/source.png',
 			description:
@@ -255,31 +254,29 @@ const config = {
 				{
 					id: 'raster-forest-national-scale-layer-optical',
 					visible: true,
-					type: "raster",
-					url: ['https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/rgb/sdfe-hack/summer-2018-area01/2018/{z}/{x}/{y}.png?r=red&g=green&b=blue&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]',
-					],
+					type: 'raster',
+					url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/rgb/sdfe-hack/summer-2018-area01/2018/{z}/{x}/{y}.png?r=red&g=green&b=blue&r_range=[0,2000]&b_range=[0,2000]&g_range=[0,2000]' ],
 				},
 				{
 					id: 'raster-forest-national-scale-layer',
 					visible: true,
-					type: "raster",
-					url: [`https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/prediction-trees-2018-area01/2018/class/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
-						JSON.stringify({ '0':"#FFFFFF" , '1': "#FE7860" })
-					)}`
-					],
-				}
+					type: 'raster',
+					url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/prediction-trees-2018-area01/2018/class/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
+						JSON.stringify({ 0: '#FFFFFF', 1: '#FE7860' })
+					)}` ],
+				},
 			],
 			onChapterExit: [
 				{
 					id: 'raster-forest-national-scale-layer-optical',
 					visible: false,
-					type: "raster",
+					type: 'raster',
 				},
 				{
 					id: 'raster-forest-national-scale-layer',
 					visible: false,
-					type: "raster",
-				}
+					type: 'raster',
+				},
 			],
 		},
 		// {
@@ -299,7 +296,7 @@ const config = {
 		// },
 		{
 			alignmentX: 'flex-end',
-			alignmentY: "center",
+			alignmentY: 'center',
 			hidden: false,
 			title: 'C: The city filled with tiny and dynamic objects',
 			// image: './path/to/image/source.png',
@@ -316,7 +313,7 @@ const config = {
 		},
 		{
 			alignmentX: 'flex-start',
-			alignmentY: "center",
+			alignmentY: 'center',
 			hidden: false,
 			title: 'D: The country side',
 			// image: './path/to/image/source.png',
@@ -333,7 +330,7 @@ const config = {
 		},
 		{
 			alignmentX: 'flex-start',
-			alignmentY: "center",
+			alignmentY: 'center',
 			hidden: false,
 			title: 'E: The country side',
 			// image: './path/to/image/source.png',
@@ -350,7 +347,7 @@ const config = {
 		},
 		{
 			alignmentX: 'flex-start',
-			alignmentY: "center",
+			alignmentY: 'center',
 			hidden: false,
 			title: 'F: The country side',
 			// image: './path/to/image/source.png',

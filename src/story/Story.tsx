@@ -45,11 +45,11 @@ type dataType = {
 
 type StepIndex = number | null
 
-interface Story {
+interface StoryProps {
 	stepIndex?: StepIndex,
 }
 
-const Story: FC<Story> = ({ stepIndex }) => {
+const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const classes = useStyles()
 
@@ -61,7 +61,7 @@ const Story: FC<Story> = ({ stepIndex }) => {
 	const [ showDetails, setShowDetails ] = useState(false)
 
 	// holder of the interval if we have an animation situation
-	let rasterAnim: NodeJS.Timeout
+	let rasterAnim = setInterval(() => {}, 1000)
 
 	const onStepEnter = ({ data }: {data: dataType}) => {
 
@@ -73,73 +73,93 @@ const Story: FC<Story> = ({ stepIndex }) => {
 
 			// for each layer that needs to be added
 			onEnter.forEach((item: any) => {
-			// we check if the layer is found in the state
-			const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
-			// check the layer type
-			if (item.type === 'marker') {
-				// if we want to make the item invisible, we remove it from the state array
-				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-				else if (isFound === -1) {
-					// if the layer is new aka it's not found, get the data. Propbably using only item.data is enough but don't wanna brake things.
-					const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
-					// generate new layer and add it to the temporary array
-					const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
-					layersCopy = [ ...layersCopy, newLayer ]
+
+				// we check if the layer is found in the state
+				const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
+				// check the layer type
+				if (item.type === 'marker') {
+
+					// if we want to make the item invisible, we remove it from the state array
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					else if (isFound === -1) {
+
+						// if the layer is new aka it's not found, get the data.
+						// Propbably using only item.data is enough but don't wanna brake things.
+						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
+						// generate new layer and add it to the temporary array
+						const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+						layersCopy = [ ...layersCopy, newLayer ]
+
+					}
+
+					return
 
 				}
-				return;
-			}
 
 
 				if (item.type === 'raster') {
-					if(item.animation === true){
+
+					if (item.animation === true) {
+
 						// if item has animation we start a counter
 						let counter = 0
 						// get how many raster we have to switch between
-						let rasterCount = item.rasters.length
+						const rasterCount = item.rasters.length
 						// start the interval assingning it to the global value
 						rasterAnim = setInterval(() => {
+
 							// build the new raster layer
-							const newLayer = generateRasterLayer(item.rasters[counter].id, item.rasters[counter].url, true)
-							setLayers((l => {
+							const newLayer = generateRasterLayer(item.rasters[ counter ].id, item.rasters[ counter ].url, true)
+							setLayers((l: any) => {
+
 								// check if the counter has reached the limit
-								if(counter === rasterCount - 1){
+								if (counter === rasterCount - 1) {
+
 									// if so, reset the counter and reset the array from the state
 									counter = -1
-									return [...layersCopy, newLayer]
+
+									return [ ...layersCopy, newLayer ]
+
 								}
+
 								// otherwise just add to the state
-								return [...l, newLayer]
-							}))
+								return [ ...l, newLayer ]
+
+							})
 							// update the counter
 							counter += 1
+
 						}, 6000)
 
 						// situation where raster is not an animation so we just add it to the state
+
 					} else {
+
 						// if is not to be visible then filter the array
 						if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
 						else if (isFound === -1) {
+
 							// if the raster is not found add it to the state
 							const newLayer = generateRasterLayer(item.id, item.url, item.visible)
 							layersCopy = [ ...layersCopy, newLayer ]
 
 						}
-						return;
+
+						return
+
 					}
 					// if geojson then create new geojson layer
-						if (item.type === 'geojson') {
-							if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-							else if (isFound === -1) {
+					if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					else if (isFound === -1) {
 
-							const foundData = item.data
-							const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, undefined, item.fill, item.fillColor)
-							layersCopy = [ ...layersCopy, newLayer ]
+						const foundData = item.data
+						const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, undefined, item.fill, item.fillColor)
+						layersCopy = [ ...layersCopy, newLayer ]
 
-							}
-							return;
-						}
 					}
+
+
+				}
 
 
 			})
@@ -178,11 +198,10 @@ const Story: FC<Story> = ({ stepIndex }) => {
 
 				const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
 				if (item.type === 'marker') {
-					if (item.visible === false) {
 
-						layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
 
-					} else if (isFound === -1) {
+					else if (isFound === -1) {
 
 						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
 
@@ -190,42 +209,46 @@ const Story: FC<Story> = ({ stepIndex }) => {
 						layersCopy = [ ...layersCopy, newLayer ]
 
 					}
-					return;
+
+					return
+
 				}
 
 				if (item.type === 'raster') {
-					if(item.animation === true){
+
+					if (item.animation === true) {
 
 						// remove the layers and clear the interval
-						layersCopy = layersCopy.filter(lrsPass => !(lrsPass.id.includes(item.id)))
-						setLayers([...layersCopy])
+						layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+						setLayers([ ...layersCopy ])
 						clearInterval(rasterAnim)
 
-					}else{
+					} else
 
-						if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
 
-						else if (isFound === -1) {
+					else if (isFound === -1) {
 
 						const newLayer = generateRasterLayer(item.id, item.url, item.visible)
 						layersCopy = [ ...layersCopy, newLayer ]
 
-						}
 					}
-					return;
+
+
+					return
+
 				}
 
-				if (item.type === 'geojson') {
-					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-					else if (isFound === -1) {
+				if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) {
 
 					const foundData = item.data
 					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, undefined, item.fill, item.fillColor)
 					layersCopy = [ ...layersCopy, newLayer ]
 
-					}
-					return;
 				}
+
+
 			})
 
 			return [ ...layersCopy ]
@@ -264,7 +287,7 @@ const Story: FC<Story> = ({ stepIndex }) => {
 								opacity: currentStepIndex === i ? 1 : 0.2,
 								justifyContent: item.alignmentX,
 								alignItems: item.alignmentY,
-								flexDirection: item.id === 'forest-national-scale-layer' ? "column" : "row"
+								flexDirection: item.id === 'forest-national-scale-layer' ? 'column' : 'row',
 							}}
 						>
 							<Paper className={classes.stepBoxItem}>
@@ -276,14 +299,14 @@ const Story: FC<Story> = ({ stepIndex }) => {
 								</Typography>
 							</Paper>
 							{showDetails && (
-								<Box display="flex" flexDirection="column">
+								<Box display={'flex'} flexDirection={'column'}>
 									{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{  maxWidth: 'unset', marginTop: "1rem" }}>
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem' }}>
 											<StatisticsCounter title={'Top 5 - Most forest area (km2)'} items={forestArea} />
 										</Paper>
 									)}
 									{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{  maxWidth: 'unset', marginTop: "1rem" }}>
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem' }}>
 											<StatisticsCounter title={'m2 forest/inh. - top 5 biggest mun.'} items={forestPerInhabitant} />
 										</Paper>
 									)}
