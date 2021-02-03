@@ -17,6 +17,7 @@ const generateMarkerLayer = (id: string, data: any[] = [], visible: boolean = tr
 				mask: false
 			}
 		},
+
 		getIcon: d => 'marker',
 		sizeScale: 15,
 		getPosition: (d: any) => d.coordinates,

@@ -7,9 +7,11 @@ import {AppContext} from "app-screen/AppScreen"
 import { FlyToInterpolator } from 'react-map-gl';
 import { IconLayer } from '@deck.gl/layers';
 import { easeCubicInOut } from 'd3-ease'
+import { forestArea } from "common/data/forestAreaData";
+import { forestPerInhabitant } from "common/data/forestPerInhabitant"
 import generateMarkerLayer from "common/layers/generateMarkerLayer"
 import generateRasterLayer from "common/layers/generateRasterLayer"
-// import StatisticsCounter from "./StatisticsCounter"
+import StatisticsCounter from "./StatisticsCounter"
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -176,7 +178,7 @@ const Story: FC<Story> = ({ stepIndex }) => {
 							className={classes.stepBox}
 								style={{
 								opacity: currentStepIndex === i ? 1 : 0.2,
-								justifyContent: item.id && item.id === "forest-national-scale-layer" ? "space-between" : item.alignment === "left" ? "flex-start" : "flex-end"
+								justifyContent: item.id && item.id === "forest-national-scale-layer" ? "space-between" : item.alignment === "left" ? "flex-start" : "flex-end",
 							}}>
 							<Paper className={classes.stepBoxItem}
 							>
@@ -187,11 +189,16 @@ const Story: FC<Story> = ({ stepIndex }) => {
 									{item.description}
 								</Typography>
 							</Paper>
-							{/* {item.id === "forest-national-scale-layer" && (
-								<Paper className={classes.stepBoxItem}>
-									<StatisticsCounter />
+							{item.id === "forest-national-scale-layer" && (
+								<Paper className={classes.stepBoxItem} style={{ alignSelf: "flex-end", maxWidth: 'unset' }}>
+									<StatisticsCounter title={"Top 5 - Most forest area (km2)"} items={ forestArea }/>
 								</Paper>
-							)} */}
+							)}
+							{item.id === "forest-national-scale-layer" && (
+								<Paper className={classes.stepBoxItem} style={{ alignSelf: "flex-end", maxWidth: 'unset' }}>
+									<StatisticsCounter title={"m2 forest/inhabitants in top 5 biggest mun."} items={ forestPerInhabitant } />
+								</Paper>
+							)}
 						</Box>
 					</Step>
 				))
