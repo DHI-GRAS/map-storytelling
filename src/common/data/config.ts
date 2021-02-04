@@ -544,6 +544,7 @@ const config = {
 			],
 		},
 		{
+			id: 'raster-forest-class',
 			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Det dynamiske grønne Danmark i detaljer',

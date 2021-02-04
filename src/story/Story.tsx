@@ -11,6 +11,7 @@ import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import { forestArea } from 'common/data/forestAreaData'
+import { doubleData } from 'common/data/dubleData'
 import { herningData } from 'common/data/herningData'
 import { forestPerInhabitant } from 'common/data/forestPerInhabitant'
 import generateMarkerLayer from 'common/layers/generateMarkerLayer'
@@ -19,6 +20,7 @@ import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
 import lastImage from 'common/images/app_mockup.png'
 import StatisticsCounter from './StatisticsCounter'
+import StatisticsCounterDouble from './StatisticsCounterDouble'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -284,7 +286,7 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	useEffect(() => {
 
-		// console.log(isExecExit)
+		console.log(currentStepIndex)
 		if (currentStepIndex === 12) setTimeout(() => setToShowLast(true), 4000)
 
 	}, [ isExecExit, currentStepIndex ])
@@ -323,7 +325,9 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 								opacity: currentStepIndex === i ? 1 : 0.2,
 								justifyContent: item.alignmentX,
 								alignItems: item.alignmentY,
-								flexDirection: item.id === 'forest-national-scale-layer' || item.id === 'herning-commune' ? 'column' : 'row',
+								flexDirection: item.id === 'forest-national-scale-layer' ||
+								item.id === 'herning-commune' ||
+								item.id === 'raster-forest-class' ? 'column' : 'row',
 							}}
 						>
 							{item.id === 'final-step' && toShowLast && <img src={lastImage} alt={'final-step'} style={{ width: '100vw', height: '100vh' }} />}
@@ -381,6 +385,13 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 										<Box display={'flex'} flexDirection={'column'}>
 											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
 												<StatisticsCounter title={'km2'} items={herningData} />
+											</Paper>
+										</Box>
+									)}
+									{currentStepIndex === 11 && (
+										<Box display={'flex'} flexDirection={'column'}>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
 											</Paper>
 										</Box>
 									)}
