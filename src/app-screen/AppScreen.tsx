@@ -1,7 +1,7 @@
 import React, {
-	FC, useState, createContext, SetStateAction, Dispatch,
+	FC, useState, createContext,
 } from 'react'
-import { Box, Button } from '@material-ui/core'
+// import { Box, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Map from 'map/Map'
 import Story from 'story/Story'
@@ -37,6 +37,7 @@ interface DefaultState {
 		isJourneyMode: boolean,
 		viewport: Viewport,
 		layers: any[],
+		isButtonDisabled: boolean,
 	},
 	actions: any,
 }
@@ -57,6 +58,7 @@ const defaultState: DefaultState = {
 		isJourneyMode: false,
 		viewport: defaultViewport,
 		layers: [],
+		isButtonDisabled: false,
 	},
 	actions: {},
 }
@@ -69,6 +71,7 @@ const AppScreen: FC = () => {
 	const [ viewport, setViewport ] = useState(defaultViewport)
 	const [ isJourneyMode, setIsJourneyMode ] = useState(false)
 	const [ layers, setLayers ] = useState([])
+	const [ isButtonDisabled, setIsButtonDisabled ] = useState(false)
 
 	const onSetStoryMode = (mode: boolean) => {
 
@@ -90,22 +93,21 @@ const AppScreen: FC = () => {
 				isJourneyMode,
 				viewport,
 				layers,
+				isButtonDisabled,
 			},
 			actions: {
 				setIsJourneyMode,
 				setViewport,
 				setLayers,
+				setIsButtonDisabled,
+				onSetStoryMode,
 			},
 		}}
 		>
 			<div className={classes.root} >
-				<Box position={'fixed'} style={{ top: '1rem', right: '1rem', zIndex: 10000 }}>
-					<Button variant={'contained'} onClick={() => onSetStoryMode(isJourneyMode)}>
-						{!isJourneyMode ? 'Start journey' : 'End journey'}
-					</Button>
-				</Box>
+
 				<Map />
-				{isJourneyMode && <Story />}
+				<Story />
 			</div>
 
 		</AppContext.Provider>

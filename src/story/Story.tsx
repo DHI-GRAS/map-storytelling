@@ -1,7 +1,9 @@
 import React, {
-	FC, useState, useContext, useEffect,
+	FC, useState, useContext, useEffect, CSSProperties,
 } from 'react'
-import { Box, Typography, Paper } from '@material-ui/core'
+import {
+	Box, Typography, Paper, Button,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Scrollama, Step } from 'react-scrollama'
 import configFile from 'common/data/config'
@@ -9,10 +11,12 @@ import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import { forestArea } from 'common/data/forestAreaData'
+import { herningData } from 'common/data/herningData'
 import { forestPerInhabitant } from 'common/data/forestPerInhabitant'
 import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
+import generateClorLayer from 'common/layers/generateClorLayer'
 import StatisticsCounter from './StatisticsCounter'
 
 const useStyles = makeStyles(() => ({
@@ -36,6 +40,12 @@ const useStyles = makeStyles(() => ({
 		padding: '2rem',
 		maxWidth: '40%',
 	},
+	journeyButton: {
+		backgroundColor: '#188D01',
+		'&:hover': {
+			backgroundColor: '#199600',
+		},
+	},
 }))
 
 type dataType = {
@@ -45,21 +55,33 @@ type dataType = {
 
 type StepIndex = number | null
 
-interface Story {
+interface StoryProps {
 	stepIndex?: StepIndex,
 }
 
-const Story: FC<Story> = ({ stepIndex }) => {
+const bannerVideo: CSSProperties = {
+	// position: 'absolute',
+	// top: ' 50%',
+	// left: '50%',
+	width: '35%',
+	height: 'auto',
+	// minHeight: ' 100%',
+	// transform: 'translateX(-50%) translateY(-50%)',
+	zIndex: -1,
+}
+
+const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const classes = useStyles()
 
 	const {
-		actions: { setViewport, setLayers },
+		state: { isJourneyMode },
+		actions: { setViewport, setLayers, onSetStoryMode },
 	} = useContext(AppContext)
 
 	const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(stepIndex ?? 0)
-	const [ showDetails, setShowDetails ] = useState(false)
-
+	const [ isExecExit, setIsExecExit ] = useState(false)
+	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 	// holder of the interval if we have an animation situation
 	let rasterAnim: NodeJS.Timeout
 
@@ -73,73 +95,87 @@ const Story: FC<Story> = ({ stepIndex }) => {
 
 			// for each layer that needs to be added
 			onEnter.forEach((item: any) => {
-			// we check if the layer is found in the state
-			const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
-			// check the layer type
-			if (item.type === 'marker') {
-				// if we want to make the item invisible, we remove it from the state array
-				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-				else if (isFound === -1) {
-					// if the layer is new aka it's not found, get the data. Propbably using only item.data is enough but don't wanna brake things.
-					const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
-					// generate new layer and add it to the temporary array
-					const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+
+
+				// we check if the layer is found in the state
+				const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
+				// check the layer type
+				if (item.type === 'marker') {
+
+					// if we want to make the item invisible, we remove it from the state array
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					else if (isFound === -1) {
+
+						// if the layer is new aka it's not found, get the data.
+						// Propbably using only item.data is enough but don't wanna brake things.
+						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
+						// generate new layer and add it to the temporary array
+						const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+						layersCopy = [ ...layersCopy, newLayer ]
+
+					}
+
+					return
+
+				}
+
+
+				if (item.type === 'raster') if (item.animation === true) {
+
+					// setIsButtonDisabled(true)
+					// if item has animation we start a counter
+					let counter = 0
+					// get how many raster we have to switch between
+					const rasterCount = item.rasters.length
+					// start the interval assingning it to the global value
+					rasterAnim = setInterval(() => {
+
+						// build the new raster layer
+						const newLayer = generateRasterLayer(item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.opacity)
+						setLayers((l: any) => [ ...l, newLayer ])
+						// update the counter
+						if (counter === rasterCount - 1) clearInterval(rasterAnim)
+
+
+						counter += 1
+
+					}, 6000)
+
+					// situation where raster is not an animation so we just add it to the state
+
+				} else {
+
+					// if is not to be visible then filter the array
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					else if (isFound === -1) {
+
+						const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
+						layersCopy = [ ...layersCopy, newLayer ]
+
+					}
+
+					// if the raster is not found add it to the state
+
+
+					return
+
+				}
+
+
+				// if geojson then create new geojson layer
+				if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+
+					const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				} else {
+
+					const foundData = item.data
+					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
 					layersCopy = [ ...layersCopy, newLayer ]
 
 				}
-				return;
-			}
-
-
-				if (item.type === 'raster') {
-					if(item.animation === true){
-						// if item has animation we start a counter
-						let counter = 0
-						// get how many raster we have to switch between
-						let rasterCount = item.rasters.length
-						// start the interval assingning it to the global value
-						rasterAnim = setInterval(() => {
-							// build the new raster layer
-							const newLayer = generateRasterLayer(item.rasters[counter].id, item.rasters[counter].url, true)
-							setLayers((l => {
-								// check if the counter has reached the limit
-								if(counter === rasterCount - 1){
-									// if so, reset the counter and reset the array from the state
-									counter = -1
-									return [...layersCopy, newLayer]
-								}
-								// otherwise just add to the state
-								return [...l, newLayer]
-							}))
-							// update the counter
-							counter += 1
-						}, 6000)
-
-						// situation where raster is not an animation so we just add it to the state
-					} else {
-						// if is not to be visible then filter the array
-						if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-						else if (isFound === -1) {
-							// if the raster is not found add it to the state
-							const newLayer = generateRasterLayer(item.id, item.url, item.visible)
-							layersCopy = [ ...layersCopy, newLayer ]
-
-						}
-						return;
-					}
-					// if geojson then create new geojson layer
-						if (item.type === 'geojson') {
-							if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-							else if (isFound === -1) {
-
-							const foundData = item.data
-							const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, undefined, item.fill, item.fillColor)
-							layersCopy = [ ...layersCopy, newLayer ]
-
-							}
-							return;
-						}
-					}
 
 
 			})
@@ -169,6 +205,7 @@ const Story: FC<Story> = ({ stepIndex }) => {
 	// onStepExit is the same function as onStepEnter
 	const onStepExit = ({ data }: {data: dataType}) => {
 
+		setIsExecExit(true)
 		const onExit = data.data.onChapterExit
 		if (onExit.length > 0) setLayers((lrs: any) => {
 
@@ -178,11 +215,10 @@ const Story: FC<Story> = ({ stepIndex }) => {
 
 				const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
 				if (item.type === 'marker') {
-					if (item.visible === false) {
 
-						layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
 
-					} else if (isFound === -1) {
+					else if (isFound === -1) {
 
 						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
 
@@ -190,66 +226,85 @@ const Story: FC<Story> = ({ stepIndex }) => {
 						layersCopy = [ ...layersCopy, newLayer ]
 
 					}
-					return;
+
+					return
+
 				}
 
 				if (item.type === 'raster') {
-					if(item.animation === true){
+
+					if (item.animation === true) {
 
 						// remove the layers and clear the interval
-						layersCopy = layersCopy.filter(lrsPass => !(lrsPass.id.includes(item.id)))
-						setLayers([...layersCopy])
+						layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+						setLayers([ ...layersCopy ])
 						clearInterval(rasterAnim)
 
-					}else{
+					} else
 
-						if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-
-						else if (isFound === -1) {
-
-						const newLayer = generateRasterLayer(item.id, item.url, item.visible)
-						layersCopy = [ ...layersCopy, newLayer ]
-
-						}
-					}
-					return;
-				}
-
-				if (item.type === 'geojson') {
 					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
 					else if (isFound === -1) {
 
-					const foundData = item.data
-					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, undefined, item.fill, item.fillColor)
-					layersCopy = [ ...layersCopy, newLayer ]
+						const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
+						layersCopy = [ ...layersCopy, newLayer ]
 
 					}
-					return;
+
+					return
+
 				}
+
+				if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+
+					const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				} else {
+
+					const foundData = item.data
+					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				}
+
+
 			})
 
 			return [ ...layersCopy ]
 
 		})
-
+		setIsExecExit(false)
 
 	}
 
 	useEffect(() => {
 
-		if (currentStepIndex === 1) setShowDetails(true)
-		else setShowDetails(false)
+		// console.log(isExecExit)
 
-	}, [ currentStepIndex ])
+	}, [ isExecExit ])
 
 	return (
-		<Box className={classes.storiesWrapper}>
-			<Scrollama
-				onStepEnter={onStepEnter}
-				onStepExit={onStepExit}
-				debug={undefined}
-			>
-				{
+		<>
+			<Box position={'fixed'} style={{ top: '1rem', right: '1rem', zIndex: 10000 }}>
+				<Button
+					disabled={currentStepIndex === 4}
+					variant={'contained'}
+					onClick={() => onSetStoryMode(isJourneyMode)}
+					className={classes.journeyButton}
+				>
+					{!isJourneyMode ? 'Udforsk det grønne Danmark' : 'Afslut'}
+				</Button>
+			</Box>
+			{isJourneyMode && (
+			<Box className={classes.storiesWrapper}>
+				<Scrollama
+					onStepEnter={data => !isExecExit && onStepEnter(data)}
+					onStepExit={onStepExit}
+					debug={undefined}
+				>
+					{
 				configFile.chapters.map((item, i) => (
 					<Step
 						data={{
@@ -264,37 +319,74 @@ const Story: FC<Story> = ({ stepIndex }) => {
 								opacity: currentStepIndex === i ? 1 : 0.2,
 								justifyContent: item.alignmentX,
 								alignItems: item.alignmentY,
-								flexDirection: item.id === 'forest-national-scale-layer' ? "column" : "row"
+								flexDirection: item.id === 'forest-national-scale-layer' || item.id === 'herning-commune' ? 'column' : 'row',
 							}}
 						>
-							<Paper className={classes.stepBoxItem}>
-								<Typography variant={'h3'} gutterBottom>
-									{item.title}
-								</Typography>
-								<Typography variant={'body1'} gutterBottom>
-									{item.description}
-								</Typography>
-							</Paper>
-							{showDetails && (
-								<Box display="flex" flexDirection="column">
-									{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{  maxWidth: 'unset', marginTop: "1rem" }}>
-											<StatisticsCounter title={'Top 5 - Most forest area (km2)'} items={forestArea} />
-										</Paper>
-									)}
-									{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{  maxWidth: 'unset', marginTop: "1rem" }}>
-											<StatisticsCounter title={'m2 forest/inh. - top 5 biggest mun.'} items={forestPerInhabitant} />
-										</Paper>
-									)}
+							{item.id === 'denmark-layer' ? (
+								<Box>
+									<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+										{item.title}
+									</Typography>
+									<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
+										{item.description}
+									</Typography>
+									{currentStepIndex === 0 && (
+									<Box mt={2} width={1}>
+										<video autoPlay loop muted style={bannerVideo}>
+											<source
+												src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
+												type={'video/mp4'}
+											/>
+										</video>
+									</Box>
+									)
+									}
+
 								</Box>
+							) : (
+								<>
+									<Paper className={classes.stepBoxItem}>
+										<Typography variant={'h3'} gutterBottom>
+											{item.title}
+										</Typography>
+										{item.description && (
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
+										)}
+
+									</Paper>
+									{currentStepIndex === 1 && (
+										<Box display={'flex'} flexDirection={'column'}>
+											{item.id === 'forest-national-scale-layer' && (
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounter title={'Top 5 - Most forest area (km2)'} items={forestArea} />
+											</Paper>
+											)}
+											{item.id === 'forest-national-scale-layer' && (
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounter title={'m2 forest/inh. - top 5 biggest mun.'} items={forestPerInhabitant} />
+											</Paper>
+											)}
+										</Box>
+									)}
+									{currentStepIndex === 3 && (
+										<Box display={'flex'} flexDirection={'column'}>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounter title={'km2'} items={herningData} />
+											</Paper>
+										</Box>
+									)}
+								</>
 							)}
 						</Box>
 					</Step>
 				))
 			}
-			</Scrollama>
-		</Box>
+				</Scrollama>
+			</Box>
+			)}
+		</>
 	)
 
 }

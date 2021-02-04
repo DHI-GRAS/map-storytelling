@@ -1,23 +1,28 @@
-import React, { FC, useContext, useEffect, useRef } from "react"
+import React, {
+	FC, useContext,
+} from 'react'
 
-import DeckGL from '@deck.gl/react';
-import { Box } from "@material-ui/core"
-import  { StaticMap  } from 'react-map-gl';
-import configFile from "common/data/config"
-import { AppContext } from "app-screen/AppScreen"
+// eslint-disable-next-line import/no-extraneous-dependencies
+import DeckGL from '@deck.gl/react'
+import { Box } from '@material-ui/core'
+import { StaticMap } from 'react-map-gl'
+import configFile from 'common/data/config'
+import { AppContext } from 'app-screen/AppScreen'
+import generateClorLayer from 'common/layers/generateClorLayer'
+import dkData from 'common/data/Denmark.json'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
-const CESIUM_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZDc1YjYzZS1lNTQyLTQ0ODgtYmEzNy0zMDViZmFkODhmOTQiLCJpZCI6NDMwNjYsImlhdCI6MTYxMjE5MzU0OH0.t8NZJnF7S80peYPunssqQt0u0lL6QTbpYxB_SqleXz4'
 
 const Map: FC = () => {
+
 	const {
 		state: {
 			viewport,
-			layers
+			layers,
 		},
 		actions: {
 			setViewport,
-		}
+		},
 	} = useContext(AppContext)
 
 	// const dklayer = new GeoJsonLayer({
@@ -78,33 +83,35 @@ const Map: FC = () => {
 	// 	}
 	//   });
 
+	// const cl = generateClorLayer('dk-layer', true, 'https://grasdatastorage.blob.core.windows.net/images/forest_cloropleth.json')
 
 	return (
 		<Box
-			width={"100vw"}
-			height={"100vh"}
-			position={"fixed"}
+			width={'100vw'}
+			height={'100vh'}
+			position={'fixed'}
 		>
 			<DeckGL
 				viewState={viewport as any}
-				controller={true}
-				width={"100%"}
-				height={"100%"}
-				onViewStateChange={(arg) => setViewport(arg.viewState)}
-				layers={[...layers]}
+				controller
+				width={'100%'}
+				height={'100%'}
+				onViewStateChange={arg => setViewport(arg.viewState)}
+				layers={[ ...layers ]}
 			>
 				<StaticMap
-
-					width={"100%"}
-					height={"100%"}
+					width={'100%'}
+					height={'100%'}
 					mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
 					mapStyle={configFile.style}
+					// style={{ opacity: 0.1 }}
 				/>
 			</DeckGL>
 		</Box>
 
 	)
+
 }
 
-export default Map;
+export default Map
 

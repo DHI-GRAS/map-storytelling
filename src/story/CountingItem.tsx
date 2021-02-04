@@ -48,7 +48,7 @@ const CountingItem: FC<Props> = ({ max, name, duration }) => {
 				{value}
 			</Typography>
 			<Box className={classes.barBox} style={{ height: value / 2 }} />
-			<Typography variant={'body2'}>
+			<Typography variant={'body2'} style={{ fontSize: 12 }}>
 				{name}
 			</Typography>
 		</Box>
