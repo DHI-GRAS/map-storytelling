@@ -1,5 +1,5 @@
 import denmarkGeoJSon from './Denmark.json'
-import herningJson from './Herning.json'
+import herningJson from './herning.json'
 
 const allMarkers = 	{
 	id: 'all-markers-forest-national-scale-layer',
