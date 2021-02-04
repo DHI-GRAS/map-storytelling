@@ -15,7 +15,6 @@ const getRGBA = (val: number): any => {
 
 	return [ 239, 237, 143, 255 ]
 
-
 }
 
 const generateClorLayer = (
@@ -37,7 +36,7 @@ const generateClorLayer = (
 	lineWidthMinPixels: 4,
 	getFillColor: f => getRGBA(f.properties.m2_skov_pe),
 	getElevation: f => f.properties.m2_skov_pe * 2,
-	getLineColor: [ 255, 255, 255, 40 ],
+	getLineColor: f => getRGBA(f.properties.m2_skov_pe),
 	getLineWidth: 1,
 })
 

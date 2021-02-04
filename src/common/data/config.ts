@@ -1,5 +1,11 @@
 import denmarkGeoJSon from './Denmark.json'
 import herningJson from './herning.json'
+import forestClor from './forest_cloropleth.json'
+import blockTreesJson from './vector-files/block_trees.json'
+import blockTreesFences from './vector-files/block_trees_fences.json'
+import blockTreesGroups from './vector-files/block_trees_groups.json'
+import blockTreesForest from './vector-files/block_trees_forest.json'
+import blockBuildings from './vector-files/buildings.json'
 
 const allMarkers = 	{
 	id: 'all-markers-forest-national-scale-layer',
@@ -12,13 +18,17 @@ const allMarkers = 	{
 			name: 'National forest mapping',
 		},
 		{
+			coordinates: [ 12.321831, 56.002167 ],
+			name: 'Coniferous layer',
+		},
+		{
 			coordinates: [ 11.931931451403903, 54.575430797189625 ],
 			name: 'A: The sand dune that disappeared',
 		},
-		{
-			coordinates: [ 11.947387726660498, 54.57506135095206 ],
-			name: 'B: Dynamic danish landscape',
-		},
+		// {
+		// 	coordinates: [ 11.947387726660498, 54.57506135095206 ],
+		// 	name: 'B: Dynamic danish landscape',
+		// },
 		{
 			coordinates: [ 9.81878839989416, 54.904766036118524 ],
 			name: 'C: The city filled with tiny and dynamic objects',
@@ -71,8 +81,8 @@ const layersAnimation = {
 	],
 }
 
-const rasterForestOptical01 = {
-	id: 'raster-forest-national-scale-layer-optical',
+const rasterArea01Optical = {
+	id: 'raster-01-layer-optical',
 	visible: true,
 	type: 'raster',
 	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/rgb/sdfe-hack/summer-2018-area01/2018/{z}/{x}/{y}.png?r=red&g=green&b=blue&r_range=[0,255]&b_range=[0,255]&g_range=[0,255]' ],
@@ -92,9 +102,9 @@ const rasterNationalForestCover = {
 	id: 'raster-forest-national-scale-layer-cover',
 	visible: true,
 	type: 'raster',
-	opacity: 0.3,
-	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-1class-s2-2020/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
-		JSON.stringify({ 0: '#FFFFFF', 1: '##C80815' })
+	opacity: 1,
+	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-2class-s2-2020/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
+		JSON.stringify({ 0: '#FFFFFF', 1: '#0D6D27' })
 	)}` ],
 }
 
@@ -110,14 +120,14 @@ const rasterNationalForestClass = {
 const munClorLayer = {
 	id: 'communes-cloropeth-layer',
 	visible: true,
-	data: 'https://grasdatastorage.blob.core.windows.net/images/forest_cloropleth.json',
+	data: forestClor,
 	type: 'geojson',
 }
 
 const munClorLayerOpacity = {
 	id: 'communes-cloropeth-layer-opacity',
 	visible: true,
-	data: 'https://grasdatastorage.blob.core.windows.net/images/forest_cloropleth.json',
+	data: forestClor,
 	type: 'geojson',
 }
 
@@ -128,6 +138,82 @@ const herningMun = {
 	type: 'geojson',
 }
 
+const multipleConifers = {
+	id: 'multiple-coniferuous',
+	type: 'raster',
+	visible: true,
+	opacity: 0.5,
+	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-species/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
+		JSON.stringify({
+			1: '#0D6D27', 2: '#FFFF00', 3: '#22EE5B', 4: '#7D4C05', 5: '#FF8A00', 6: '#FFFFFF',
+		})
+	)}` ],
+}
+
+const intensityLayer = {
+	id: 'intensity-layer',
+	type: 'raster',
+	visible: true,
+	// opacity: 1,
+	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/intensity-area01-2018/2018/intensity/{z}/{x}/{y}.png?colormap=gray' ],
+}
+
+const ndsmLayer = {
+	id: 'ndsm-layer',
+	type: 'raster',
+	visible: true,
+	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/ndsm-area01-2018/2018/ndsm/{z}/{x}/{y}.png?colormap=gray' ],
+}
+
+const vectorBlockTrees = {
+	id: 'vector-block-trees',
+	type: 'geojson',
+	data: blockTreesJson,
+	fill: true,
+	fillColor: [ 171, 139, 229, 200 ],
+	lineColor: [ 155, 155, 155, 0 ],
+	visible: true,
+}
+
+const vectorBlockTreesFences = {
+	id: 'vector-block-trees-fences',
+	type: 'geojson',
+	data: blockTreesFences,
+	fill: true,
+	visible: true,
+	fillColor: [ 11, 229, 34, 200 ],
+	lineColor: [ 11, 229, 34, 100 ],
+}
+
+const vectorBlockTreesForest = {
+	id: 'vector-block-trees-forest',
+	type: 'geojson',
+	data: blockTreesForest,
+	fill: true,
+	visible: true,
+	fillColor: [ 125, 76, 5, 200 ],
+	lineColor: [ 155, 155, 155, 0 ],
+}
+
+const vectorBlockTreesGroups = {
+	id: 'vector-block-trees-groups',
+	type: 'geojson',
+	visible: true,
+	data: blockTreesGroups,
+	fill: true,
+	fillColor: [ 252, 229, 21, 200 ],
+	lineColor: [ 155, 155, 155, 0 ],
+}
+
+const vectorBlockBuildings = {
+	id: 'vector-block-buildings',
+	type: 'geojson',
+	data: blockBuildings,
+	fill: true,
+	visible: true,
+	fillColor: [ 13, 109, 39, 200 ],
+	lineColor: [ 155, 155, 155, 0 ],
+}
 
 const config = {
 	style: 'mapbox://styles/mapbox/satellite-v9',
@@ -171,20 +257,23 @@ const config = {
 			description: 'Sammenhængende og tidslig referenceramme for udviklingen af skovdække i Danmark',
 			location: {
 				center: [ 10.165798, 55.513295 ],
-				zoom: 6,
+				zoom: 7,
 				pitch: 60,
-				bearing: 10,
+				bearing: -20,
 			},
 			callback: '',
 			onChapterEnter: [
-				denmarkCountryBorder,
+				{
+					...denmarkCountryBorder, fill: true, lineColor: [ 255, 255, 255, 0 ], fillColor: [ 134, 162, 179, 100 ],
+				},
+				rasterNationalForestCover,
 				// rasterNationalForestCover,
 			],
 			onChapterExit: [
-				// {
-				// 	...rasterNationalForestCover,
-				// 	visible: false,
-				// },
+				{
+					...rasterNationalForestCover,
+					visible: false,
+				},
 				// {
 				// 	...munClorLayer,
 				// 	visible: false,
@@ -313,8 +402,8 @@ const config = {
 			id: 'markers-overview',
 			alignmentX: 'left',
 			alignmentY: 'flex-start',
-			title: 'Markers on map',
-			description: 'The markers on denmark',
+			// title: 'Markers on map',
+			// description: 'The markers on denmark',
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 6,
@@ -331,144 +420,251 @@ const config = {
 			],
 		},
 		{
-			alignmentX: 'flex-start',
-			alignmentY: 'center',
-			title: 'A: The sand dune that disappeared',
-			description: 'The sand dune that disappeared - uncovered by SDFE data. Animated tile',
+			id: 'multi-coniferous-class',
+			alignmentX: 'left',
+			alignmentY: 'flex-start',
+			title: 'Skov til skov – træ til træ',
+			description: 'Kortlægning af træarter og antal i de danske skove',
 			location: {
-				center: [ 11.931931451403903, 54.575430797189625 ],
-				zoom: 10,
+				center: [ 12.325160, 55.981134 ],
+				zoom: 12,
 				pitch: 60,
-				bearing: 0,
+				bearing: -10,
 			},
 			callback: '',
 			onChapterEnter: [
-				// main layer id defines how do the rasters id's start
-				{
-					...denmarkCountryBorder,
-					visible: false,
-				},
-				layersAnimation,
+				multipleConifers,
 			],
 			onChapterExit: [
 				{
-					...layersAnimation,
+					...multipleConifers,
 					visible: false,
 				},
 			],
 		},
 		{
-			alignmentX: 'flex-end',
-			alignmentY: 'flex-end',
-			title: 'B: Dynamic danish landscape',
-			// image: './path/to/image/source.png',
-			description:
-        'Tracking and monitoring small landscape features and invasive species in the dynamic Danish landscape',
+			id: 'intensity-layer',
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			title: 'LIDAR intensitet',
 			location: {
 				center: [ 11.931931451403903, 54.575430797189625 ],
-				zoom: 16,
+				zoom: 15,
+				pitch: 60,
+				bearing: 0,
+			},
+			callback: '',
+			onChapterEnter: [
+				intensityLayer,
+				{
+					...ndsmLayer,
+					visible: false,
+				},
+				{
+					...rasterArea01Optical,
+					visible: false,
+				},
+			],
+			onChapterExit: [
+
+			],
+		},
+		{
+			id: 'ndsm-layer',
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			title: 'nDSM',
+			location: {
+				center: [ 11.931931451403903, 54.575430797189625 ],
+				zoom: 15,
+				pitch: 60,
+				bearing: 0,
+			},
+			callback: '',
+			onChapterEnter: [
+				ndsmLayer,
+				{
+					...rasterArea01Optical,
+					visible: false,
+				},
+			],
+			onChapterExit: [
+
+			],
+		},
+		{
+			id: 'rgb-layer',
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			title: 'RGB/Orthophoto',
+			location: {
+				center: [ 11.931931451403903, 54.575430797189625 ],
+				zoom: 15,
+				pitch: 60,
+				bearing: 0,
+			},
+			callback: '',
+			onChapterEnter: [
+				rasterArea01Optical,
+				{ ...vectorBlockTrees, visible: false },
+				{ ...vectorBlockTreesForest, visible: false },
+				{ ...vectorBlockTreesFences, visible: false },
+				{ ...vectorBlockTreesGroups, visible: false },
+			],
+			onChapterExit: [
+				// {
+				// 	...ndsmLayer,
+				// 	visible: false,
+				// },
+			],
+		},
+		{
+			id: 'vector-data',
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			title: 'GEODK vektor',
+			location: {
+				center: [ 11.931931451403903, 54.575430797189625 ],
+				zoom: 15,
+				pitch: 60,
+				bearing: 0,
+			},
+			callback: '',
+			onChapterEnter: [
+				vectorBlockTrees,
+				vectorBlockTreesForest,
+				vectorBlockTreesFences,
+				vectorBlockTreesGroups,
+			],
+			onChapterExit: [
+				{ ...vectorBlockTrees, visible: false },
+				{ ...vectorBlockTreesForest, visible: false },
+				{ ...vectorBlockTreesFences, visible: false },
+				{ ...vectorBlockTreesGroups, visible: false },
+			],
+		},
+		{
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			title: 'Det dynamiske grønne Danmark i detaljer',
+			description:
+		'Alle de små grønne objekter i vores byer og landdistrikter',
+			location: {
+				center: [ 11.931931451403903, 54.575430797189625 ],
+				zoom: 15,
 				pitch: 0,
 				bearing: 0,
 			},
 			callback: '',
 			onChapterEnter: [
-				rasterForestOptical01,
 				rasterForestClass01,
 			],
 			onChapterExit: [
-				{
-					...rasterForestOptical01,
-					visible: false,
-				},
 				{
 					...rasterForestClass01,
 					visible: false,
 				},
 			],
 		},
+		{
+			id: 'final-step',
+			alignmentX: 'flex-start',
+			alignmentY: 'flex-start',
+			location: {
+				center: [ 10.165798, 55.513295 ],
+				zoom: 7,
+				pitch: 60,
+				bearing: 10,
+			},
+			callback: '',
+			onChapterEnter: [
+			],
+			onChapterExit: [
+			],
+		},
+		// // {
+		// //   alignment: 'left',
+		// //   title: 'The dynamic evolving city',
+		// //   // image: './path/to/image/source.png',
+		// //   description: 'The dynamic evolving city',
+		// //   location: {
+		// //     center: [10.1788330078125, 56.18225387824831],
+		// //     zoom: 14,
+		// //     pitch: 60,
+		// //     bearing: -43.2,
+		// //   },
+		// //   callback: '',
+		// //   onChapterEnter: [],
+		// //   onChapterExit: [],
+		// // },
 		// {
-		//   alignment: 'left',
-		//   title: 'The dynamic evolving city',
-		//   // image: './path/to/image/source.png',
-		//   description: 'The dynamic evolving city',
-		//   location: {
-		//     center: [10.1788330078125, 56.18225387824831],
-		//     zoom: 14,
-		//     pitch: 60,
-		//     bearing: -43.2,
-		//   },
-		//   callback: '',
-		//   onChapterEnter: [],
-		//   onChapterExit: [],
+		// 	alignmentX: 'flex-end',
+		// 	alignmentY: 'center',
+		// 	hidden: false,
+		// 	title: 'C: The city filled with tiny and dynamic objects',
+		// 	// image: './path/to/image/source.png',
+		// 	description: 'The city filled with tiny and dynamic objects',
+		// 	location: {
+		// 		center: [ 9.81878839989416, 54.904766036118524 ],
+		// 		zoom: 16,
+		// 		pitch: 60,
+		// 		bearing: -43.2,
+		// 	},
+		// 	callback: '',
+		// 	onChapterEnter: [],
+		// 	onChapterExit: [],
 		// },
-		{
-			alignmentX: 'flex-end',
-			alignmentY: 'center',
-			hidden: false,
-			title: 'C: The city filled with tiny and dynamic objects',
-			// image: './path/to/image/source.png',
-			description: 'The city filled with tiny and dynamic objects',
-			location: {
-				center: [ 9.81878839989416, 54.904766036118524 ],
-				zoom: 16,
-				pitch: 60,
-				bearing: -43.2,
-			},
-			callback: '',
-			onChapterEnter: [],
-			onChapterExit: [],
-		},
-		{
-			alignmentX: 'flex-start',
-			alignmentY: 'center',
-			hidden: false,
-			title: 'D: The country side',
-			// image: './path/to/image/source.png',
-			description: 'The country side with all its small landscape features',
-			location: {
-				center: [ 10.19916535101355, 55.10831373009 ],
-				zoom: 12,
-				pitch: 80,
-				bearing: -43.2,
-			},
-			callback: '',
-			onChapterEnter: [],
-			onChapterExit: [],
-		},
-		{
-			alignmentX: 'flex-start',
-			alignmentY: 'center',
-			hidden: false,
-			title: 'E: The country side',
-			// image: './path/to/image/source.png',
-			description: 'The country side with all its small landscape features',
-			location: {
-				center: [ 10.21482134128163, 55.10815610067341 ],
-				zoom: 10,
-				pitch: 90,
-				bearing: 0,
-			},
-			callback: '',
-			onChapterEnter: [],
-			onChapterExit: [],
-		},
-		{
-			alignmentX: 'flex-start',
-			alignmentY: 'center',
-			hidden: false,
-			title: 'F: The country side',
-			// image: './path/to/image/source.png',
-			description: 'The country side with all its small landscape features',
-			location: {
-				center: [ 10.20881828631708, 57.47134378201429 ],
-				zoom: 13,
-				pitch: 60,
-				bearing: 90,
-			},
-			callback: '',
-			onChapterEnter: [],
-			onChapterExit: [],
-		},
+		// {
+		// 	alignmentX: 'flex-start',
+		// 	alignmentY: 'center',
+		// 	hidden: false,
+		// 	title: 'D: The country side',
+		// 	// image: './path/to/image/source.png',
+		// 	description: 'The country side with all its small landscape features',
+		// 	location: {
+		// 		center: [ 10.19916535101355, 55.10831373009 ],
+		// 		zoom: 12,
+		// 		pitch: 80,
+		// 		bearing: -43.2,
+		// 	},
+		// 	callback: '',
+		// 	onChapterEnter: [],
+		// 	onChapterExit: [],
+		// },
+		// {
+		// 	alignmentX: 'flex-start',
+		// 	alignmentY: 'center',
+		// 	hidden: false,
+		// 	title: 'E: The country side',
+		// 	// image: './path/to/image/source.png',
+		// 	description: 'The country side with all its small landscape features',
+		// 	location: {
+		// 		center: [ 10.21482134128163, 55.10815610067341 ],
+		// 		zoom: 10,
+		// 		pitch: 90,
+		// 		bearing: 0,
+		// 	},
+		// 	callback: '',
+		// 	onChapterEnter: [],
+		// 	onChapterExit: [],
+		// },
+		// {
+		// 	alignmentX: 'flex-start',
+		// 	alignmentY: 'center',
+		// 	hidden: false,
+		// 	title: 'F: The country side',
+		// 	// image: './path/to/image/source.png',
+		// 	description: 'The country side with all its small landscape features',
+		// 	location: {
+		// 		center: [ 10.20881828631708, 57.47134378201429 ],
+		// 		zoom: 13,
+		// 		pitch: 60,
+		// 		bearing: 90,
+		// 	},
+		// 	callback: '',
+		// 	onChapterEnter: [],
+		// 	onChapterExit: [],
+		// },
 	],
 }
 

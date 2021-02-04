@@ -8,8 +8,6 @@ import { Box } from '@material-ui/core'
 import { StaticMap } from 'react-map-gl'
 import configFile from 'common/data/config'
 import { AppContext } from 'app-screen/AppScreen'
-import generateClorLayer from 'common/layers/generateClorLayer'
-import dkData from 'common/data/Denmark.json'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
 
@@ -24,6 +22,11 @@ const Map: FC = () => {
 			setViewport,
 		},
 	} = useContext(AppContext)
+
+	// const layer = new MVTLayer({
+	// 	data: 'https://k0zyvx2wa6.execute-api.eu-central-1.amazonaws.com/production/geoserver/sdfehack/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sdfehack:block_trees&outputFormat=application/json',
+	// 	onDataLoad: f => console.log(f),
+	// })
 
 	// const dklayer = new GeoJsonLayer({
 	// 	id: 'dk-layer',

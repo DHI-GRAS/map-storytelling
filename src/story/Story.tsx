@@ -17,6 +17,7 @@ import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
+import lastImage from 'common/images/app_mockup.png'
 import StatisticsCounter from './StatisticsCounter'
 
 const useStyles = makeStyles(() => ({
@@ -81,7 +82,9 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(stepIndex ?? 0)
 	const [ isExecExit, setIsExecExit ] = useState(false)
+	const [ toShowLast, setToShowLast ] = useState(false)
 	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
+
 	// holder of the interval if we have an animation situation
 	let rasterAnim: NodeJS.Timeout
 
@@ -282,8 +285,9 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 	useEffect(() => {
 
 		// console.log(isExecExit)
+		if (currentStepIndex === 12) setTimeout(() => setToShowLast(true), 4000)
 
-	}, [ isExecExit ])
+	}, [ isExecExit, currentStepIndex ])
 
 	return (
 		<>
@@ -322,6 +326,7 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 								flexDirection: item.id === 'forest-national-scale-layer' || item.id === 'herning-commune' ? 'column' : 'row',
 							}}
 						>
+							{item.id === 'final-step' && toShowLast && <img src={lastImage} alt={'final-step'} style={{ width: '100vw', height: '100vh' }} />}
 							{item.id === 'denmark-layer' ? (
 								<Box>
 									<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
@@ -345,17 +350,19 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 								</Box>
 							) : (
 								<>
+									{item.title && (
 									<Paper className={classes.stepBoxItem}>
 										<Typography variant={'h3'} gutterBottom>
 											{item.title}
 										</Typography>
 										{item.description && (
-											<Typography variant={'body1'} gutterBottom>
-												{item.description}
-											</Typography>
+										<Typography variant={'body1'} gutterBottom>
+											{item.description}
+										</Typography>
 										)}
 
 									</Paper>
+									)}
 									{currentStepIndex === 1 && (
 										<Box display={'flex'} flexDirection={'column'}>
 											{item.id === 'forest-national-scale-layer' && (

@@ -21,6 +21,8 @@ const generateMarkerLayer = (
 	getLineColor: lineColor,
 	// getRadius: 100,
 	getLineWidth: 0.5,
+	// radiusScale: 10,
+	getRadius: 8,
 	// getElevation: 30
 })
 
