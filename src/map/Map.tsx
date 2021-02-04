@@ -8,6 +8,8 @@ import { Box } from '@material-ui/core'
 import { StaticMap } from 'react-map-gl'
 import configFile from 'common/data/config'
 import { AppContext } from 'app-screen/AppScreen'
+import generateClorLayer from 'common/layers/generateClorLayer'
+import dkData from 'common/data/Denmark.json'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
 
@@ -81,6 +83,7 @@ const Map: FC = () => {
 	// 	}
 	//   });
 
+	// const cl = generateClorLayer('dk-layer', true, 'https://grasdatastorage.blob.core.windows.net/images/forest_cloropleth.json')
 
 	return (
 		<Box
@@ -101,6 +104,7 @@ const Map: FC = () => {
 					height={'100%'}
 					mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
 					mapStyle={configFile.style}
+					// style={{ opacity: 0.1 }}
 				/>
 			</DeckGL>
 		</Box>
