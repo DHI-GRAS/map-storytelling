@@ -350,9 +350,9 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 											{item.title}
 										</Typography>
 										{item.description && (
-										<Typography variant={'body1'} gutterBottom>
-											{item.description}
-										</Typography>
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
 										)}
 
 									</Paper>
