@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "./src/app/index.tsx",
+	"homepage": "./",
 	"scripts": {
 		"lint": "eslint --ext ts,tsx ./src --cache",
 		"lint:fix": "eslint --ext ts,tsx ./src --fix --cache",
