@@ -64,6 +64,18 @@ interface StoryProps {
 	stepIndex?: StepIndex,
 }
 
+const bannerVideo: CSSProperties = {
+	// position: 'absolute',
+	// top: ' 50%',
+	// left: '50%',
+	width: '40%',
+	// minWidth: ' 100%',
+	height: 'auto',
+	// minHeight: ' 100%',
+	// transform: 'translateX(-50%) translateY(-50%)',
+	zIndex: -1,
+}
+
 const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const classes = useStyles()
@@ -348,19 +360,42 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 						>
 							{(
 								<>
-									{item.title && (
-									<Paper className={classes.stepBoxItem}>
-										<Typography variant={'h3'} gutterBottom>
-											{item.title}
-										</Typography>
-										{item.description && (
-										<Typography variant={'body1'} gutterBottom>
-											{item.description}
-										</Typography>
-										)}
+									{item.title && currentStepIndex !== 0 && (
+										<Paper className={classes.stepBoxItem}>
+											<Typography variant={'h3'} gutterBottom>
+												{item.title}
+											</Typography>
+											{item.description && (
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
+											)}
 
-									</Paper>
+										</Paper>
 									)}
+									{
+										currentStepIndex === 0 && (
+											<Box display={'flex'} flexDirection={'column'}>
+												<Box mb={2}>
+
+													<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+														{'Det Grønne Danmarkskort'}
+													</Typography>
+													<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
+														<i>
+															{'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark'}
+														</i>
+													</Typography>
+												</Box>
+												<video autoPlay loop muted style={bannerVideo}>
+													<source
+														src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
+														type={'video/mp4'}
+													/>
+												</video>
+											</Box>
+										)
+									}
 									{currentStepIndex === 1 && (
 										<Box display={'flex'} flexDirection={'column'}>
 											{item.id === 'forest-national-scale-layer' && (
@@ -373,6 +408,7 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 												<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
 											</Paper>
 											)}
+
 										</Box>
 									)}
 									{currentStepIndex === 3 && (
