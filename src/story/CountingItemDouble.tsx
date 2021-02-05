@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import CountingItem from './CountingItem'
 
 const useStyles = makeStyles(theme => ({
 	barBox1: {

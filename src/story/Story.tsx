@@ -18,7 +18,6 @@ import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
-import lastImage from 'common/images/app_mockup.png'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
 
@@ -48,6 +47,9 @@ const useStyles = makeStyles(() => ({
 		'&:hover': {
 			backgroundColor: '#199600',
 		},
+		'&:disabled': {
+			backgroundColor: '#B7F9A2',
+		},
 	},
 }))
 
@@ -62,17 +64,6 @@ interface StoryProps {
 	stepIndex?: StepIndex,
 }
 
-const bannerVideo: CSSProperties = {
-	// position: 'absolute',
-	// top: ' 50%',
-	// left: '50%',
-	width: '35%',
-	height: 'auto',
-	// minHeight: ' 100%',
-	// transform: 'translateX(-50%) translateY(-50%)',
-	zIndex: -1,
-}
-
 const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const classes = useStyles()
@@ -84,11 +75,11 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(stepIndex ?? 0)
 	const [ isExecExit, setIsExecExit ] = useState(false)
-	const [ toShowLast, setToShowLast ] = useState(false)
 	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
 	// holder of the interval if we have an animation situation
 	let rasterAnim: NodeJS.Timeout
+	let markerAnim: NodeJS.Timeout
 
 	const onStepEnter = ({ data }: {data: dataType}) => {
 
@@ -109,7 +100,26 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 					// if we want to make the item invisible, we remove it from the state array
 					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-					else if (isFound === -1) {
+					else if (isFound === -1) if (item.animation === true) {
+
+						let counter = 0
+						// get how many raster we have to switch between
+						const markerCount = item.data.length
+						// start the interval assingning it to the global value
+						markerAnim = setInterval(() => {
+
+							const currentMark = item.data[ counter ]
+							// build the new raster layer
+							const newLayer = generateMarkerLayer(currentMark.id, [ currentMark ], true)
+							setLayers((l: any) => [ ...l, newLayer ])
+							// update the counter
+							if (counter === markerCount - 1) clearInterval(markerAnim)
+
+							counter += 1
+
+						}, 2000)
+
+					} else {
 
 						// if the layer is new aka it's not found, get the data.
 						// Propbably using only item.data is enough but don't wanna brake things.
@@ -221,6 +231,13 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 				const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
 				if (item.type === 'marker') {
 
+					if (item.animation === true) {
+
+						layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+						setLayers([ ...layersCopy ])
+						clearInterval(markerAnim)
+
+					} else
 					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
 
 					else if (isFound === -1) {
@@ -286,16 +303,15 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	useEffect(() => {
 
-		console.log(currentStepIndex)
-		if (currentStepIndex === 12) setTimeout(() => setToShowLast(true), 4000)
+		// if (currentStepIndex === 12) setTimeout(() => setToShowLast(true), 4000)
 
-	}, [ isExecExit, currentStepIndex ])
+	}, [ isExecExit ])
 
 	return (
 		<>
 			<Box position={'fixed'} style={{ top: '1rem', right: '1rem', zIndex: 10000 }}>
 				<Button
-					disabled={currentStepIndex === 4}
+					disabled={[ 12 ].includes(currentStepIndex)}
 					variant={'contained'}
 					onClick={() => onSetStoryMode(isJourneyMode)}
 					className={classes.journeyButton}
@@ -330,29 +346,7 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 								item.id === 'raster-forest-class' ? 'column' : 'row',
 							}}
 						>
-							{item.id === 'final-step' && toShowLast && <img src={lastImage} alt={'final-step'} style={{ width: '100vw', height: '100vh' }} />}
-							{item.id === 'denmark-layer' ? (
-								<Box>
-									<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-										{item.title}
-									</Typography>
-									<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
-										{item.description}
-									</Typography>
-									{currentStepIndex === 0 && (
-									<Box mt={2} width={1}>
-										<video autoPlay loop muted style={bannerVideo}>
-											<source
-												src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
-												type={'video/mp4'}
-											/>
-										</video>
-									</Box>
-									)
-									}
-
-								</Box>
-							) : (
+							{(
 								<>
 									{item.title && (
 									<Paper className={classes.stepBoxItem}>
@@ -371,12 +365,12 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 										<Box display={'flex'} flexDirection={'column'}>
 											{item.id === 'forest-national-scale-layer' && (
 											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'Top 5 - Most forest area (km2)'} items={forestArea} />
+												<StatisticsCounter title={'Top 5 - Mest skovdække (km2)'} items={forestArea} />
 											</Paper>
 											)}
 											{item.id === 'forest-national-scale-layer' && (
 											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'m2 forest/inh. - top 5 biggest mun.'} items={forestPerInhabitant} />
+												<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
 											</Paper>
 											)}
 										</Box>

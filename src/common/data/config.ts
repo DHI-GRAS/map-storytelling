@@ -48,6 +48,69 @@ const allMarkers = 	{
 	],
 }
 
+const animationMarkers = 	{
+	id: 'animation',
+	visible: true,
+	animation: true,
+	type: 'marker',
+	data:
+	[
+		{
+			// done
+			coordinates: [ 9.070115, 56.259095 ],
+			id: 'animation-marker-1',
+		},
+		{
+			// done
+			coordinates: [ 12.239054, 55.290043 ],
+			id: 'animation-marker-10',
+		},
+		{
+			// done
+			coordinates: [ 10.342586, 55.263648 ],
+			id: 'animation-marker-2',
+		},
+		{
+			// done
+			coordinates: [ 10.664022, 56.372447 ],
+			id: 'animation-marker-11',
+		},
+		{
+			// done
+			coordinates: [ 9.376268, 56.897888 ],
+			id: 'animation-marker-3',
+		},
+		{
+			coordinates: [ 9.099412, 55.025235 ],
+			id: 'animation-marker-8',
+		},
+		{
+			// done
+			coordinates: [ 8.367245, 56.406546 ],
+			id: 'animation-marker-4',
+		},
+		{
+			coordinates: [ 12.515967, 55.687448 ],
+			id: 'animation-marker-9',
+		},
+		{
+			// done
+			coordinates: [ 11.295075, 54.783467 ],
+			id: 'animation-marker-5',
+		},
+		{
+			// done
+			coordinates: [ 11.974892, 54.831080 ],
+			id: 'animation-marker-6',
+		},
+		{
+			// done
+			coordinates: [ 11.490710, 55.741779 ],
+			id: 'animation-marker-7',
+		},
+	],
+}
+
 const denmarkCountryBorder = {
 	id: 'denmark-country-border',
 	type: 'geojson',
@@ -104,7 +167,7 @@ const rasterNationalForestCover = {
 	type: 'raster',
 	opacity: 1,
 	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-2class-s2-2020/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
-		JSON.stringify({ 0: '#FFFFFF', 1: '#0D6D27' })
+		JSON.stringify({ 0: '#FFFFFF', 1: '#22EE5B' })
 	)}` ],
 }
 
@@ -434,6 +497,18 @@ const config = {
 			callback: '',
 			onChapterEnter: [
 				multipleConifers,
+				{
+					...intensityLayer,
+					visible: false,
+				},
+				{
+					...ndsmLayer,
+					visible: false,
+				},
+				{
+					...rasterArea01Optical,
+					visible: false,
+				},
 			],
 			onChapterExit: [
 				{
@@ -559,6 +634,10 @@ const config = {
 			callback: '',
 			onChapterEnter: [
 				rasterForestClass01,
+				{
+					...denmarkCountryBorder,
+					visible: false,
+				},
 			],
 			onChapterExit: [
 				{
@@ -579,8 +658,22 @@ const config = {
 			},
 			callback: '',
 			onChapterEnter: [
+				denmarkCountryBorder,
+				{
+					...allMarkers,
+					visible: false,
+				},
+				{
+					...rasterForestClass01,
+					visible: false,
+				},
+				animationMarkers,
 			],
 			onChapterExit: [
+				{
+					...animationMarkers, visible: false,
+				},
+
 			],
 		},
 		// // {
