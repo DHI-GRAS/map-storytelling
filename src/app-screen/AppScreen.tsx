@@ -7,6 +7,7 @@ import Map from 'map/Map'
 import Story from 'story/Story'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
+import { Viewport, Context } from './@types/context'
 
 const useStyles = makeStyles({
 	root: {
@@ -24,25 +25,8 @@ const useStyles = makeStyles({
 	},
 })
 
-type Viewport = {
-	latitude: number,
-		longitude: number,
-		zoom: number,
-		bearing: number,
-		pitch: number,
-}
 
-interface DefaultState {
-	state: {
-		isJourneyMode: boolean,
-		viewport: Viewport,
-		layers: any[],
-		isButtonDisabled: boolean,
-	},
-	actions: any,
-}
-
-const defaultViewport = {
+const defaultViewport: Viewport = {
 	latitude: 49.915862,
 	longitude: 10.046997,
 	zoom: 4,
@@ -53,12 +37,13 @@ const defaultViewport = {
 	transitionEasing: easeCubicInOut,
 }
 
-const defaultState: DefaultState = {
+const defaultState: Context = {
 	state: {
 		isJourneyMode: false,
 		viewport: defaultViewport,
 		layers: [],
 		isButtonDisabled: false,
+		activeStep: null,
 	},
 	actions: {},
 }
@@ -72,6 +57,7 @@ const AppScreen: FC = () => {
 	const [ isJourneyMode, setIsJourneyMode ] = useState(false)
 	const [ layers, setLayers ] = useState([])
 	const [ isButtonDisabled, setIsButtonDisabled ] = useState(false)
+	const [ activeStep, setActiveStep ] = useState(null)
 
 	const onSetStoryMode = (mode: boolean) => {
 
@@ -87,6 +73,12 @@ const AppScreen: FC = () => {
 
 	}
 
+	const onEnableMap = (enable: boolean) => {
+
+		setIsJourneyMode(!enable)
+
+	}
+
 	return (
 		<AppContext.Provider value={{
 			state: {
@@ -94,6 +86,7 @@ const AppScreen: FC = () => {
 				viewport,
 				layers,
 				isButtonDisabled,
+				activeStep,
 			},
 			actions: {
 				setIsJourneyMode,
@@ -101,6 +94,8 @@ const AppScreen: FC = () => {
 				setLayers,
 				setIsButtonDisabled,
 				onSetStoryMode,
+				onEnableMap,
+				setActiveStep,
 			},
 		}}
 		>

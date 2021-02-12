@@ -16,6 +16,9 @@
   },
   "include": [
     "src",
-    "src/common/@types/*"
-  ]
+    "src/common/@types/*",
+  ],
+	"exclude": [
+		"node_modules"
+	]
 }
