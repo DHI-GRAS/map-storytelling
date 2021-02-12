@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { GeoJsonLayer } from '@deck.gl/layers'
 
-const getRGBA = (val: number): any => {
+const getRGBA = (val: number): [number, number, number, number] => {
 
 	if (val < 100) return [ 239, 237, 143, 255 ]
 	if (val < 500) return [ 216, 224, 131, 255 ]

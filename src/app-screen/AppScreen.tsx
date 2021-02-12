@@ -7,7 +7,8 @@ import Map from 'map/Map'
 import Story from 'story/Story'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
-import { Viewport, Context } from './@types/context'
+import LayerTypes from 'common/layers/@types/LayerTypes'
+import { Viewport, Context } from './@types/Context'
 
 const useStyles = makeStyles({
 	root: {
@@ -55,9 +56,9 @@ const AppScreen: FC = () => {
 	const classes = useStyles()
 	const [ viewport, setViewport ] = useState(defaultViewport)
 	const [ isJourneyMode, setIsJourneyMode ] = useState(false)
-	const [ layers, setLayers ] = useState([])
+	const [ layers, setLayers ] = useState<LayerTypes[]>([])
 	const [ isButtonDisabled, setIsButtonDisabled ] = useState(false)
-	const [ activeStep, setActiveStep ] = useState(null)
+	const [ activeStep, setActiveStep ] = useState<number | null>(null)
 
 	const onSetStoryMode = (mode: boolean) => {
 

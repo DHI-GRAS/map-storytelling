@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { GeoJsonLayer } from '@deck.gl/layers'
 
 const generateMarkerLayer = (

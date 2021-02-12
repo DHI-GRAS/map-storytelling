@@ -18,7 +18,4 @@
     "src",
     "src/common/@types/*",
   ],
-	"exclude": [
-		"node_modules"
-	]
 }

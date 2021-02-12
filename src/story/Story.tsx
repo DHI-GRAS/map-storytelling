@@ -5,7 +5,7 @@ import {
 	Box, Typography, Paper, Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import configFile from 'common/data/config'
+import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
@@ -18,6 +18,8 @@ import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
 import Scroll from 'scroll/Scroll'
+import { Chapter } from 'config/@types/Config'
+import LayerTypes from 'common/layers/@types/LayerTypes'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
 
@@ -26,7 +28,6 @@ const useStyles = makeStyles(() => ({
 		position: 'absolute',
 		overflow: 'auto',
 		margin: '0',
-		// border: '2px dashed skyblue',
 		width: '100vw',
 		zIndex: 1000,
 	},
@@ -61,14 +62,8 @@ interface StoryProps {
 }
 
 const bannerVideo: CSSProperties = {
-	// position: 'absolute',
-	// top: ' 50%',
-	// left: '50%',
 	width: '40%',
-	// minWidth: ' 100%',
 	height: 'auto',
-	// minHeight: ' 100%',
-	// transform: 'translateX(-50%) translateY(-50%)',
 	zIndex: -1,
 }
 
@@ -98,13 +93,13 @@ const Story: FC<StoryProps> = () => {
 	const rasterAnim: MutableRefObject<number | undefined> = useRef(undefined)
 	const markerAnim: MutableRefObject<number | undefined> = useRef(undefined)
 
-	const handleChangeStep = async(step, dataAfter, dataBefore) => {
+	const handleChangeStep = async(step: number, dataAfter: Chapter, dataBefore: Chapter | undefined) => {
 
 		setActiveStep(step)
 
 		let layersCopy = [ ...layers ]
 		// tryied adding these two parts as separate functions but it didn't seme to work well
-		dataBefore?.onChapterExit.length > 0 && dataBefore?.onChapterExit.forEach((item: any) => {
+		dataBefore && dataBefore.onChapterExit.length > 0 && dataBefore.onChapterExit.forEach((item: any) => {
 
 			const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
 			if (item.type === 'marker') {
@@ -190,7 +185,7 @@ const Story: FC<StoryProps> = () => {
 						const currentMark = item.data[ counter ]
 						// build the new raster layer
 						const newLayer = generateMarkerLayer(currentMark.id, [ currentMark ], true)
-						setLayers((l: any) => [ ...l.filter(lyr => lyr.id !== currentMark.id), newLayer ])
+						setLayers((l: any) => [ ...l.filter((lyr: LayerTypes) => lyr.id !== currentMark.id), newLayer ])
 						// update the counter
 						if (counter === markerCount - 1 && markerAnim.current) clearInterval(markerAnim.current)
 
@@ -345,8 +340,6 @@ const Story: FC<StoryProps> = () => {
 										item.id === 'raster-forest-class' ? 'column' : 'row',
 									}}
 								>
-
-
 									{item.title && i !== 0 && activeStep !== 0 && (
 									<Paper className={classes.stepBoxItem}>
 										<Typography variant={'h3'} gutterBottom>
@@ -361,27 +354,27 @@ const Story: FC<StoryProps> = () => {
 									</Paper>
 									)}
 									{
-												activeStep === 0 && i === 0 && (
-													<Box display={'flex'} flexDirection={'column'}>
-														<Box mb={2}>
+										activeStep === 0 && i === 0 && (
+											<Box display={'flex'} flexDirection={'column'}>
+												<Box mb={2}>
 
-															<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-																{'Det Grønne Danmarkskort'}
-															</Typography>
-															<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
-																<i>
-																	{'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark'}
-																</i>
-															</Typography>
-														</Box>
-														<video autoPlay loop muted style={bannerVideo}>
-															<source
-																src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
-																type={'video/mp4'}
-															/>
-														</video>
-													</Box>
-												)
+													<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+														{'Det Grønne Danmarkskort'}
+													</Typography>
+													<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
+														<i>
+															{'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark'}
+														</i>
+													</Typography>
+												</Box>
+												<video autoPlay loop muted style={bannerVideo}>
+													<source
+														src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
+														type={'video/mp4'}
+													/>
+												</video>
+											</Box>
+										)
 											}
 									{activeStep === 1 && i === 1 && (
 									<Box display={'flex'} flexDirection={'column'}>
@@ -412,8 +405,6 @@ const Story: FC<StoryProps> = () => {
 										</Paper>
 									</Box>
 									)}
-
-
 								</Box>
 							</Box>
 						))

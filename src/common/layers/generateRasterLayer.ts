@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { BitmapLayer } from '@deck.gl/layers'
 import { TileLayer } from '@deck.gl/geo-layers'
 
@@ -13,7 +14,7 @@ const generateRasterLayer = (id: string, url: string, visible = true, opacity = 
 	renderSubLayers: props => {
 
 		const {
-			  bbox: {
+			bbox: {
 				west, south, east, north,
 			},
 		} = props.tile

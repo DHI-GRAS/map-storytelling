@@ -1,13 +1,16 @@
-import denmarkGeoJSon from './Denmark.json'
-import herningJson from './herning.json'
-import forestClor from './forest_cloropleth.json'
-import blockTreesJson from './vector-files/block_trees.json'
-import blockTreesFences from './vector-files/block_trees_fences.json'
-import blockTreesGroups from './vector-files/block_trees_groups.json'
-import blockTreesForest from './vector-files/block_trees_forest.json'
-import blockBuildings from './vector-files/buildings.json'
+import denmarkGeoJSon from 'common/data/geojson/Denmark.json'
+import herningJson from 'common/data/geojson/herning.json'
+import forestClor from 'common/data/geojson/forest_cloropleth.json'
+import blockTreesJson from 'common/data/vector-files/block_trees.json'
+import blockTreesFences from 'common/data/vector-files/block_trees_fences.json'
+import blockTreesGroups from 'common/data/vector-files/block_trees_groups.json'
+import blockTreesForest from 'common/data/vector-files/block_trees_forest.json'
+import blockBuildings from 'common/data/vector-files/buildings.json'
 
-const allMarkers = 	{
+import { GeoJsonConfig, RasterConfig, MarkersConfig } from './@types/layersConfig'
+import Config from './@types/Config'
+
+const allMarkers: MarkersConfig = 	{
 	id: 'all-markers-forest-national-scale-layer',
 	visible: true,
 	type: 'marker',
@@ -25,10 +28,6 @@ const allMarkers = 	{
 			coordinates: [ 11.931931451403903, 54.575430797189625 ],
 			name: 'A: The sand dune that disappeared',
 		},
-		// {
-		// 	coordinates: [ 11.947387726660498, 54.57506135095206 ],
-		// 	name: 'B: Dynamic danish landscape',
-		// },
 		{
 			coordinates: [ 9.81878839989416, 54.904766036118524 ],
 			name: 'C: The city filled with tiny and dynamic objects',
@@ -48,7 +47,7 @@ const allMarkers = 	{
 	],
 }
 
-const animationMarkers = 	{
+const animationMarkers: MarkersConfig = {
 	id: 'animation',
 	visible: true,
 	animation: true,
@@ -56,27 +55,22 @@ const animationMarkers = 	{
 	data:
 	[
 		{
-			// done
 			coordinates: [ 9.070115, 56.259095 ],
 			id: 'animation-marker-1',
 		},
 		{
-			// done
 			coordinates: [ 12.239054, 55.290043 ],
 			id: 'animation-marker-10',
 		},
 		{
-			// done
 			coordinates: [ 10.342586, 55.263648 ],
 			id: 'animation-marker-2',
 		},
 		{
-			// done
 			coordinates: [ 10.664022, 56.372447 ],
 			id: 'animation-marker-11',
 		},
 		{
-			// done
 			coordinates: [ 9.376268, 56.897888 ],
 			id: 'animation-marker-3',
 		},
@@ -85,7 +79,6 @@ const animationMarkers = 	{
 			id: 'animation-marker-8',
 		},
 		{
-			// done
 			coordinates: [ 8.367245, 56.406546 ],
 			id: 'animation-marker-4',
 		},
@@ -94,24 +87,21 @@ const animationMarkers = 	{
 			id: 'animation-marker-9',
 		},
 		{
-			// done
 			coordinates: [ 11.295075, 54.783467 ],
 			id: 'animation-marker-5',
 		},
 		{
-			// done
 			coordinates: [ 11.974892, 54.831080 ],
 			id: 'animation-marker-6',
 		},
 		{
-			// done
 			coordinates: [ 11.490710, 55.741779 ],
 			id: 'animation-marker-7',
 		},
 	],
 }
 
-const denmarkCountryBorder = {
+const denmarkCountryBorder: GeoJsonConfig = {
 	id: 'denmark-country-border',
 	type: 'geojson',
 	data: denmarkGeoJSon,
@@ -119,12 +109,12 @@ const denmarkCountryBorder = {
 	visible: true,
 }
 
-const layersAnimation = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const layersAnimation: RasterConfig = {
 	id: 'layers-animation',
 	type: 'raster',
 	animation: true,
 	visible: true,
-	timeout: 2,
 	rasters: [
 		{
 			id: 'layers-animation-animation-1',
@@ -144,14 +134,14 @@ const layersAnimation = {
 	],
 }
 
-const rasterArea01Optical = {
+const rasterArea01Optical: RasterConfig = {
 	id: 'raster-01-layer-optical',
 	visible: true,
 	type: 'raster',
 	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/rgb/sdfe-hack/summer-2018-area01/2018/{z}/{x}/{y}.png?r=red&g=green&b=blue&r_range=[0,255]&b_range=[0,255]&g_range=[0,255]' ],
 }
 
-const rasterForestClass01 = {
+const rasterForestClass01: RasterConfig = {
 	id: 'raster-forest-national-scale-layer',
 	visible: true,
 	type: 'raster',
@@ -161,7 +151,7 @@ const rasterForestClass01 = {
 	)}` ],
 }
 
-const rasterNationalForestCover = {
+const rasterNationalForestCover: RasterConfig = {
 	id: 'raster-forest-national-scale-layer-cover',
 	visible: true,
 	type: 'raster',
@@ -171,7 +161,7 @@ const rasterNationalForestCover = {
 	)}` ],
 }
 
-const rasterNationalForestClass = {
+const rasterNationalForestClass: RasterConfig = {
 	id: 'raster-forest-national-scale-layer-class',
 	visible: true,
 	type: 'raster',
@@ -180,28 +170,28 @@ const rasterNationalForestClass = {
 		JSON.stringify({ 0: '#FFFFFF', 1: '#FFFF00', 2: '#0D6D27' })
 	)}` ],
 }
-const munClorLayer = {
+const munClorLayer: GeoJsonConfig = {
 	id: 'communes-cloropeth-layer',
 	visible: true,
 	data: forestClor,
 	type: 'geojson',
 }
 
-const munClorLayerOpacity = {
+const munClorLayerOpacity: GeoJsonConfig = {
 	id: 'communes-cloropeth-layer-opacity',
 	visible: true,
 	data: forestClor,
 	type: 'geojson',
 }
 
-const herningMun = {
+const herningMun: GeoJsonConfig = {
 	id: 'herning-municipality',
 	visible: true,
 	data: herningJson,
 	type: 'geojson',
 }
 
-const multipleConifers = {
+const multipleConifers: RasterConfig = {
 	id: 'multiple-coniferuous',
 	type: 'raster',
 	visible: true,
@@ -213,22 +203,21 @@ const multipleConifers = {
 	)}` ],
 }
 
-const intensityLayer = {
+const intensityLayer: RasterConfig = {
 	id: 'intensity-layer',
 	type: 'raster',
 	visible: true,
-	// opacity: 1,
 	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/intensity-area01-2018/2018/intensity/{z}/{x}/{y}.png?colormap=gray' ],
 }
 
-const ndsmLayer = {
+const ndsmLayer: RasterConfig = {
 	id: 'ndsm-layer',
 	type: 'raster',
 	visible: true,
 	url: [ 'https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/ndsm-area01-2018/2018/ndsm/{z}/{x}/{y}.png?colormap=gray' ],
 }
 
-const vectorBlockTrees = {
+const vectorBlockTrees: GeoJsonConfig = {
 	id: 'vector-block-trees',
 	type: 'geojson',
 	data: blockTreesJson,
@@ -238,7 +227,7 @@ const vectorBlockTrees = {
 	visible: true,
 }
 
-const vectorBlockTreesFences = {
+const vectorBlockTreesFences: GeoJsonConfig = {
 	id: 'vector-block-trees-fences',
 	type: 'geojson',
 	data: blockTreesFences,
@@ -248,7 +237,7 @@ const vectorBlockTreesFences = {
 	lineColor: [ 11, 229, 34, 100 ],
 }
 
-const vectorBlockTreesForest = {
+const vectorBlockTreesForest: GeoJsonConfig = {
 	id: 'vector-block-trees-forest',
 	type: 'geojson',
 	data: blockTreesForest,
@@ -258,7 +247,7 @@ const vectorBlockTreesForest = {
 	lineColor: [ 155, 155, 155, 0 ],
 }
 
-const vectorBlockTreesGroups = {
+const vectorBlockTreesGroups: GeoJsonConfig = {
 	id: 'vector-block-trees-groups',
 	type: 'geojson',
 	visible: true,
@@ -268,7 +257,8 @@ const vectorBlockTreesGroups = {
 	lineColor: [ 155, 155, 155, 0 ],
 }
 
-const vectorBlockBuildings = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const vectorBlockBuildings: GeoJsonConfig = {
 	id: 'vector-block-buildings',
 	type: 'geojson',
 	data: blockBuildings,
@@ -278,9 +268,8 @@ const vectorBlockBuildings = {
 	lineColor: [ 155, 155, 155, 0 ],
 }
 
-const config = {
+const config: Config = {
 	style: 'mapbox://styles/mapbox/satellite-v9',
-	footer: 'Source: source citations, etc.',
 	chapters: [
 		{
 			id: 'denmark-layer',
@@ -294,7 +283,6 @@ const config = {
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				{
 					...denmarkCountryBorder,
@@ -308,7 +296,6 @@ const config = {
 					...munClorLayer,
 					visible: false,
 				},
-				// add polygon with only denmark
 			],
 			onChapterExit: [],
 		},
@@ -324,13 +311,11 @@ const config = {
 				pitch: 60,
 				bearing: -20,
 			},
-			callback: '',
 			onChapterEnter: [
 				{
 					...denmarkCountryBorder, fill: true, lineColor: [ 255, 255, 255, 0 ], fillColor: [ 134, 162, 179, 100 ],
 				},
 				rasterNationalForestCover,
-				// rasterNationalForestCover,
 			],
 			onChapterExit: [
 				{
@@ -340,10 +325,6 @@ const config = {
 				{
 					...denmarkCountryBorder, visible: false,
 				},
-				// {
-				// 	...munClorLayer,
-				// 	visible: false,
-				// },
 			],
 		},
 		{
@@ -351,19 +332,12 @@ const config = {
 			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Kvadratmeter skov per indbygger i 2020',
-			// location: {
-			// 	center: [ 10.165798, 55.513295 ],
-			// 	zoom: 7,
-			// 	pitch: 50,
-			// 	bearing: -30,
-			// },
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 7,
 				pitch: 60,
 				bearing: 10,
 			},
-			callback: '',
 			onChapterEnter: [
 				{
 					...denmarkCountryBorder,
@@ -378,8 +352,6 @@ const config = {
 					...allMarkers,
 					visible: false,
 				},
-				// rasterNationalForestClass,
-				// denmarkCountryBorder,
 			],
 			onChapterExit: [
 				{
@@ -397,14 +369,12 @@ const config = {
 			alignmentX: 'left',
 			alignmentY: 'flex-start',
 			title: 'Skovdække i Herning kommune',
-			// description: 'The markers on denmark',
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 7,
 				pitch: 60,
 				bearing: 10,
 			},
-			callback: '',
 			onChapterEnter: [
 				{
 					...munClorLayerOpacity,
@@ -428,10 +398,6 @@ const config = {
 					...munClorLayerOpacity,
 					visible: false,
 				},
-				// {
-				// 	...denmarkCountryBorder,
-				// 	visible: false,
-				// },
 			],
 		},
 		{
@@ -445,7 +411,6 @@ const config = {
 				pitch: 60,
 				bearing: 10,
 			},
-			callback: '',
 			onChapterEnter: [
 				{
 					...denmarkCountryBorder, fill: true, lineColor: [ 255, 255, 255, 0 ], fillColor: [ 134, 162, 179, 100 ],
@@ -466,17 +431,14 @@ const config = {
 		},
 		{
 			id: 'markers-overview',
-			alignmentX: 'left',
+			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
-			// title: 'Markers on map',
-			// description: 'The markers on denmark',
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 6,
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [ allMarkers, denmarkCountryBorder ],
 			onChapterExit: [
 				{
@@ -487,7 +449,7 @@ const config = {
 		},
 		{
 			id: 'multi-coniferous-class',
-			alignmentX: 'left',
+			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Skov til skov – træ til træ',
 			description: 'Kortlægning af træarter og antal i de danske skove',
@@ -497,7 +459,6 @@ const config = {
 				pitch: 60,
 				bearing: -10,
 			},
-			callback: '',
 			onChapterEnter: [
 				multipleConifers,
 				{
@@ -531,7 +492,6 @@ const config = {
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				intensityLayer,
 				{
@@ -543,9 +503,7 @@ const config = {
 					visible: false,
 				},
 			],
-			onChapterExit: [
-
-			],
+			onChapterExit: [],
 		},
 		{
 			id: 'ndsm-layer',
@@ -558,7 +516,6 @@ const config = {
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				ndsmLayer,
 				{
@@ -566,9 +523,7 @@ const config = {
 					visible: false,
 				},
 			],
-			onChapterExit: [
-
-			],
+			onChapterExit: [],
 		},
 		{
 			id: 'rgb-layer',
@@ -581,7 +536,6 @@ const config = {
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				rasterArea01Optical,
 				{ ...vectorBlockTrees, visible: false },
@@ -589,12 +543,7 @@ const config = {
 				{ ...vectorBlockTreesFences, visible: false },
 				{ ...vectorBlockTreesGroups, visible: false },
 			],
-			onChapterExit: [
-				// {
-				// 	...ndsmLayer,
-				// 	visible: false,
-				// },
-			],
+			onChapterExit: [],
 		},
 		{
 			id: 'vector-data',
@@ -607,7 +556,6 @@ const config = {
 				pitch: 60,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				vectorBlockTrees,
 				vectorBlockTreesForest,
@@ -626,15 +574,13 @@ const config = {
 			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Det dynamiske grønne Danmark i detaljer',
-			description:
-		'Alle de små grønne objekter i vores byer og landdistrikter',
+			description: 'Alle de små grønne objekter i vores byer og landdistrikter',
 			location: {
 				center: [ 11.931931451403903, 54.575430797189625 ],
 				zoom: 15,
 				pitch: 0,
 				bearing: 0,
 			},
-			callback: '',
 			onChapterEnter: [
 				rasterForestClass01,
 				{
@@ -659,7 +605,6 @@ const config = {
 				pitch: 60,
 				bearing: 10,
 			},
-			callback: '',
 			onChapterEnter: [
 				denmarkCountryBorder,
 				{
@@ -676,7 +621,6 @@ const config = {
 				{
 					...animationMarkers, visible: false,
 				},
-
 			],
 		},
 	],
