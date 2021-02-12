@@ -27,7 +27,7 @@ export interface RasterConfig {
 
 type MarkerItem = {
 	coordinates: [number, number],
-	id: string,
+	name: string,
 }
 
 export interface MarkersConfig {
