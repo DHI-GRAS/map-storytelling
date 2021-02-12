@@ -8680,11 +8680,6 @@ react-map-gl@^6.1.1:
     resize-observer-polyfill "^1.5.1"
     viewport-mercator-project "^6.2.3 || ^7.0.1"
 
-react-scrollama@^2.2.15:
-  version "2.2.15"
-  resolved "https://registry.yarnpkg.com/react-scrollama/-/react-scrollama-2.2.15.tgz#8a40a19bb09350a7e75ee6f9bb589a3f84eeb9ca"
-  integrity sha512-Rp/8v4AtGIf0eEd6Cli9/uoZ9ufXbVhZfrV1yR5tkapV0CCbgdLBWuVNwBhUXPUxSADltC+CSIFvG/uh2drfqA==
-
 react-transition-group@^4.4.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"

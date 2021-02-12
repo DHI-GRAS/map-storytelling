@@ -1,12 +1,15 @@
 import React, {
 	FC, useState, createContext,
 } from 'react'
-// import { Box, Button } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Map from 'map/Map'
 import Story from 'story/Story'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
+import LayerTypes from 'common/layers/@types/LayerTypes'
+import configFile from 'config/config'
+import { Viewport, Context } from './@types/Context'
 
 const useStyles = makeStyles({
 	root: {
@@ -22,27 +25,16 @@ const useStyles = makeStyles({
 	topBorder: {
 		borderTop: '1px solid #DBE4E9',
 	},
+	paging: {
+		position: 'fixed',
+		bottom: '2rem',
+		right: '1rem',
+		zIndex: 10000,
+	},
 })
 
-type Viewport = {
-	latitude: number,
-		longitude: number,
-		zoom: number,
-		bearing: number,
-		pitch: number,
-}
 
-interface DefaultState {
-	state: {
-		isJourneyMode: boolean,
-		viewport: Viewport,
-		layers: any[],
-		isButtonDisabled: boolean,
-	},
-	actions: any,
-}
-
-const defaultViewport = {
+const defaultViewport: Viewport = {
 	latitude: 49.915862,
 	longitude: 10.046997,
 	zoom: 4,
@@ -53,12 +45,13 @@ const defaultViewport = {
 	transitionEasing: easeCubicInOut,
 }
 
-const defaultState: DefaultState = {
+const defaultState: Context = {
 	state: {
 		isJourneyMode: false,
 		viewport: defaultViewport,
 		layers: [],
 		isButtonDisabled: false,
+		activeStep: null,
 	},
 	actions: {},
 }
@@ -70,8 +63,9 @@ const AppScreen: FC = () => {
 	const classes = useStyles()
 	const [ viewport, setViewport ] = useState(defaultViewport)
 	const [ isJourneyMode, setIsJourneyMode ] = useState(false)
-	const [ layers, setLayers ] = useState([])
+	const [ layers, setLayers ] = useState<LayerTypes[]>([])
 	const [ isButtonDisabled, setIsButtonDisabled ] = useState(false)
+	const [ activeStep, setActiveStep ] = useState<number | null>(null)
 
 	const onSetStoryMode = (mode: boolean) => {
 
@@ -87,6 +81,12 @@ const AppScreen: FC = () => {
 
 	}
 
+	const onEnableMap = (enable: boolean) => {
+
+		setIsJourneyMode(!enable)
+
+	}
+
 	return (
 		<AppContext.Provider value={{
 			state: {
@@ -94,6 +94,7 @@ const AppScreen: FC = () => {
 				viewport,
 				layers,
 				isButtonDisabled,
+				activeStep,
 			},
 			actions: {
 				setIsJourneyMode,
@@ -101,11 +102,21 @@ const AppScreen: FC = () => {
 				setLayers,
 				setIsButtonDisabled,
 				onSetStoryMode,
+				onEnableMap,
+				setActiveStep,
 			},
 		}}
 		>
 			<div className={classes.root} >
-
+				{
+					activeStep !== null && (
+						<Box className={classes.paging}>
+							<Typography color={'secondary'} variant={'h3'}>
+								{`${activeStep + 1}/${configFile.chapters.length}`}
+							</Typography>
+						</Box>
+					)
+				}
 				<Map />
 				<Story />
 			</div>

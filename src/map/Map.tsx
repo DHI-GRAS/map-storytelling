@@ -6,7 +6,7 @@ import React, {
 import DeckGL from '@deck.gl/react'
 import { Box } from '@material-ui/core'
 import { StaticMap } from 'react-map-gl'
-import configFile from 'common/data/config'
+import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
