@@ -1,5 +1,5 @@
 import React, {
-	FC, useState, useContext, CSSProperties, useRef, MutableRefObject,
+	FC, useContext, CSSProperties, useRef, MutableRefObject,
 } from 'react'
 import {
 	Box, Typography, Paper, Button,
@@ -345,23 +345,23 @@ const Story: FC<StoryProps> = () => {
 										item.id === 'raster-forest-class' ? 'column' : 'row',
 									}}
 								>
-									{(
-										<>
-											{item.title && activeStep !== 0 && (
-												<Paper className={classes.stepBoxItem}>
-													<Typography variant={'h3'} gutterBottom>
-														{item.title}
-													</Typography>
-													{item.description && (
-													<Typography variant={'body1'} gutterBottom>
-														{item.description}
-													</Typography>
-													)}
 
-												</Paper>
-											)}
-											{
-												activeStep === 0 && (
+
+									{item.title && i !== 0 && activeStep !== 0 && (
+									<Paper className={classes.stepBoxItem}>
+										<Typography variant={'h3'} gutterBottom>
+											{item.title}
+										</Typography>
+										{item.description && (
+										<Typography variant={'body1'} gutterBottom>
+											{item.description}
+										</Typography>
+										)}
+
+									</Paper>
+									)}
+									{
+												activeStep === 0 && i === 0 && (
 													<Box display={'flex'} flexDirection={'column'}>
 														<Box mb={2}>
 
@@ -383,37 +383,37 @@ const Story: FC<StoryProps> = () => {
 													</Box>
 												)
 											}
-											{activeStep === 1 && (
-												<Box display={'flex'} flexDirection={'column'}>
-													{item.id === 'forest-national-scale-layer' && (
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounter title={'Top 5 - Mest skovdække (km2)'} items={forestArea} />
-													</Paper>
-													)}
-													{item.id === 'forest-national-scale-layer' && (
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
-													</Paper>
-													)}
+									{activeStep === 1 && i === 1 && (
+									<Box display={'flex'} flexDirection={'column'}>
+										{item.id === 'forest-national-scale-layer' && (
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+											<StatisticsCounter title={'Top 5 - Mest skovdække (km2)'} items={forestArea} />
+										</Paper>
+										)}
+										{item.id === 'forest-national-scale-layer' && (
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+											<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
+										</Paper>
+										)}
 
-												</Box>
-											)}
-											{activeStep === 3 && (
-												<Box display={'flex'} flexDirection={'column'}>
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounter title={'km2'} items={herningData} />
-													</Paper>
-												</Box>
-											)}
-											{activeStep === 11 && (
-												<Box display={'flex'} flexDirection={'column'}>
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
-													</Paper>
-												</Box>
-											)}
-										</>
+									</Box>
 									)}
+									{activeStep === 3 && i === 3 && (
+									<Box display={'flex'} flexDirection={'column'}>
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+											<StatisticsCounter title={'km2'} items={herningData} />
+										</Paper>
+									</Box>
+									)}
+									{activeStep === 11 && i === 11 && (
+									<Box display={'flex'} flexDirection={'column'}>
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+											<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
+										</Paper>
+									</Box>
+									)}
+
+
 								</Box>
 							</Box>
 						))

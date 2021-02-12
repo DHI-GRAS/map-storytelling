@@ -64,16 +64,19 @@ const Scroll: FC<Props> = ({
 
 
 		const theInd = ranges.findIndex(rng => currentScrollTop <= (rng - topOffset))
+
 		if (theInd !== activeStep && theInd > -1) onChangeStep(theInd, data[ theInd ], data[ activeStep ])
 
 	}, [ currentScrollTop ])
 
 	useEffect(() => {
 
+		if (activeStep !== 0) window.scrollTo({ top: ranges[ activeStep - 1 ] })
 		onChangeStep(activeStep, data[ activeStep ])
 		window.addEventListener('scroll', (e: Event) => {
 
 			window.requestAnimationFrame(() => {
+
 
 				setCurrentScrollTop((e.target as any)?.scrollingElement.scrollTop.toFixed())
 
