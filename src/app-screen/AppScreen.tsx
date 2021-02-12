@@ -1,13 +1,14 @@
 import React, {
 	FC, useState, createContext,
 } from 'react'
-// import { Box, Button } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Map from 'map/Map'
 import Story from 'story/Story'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import LayerTypes from 'common/layers/@types/LayerTypes'
+import configFile from 'config/config'
 import { Viewport, Context } from './@types/Context'
 
 const useStyles = makeStyles({
@@ -23,6 +24,12 @@ const useStyles = makeStyles({
 	},
 	topBorder: {
 		borderTop: '1px solid #DBE4E9',
+	},
+	paging: {
+		position: 'fixed',
+		bottom: '2rem',
+		right: '1rem',
+		zIndex: 10000,
 	},
 })
 
@@ -101,7 +108,15 @@ const AppScreen: FC = () => {
 		}}
 		>
 			<div className={classes.root} >
-
+				{
+					activeStep !== null && (
+						<Box className={classes.paging}>
+							<Typography color={'secondary'} variant={'h3'}>
+								{`${activeStep + 1}/${configFile.chapters.length}`}
+							</Typography>
+						</Box>
+					)
+				}
 				<Map />
 				<Story />
 			</div>

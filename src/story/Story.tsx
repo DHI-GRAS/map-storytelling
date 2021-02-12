@@ -323,7 +323,7 @@ const Story: FC<StoryProps> = () => {
 					data={configFile.chapters}
 					activeStep={activeStep ?? 0}
 					onChangeStep={handleChangeStep}
-					debug
+					// debug
 					topOffset={300}
 				>
 					{
