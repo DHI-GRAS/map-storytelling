@@ -301,7 +301,7 @@ const config: Config = {
 		},
 		{
 			id: 'forest-national-scale-layer',
-			alignmentX: 'right',
+			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Opdaterede nationale skovkort',
 			description: 'Sammenhængende og tidslig referenceramme for udviklingen af skovdække i Danmark',
