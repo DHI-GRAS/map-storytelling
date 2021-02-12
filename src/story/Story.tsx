@@ -90,8 +90,8 @@ const Story: FC<StoryProps> = () => {
 	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
 	// holder of the interval if we have an animation situation
-	const rasterAnim: MutableRefObject<number | undefined> = useRef(undefined)
-	const markerAnim: MutableRefObject<number | undefined> = useRef(undefined)
+	const rasterAnim: MutableRefObject<any> = useRef(undefined)
+	const markerAnim: MutableRefObject<any> = useRef(undefined)
 
 	const handleChangeStep = async(step: number, dataAfter: Chapter, dataBefore: Chapter | undefined) => {
 

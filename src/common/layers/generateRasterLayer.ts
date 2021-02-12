@@ -20,9 +20,9 @@ const generateRasterLayer = (id: string, url: string, visible = true, opacity = 
 		} = props.tile
 
 		return new BitmapLayer(props, {
-			  data: null,
-			  image: props.data,
-			  bounds: [ west, south, east, north ],
+			data: null,
+			image: props.data,
+			bounds: [ west, south, east, north ],
 		})
 
 	},

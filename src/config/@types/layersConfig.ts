@@ -3,6 +3,8 @@ export interface GeoJsonConfig {
 	visible: boolean,
 	data: any,
 	type: 'geojson',
+	extruded?: boolean,
+	opacity?: number,
 	lineColor?: [number, number, number, number],
 	fill?: boolean,
 	fillColor?: [number, number, number, number],
@@ -27,13 +29,13 @@ export interface RasterConfig {
 
 type MarkerItem = {
 	coordinates: [number, number],
-	name: string,
+	id: string,
 }
 
 export interface MarkersConfig {
 	id: string,
 	visible: boolean,
 	type: 'marker',
-	animation: boolean,
+	animation?: boolean,
 	data: MarkerItem[],
 }

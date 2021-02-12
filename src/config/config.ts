@@ -11,38 +11,44 @@ import { GeoJsonConfig, RasterConfig, MarkersConfig } from './@types/layersConfi
 import Config from './@types/Config'
 
 const allMarkers: MarkersConfig = 	{
-	id: 'all-markers-forest-national-scale-layer',
+	id: 'all-mark-lr',
 	visible: true,
 	type: 'marker',
 	data:
 	[
 		{
 			coordinates: [ 10.165798, 55.513295 ],
-			name: 'National forest mapping',
+			id: 'all-mark-lr-marker-l-1',
 		},
 		{
 			coordinates: [ 12.321831, 56.002167 ],
-			name: 'Coniferous layer',
+			id: 'all-mark-lr-marker-l-2',
+
 		},
 		{
 			coordinates: [ 11.931931451403903, 54.575430797189625 ],
-			name: 'A: The sand dune that disappeared',
+			id: 'all-mark-lr-marker-l-3',
+
 		},
 		{
 			coordinates: [ 9.81878839989416, 54.904766036118524 ],
-			name: 'C: The city filled with tiny and dynamic objects',
+			id: 'all-mark-lr-marker-l-4',
+
 		},
 		{
 			coordinates: [ 10.19916535101355, 55.10831373009 ],
-			name: 'D: The country side',
+			id: 'all-mark-lr-marker-l-5',
+
 		},
 		{
 			coordinates: [ 10.21482134128163, 55.10815610067341 ],
-			name: 'E: The country side',
+			id: 'all-mark-lr-marker-l-6',
+
 		},
 		{
 			coordinates: [ 10.20881828631708, 57.47134378201429 ],
-			name: 'F: The country side',
+			id: 'all-mark-lr-marker-l-7',
+
 		},
 	],
 }
@@ -366,7 +372,7 @@ const config: Config = {
 		},
 		{
 			id: 'herning-commune',
-			alignmentX: 'left',
+			alignmentX: 'flex-start',
 			alignmentY: 'flex-start',
 			title: 'Skovdække i Herning kommune',
 			location: {
