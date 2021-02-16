@@ -118,6 +118,8 @@ const AppScreen: FC = () => {
 					)
 				}
 				<Map />
+
+
 				<Story />
 			</div>
 

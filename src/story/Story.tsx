@@ -17,11 +17,18 @@ import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
+import generateTextMarkerLayer from 'common/layers/generateTextMarkerLayer'
 import Scroll from 'scroll/Scroll'
 import { Chapter } from 'config/@types/Config'
 import LayerTypes from 'common/layers/@types/LayerTypes'
+import videoPoster from 'common/images/loading_video.jpg'
+// eslint-disable-next-line import/extensions
+import videoFile from 'common/images/story-landing-video-1.mp4'
+import legendForest2Class from 'common/data/legendForest2Class'
+import legendForest6Class from 'common/data/legendForest6Class'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
+import Legend from './Legend'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -38,10 +45,12 @@ const useStyles = makeStyles(() => ({
 		alignItems: 'center',
 		padding: '2rem',
 		transition: 'all .3s ease-in',
+
 	},
 	stepBoxItem: {
 		padding: '2rem',
 		maxWidth: '40%',
+		backgroundColor: 'rgba(255,255,255, .7)',
 	},
 	journeyButton: {
 		marginTop: '1rem',
@@ -86,6 +95,8 @@ const Story: FC<StoryProps> = () => {
 		},
 	} = useContext(AppContext)
 
+	// IMPROVEMENT - merge both chapterEnter & chapterExit in the same function
+
 	// const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(null)
 	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
@@ -93,83 +104,14 @@ const Story: FC<StoryProps> = () => {
 	const rasterAnim: MutableRefObject<any> = useRef(undefined)
 	const markerAnim: MutableRefObject<any> = useRef(undefined)
 
-	const handleChangeStep = async(step: number, dataAfter: Chapter, dataBefore: Chapter | undefined) => {
+	const chapterEnter = (data: Chapter, layersLocal: any) => {
 
-		setActiveStep(step)
+		let layersCopy = [ ...layersLocal ]
 
-		let layersCopy = [ ...layers ]
-		// tryied adding these two parts as separate functions but it didn't seme to work well
-		dataBefore && dataBefore.onChapterExit.length > 0 && dataBefore.onChapterExit.forEach((item: any) => {
+		if (data.onChapterEnter.length > 0) data.onChapterEnter.forEach((item: any) => {
 
-			const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
-			if (item.type === 'marker') {
+			const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id || stateLayer.id.includes(item.id))
 
-				if (item.animation === true) {
-
-					clearInterval(markerAnim.current)
-					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
-					setLayers([ ...layersCopy ])
-
-				} else
-				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-
-				else if (isFound === -1) {
-
-					// const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
-
-					const newLayer = generateMarkerLayer(item.id, item.data, item.visible)
-					layersCopy = [ ...layersCopy, newLayer ]
-
-				}
-
-				return
-
-			}
-
-			if (item.type === 'raster') {
-
-				if (item.animation === true) {
-
-					// remove the layers and clear the interval
-					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
-					setLayers([ ...layersCopy ])
-					clearInterval(rasterAnim.current)
-
-				} else
-
-				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-
-				else if (isFound === -1) {
-
-					const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
-					layersCopy = [ ...layersCopy, newLayer ]
-
-				}
-
-				return
-
-			}
-
-			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
-
-				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
-				layersCopy = [ ...layersCopy, newLayer ]
-
-			} else {
-
-				const foundData = item.data
-				const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
-				layersCopy = [ ...layersCopy, newLayer ]
-
-			}
-
-
-		})
-
-		dataAfter.onChapterEnter.length > 0 && dataAfter.onChapterEnter.forEach((item: any) => {
-
-			const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
 			if (item.type === 'marker') {
 
 				// if we want to make the item invisible, we remove it from the state array
@@ -208,6 +150,39 @@ const Story: FC<StoryProps> = () => {
 
 			}
 
+			if (item.type === 'text-marker') if (item.visible === false) layersCopy = layersCopy.filter(layer => !layer.id.includes(item.id))
+			else if (isFound === -1) if (item.animation === true) {
+
+				let counter = 0
+				// get how many raster we have to switch between
+				const markerCount = item.data.length
+				// start the interval assingning it to the global value
+				markerAnim.current = setInterval(() => {
+
+					const currentMark = item.data[ counter ]
+					const layerName = `${String(item.id)}${counter}`
+					const layerNamesOnMap = [ `${layerName}-0-textbox`, `${layerName}-0-marker` ]
+					// build the new raster layer
+					const newLayer = generateTextMarkerLayer(layerName, [ currentMark ])
+					setLayers((l: any) => [ ...l.filter((lyr: LayerTypes) => !layerNamesOnMap.includes(lyr.id)), ...newLayer ])
+					// update the counter
+					if (counter === markerCount - 1 && markerAnim.current) clearInterval(markerAnim.current)
+
+					counter += 1
+
+				}, 2000)
+
+			} else {
+
+				// if the layer is new aka it's not found, get the data.
+				// Propbably using only item.data is enough but don't wanna brake things.
+				const foundData = item.data
+				// generate new layer and add it to the temporary array
+				const newLayers = generateTextMarkerLayer(item.id, foundData)
+				layersCopy = [ ...layersCopy, ...newLayers ]
+
+			}
+
 
 			if (item.type === 'raster') {
 
@@ -222,15 +197,27 @@ const Story: FC<StoryProps> = () => {
 					rasterAnim.current = setInterval(() => {
 
 						// build the new raster layer
-						const newLayer = generateRasterLayer(item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.opacity)
-						setLayers((l: any) => [ ...l, newLayer ])
+						if (item.rasters[ counter ].type === 'raster') {
+
+							const newLayer = generateRasterLayer(
+								item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.rasters[ counter ].opacity
+							)
+							setLayers((l: any) => [ ...l.filter((el: any) => !el.id.includes('layers-animation-vector')), newLayer ])
+
+						} else if (item.rasters[ counter ].type === 'geojson') {
+
+							const newLayers = item.rasters[ counter ].data
+								.map((it: any) => generateGeoJsonLayer(it.id, it.data, it.visible, it.lineColor, it.fill, it.fillColor))
+							setLayers((l: any) => [ ...l, ...newLayers ])
+
+						}
 						// update the counter
 						if (counter === rasterCount - 1) clearInterval(rasterAnim.current)
 
 
 						counter += 1
 
-					}, 6000)
+					}, 5000)
 
 					// situation where raster is not an animation so we just add it to the state
 
@@ -268,7 +255,107 @@ const Story: FC<StoryProps> = () => {
 
 		})
 
-		setLayers([ ...layersCopy ])
+		return layersCopy
+
+	}
+
+	const chapterExit = (data: Chapter | undefined, layersLocal: any) => {
+
+		let layersCopy = [ ...layersLocal ]
+		if (data && data.onChapterExit.length > 0) data.onChapterExit.forEach((item: any) => {
+
+			const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id || item.id.includes(stateLayer.id))
+			if (item.type === 'marker') {
+
+				if (item.animation === true) {
+
+					clearInterval(markerAnim.current)
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+
+				} else if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) {
+
+					// const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
+
+					const newLayer = generateMarkerLayer(item.id, item.data, item.visible)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				}
+
+				return
+
+			}
+
+			if (item.type === 'text-marker') {
+
+				if (item.animation === true) {
+
+					clearInterval(markerAnim.current)
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+
+				} else if (item.visible === false) layersCopy = layersCopy.filter(lr => !lr.id.includes(item.id))
+
+
+				return
+
+			}
+
+			if (item.type === 'raster') {
+
+				if (item.animation === true) {
+
+					// remove the layers and clear the interval
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+					clearInterval(rasterAnim.current)
+
+				} else
+
+				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
+				else if (isFound === -1) {
+
+					const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				}
+
+				return
+
+			}
+
+			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+
+				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			} else {
+
+				const foundData = item.data
+				const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			}
+
+
+		})
+
+
+		return layersCopy
+
+	}
+
+	const handleChangeStep = async(step: number, dataAfter: Chapter, dataBefore: Chapter | undefined) => {
+
+		setActiveStep(step)
+
+		const onExitLayersRemained = chapterExit(dataBefore, layers)
+		const onEnterLayersRemained = chapterEnter(dataAfter, onExitLayersRemained)
+
+		setLayers([ ...onEnterLayersRemained ])
 		// get center
 		const dataCenter = dataAfter.location.center
 		const { center, ...rest } = dataAfter.location
@@ -297,10 +384,25 @@ const Story: FC<StoryProps> = () => {
 
 	return (
 		<>
+			{!isJourneyMode && activeStep === null && (
+				<Box width={'50vw'} position={'fixed'} style={{
+					left: '4rem', top: '50%', transform: 'translateY(-50%)', zIndex: 10000,
+				}}
+				>
+					<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+						{'Welcome to the Green Map of Denmark'}
+					</Typography>
+					<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
+						<i>
+							{'Begin your journey by clicking the button in the upper right corner'}
+						</i>
+					</Typography>
+				</Box>
+			)}
 			<Box display={'flex'} flexDirection={'column'} position={'fixed'} style={{ top: '1rem', right: '2rem', zIndex: 10000 }}>
 				{activeStep !== null && (
 					<Button
-						disabled={[ 12 ].includes(activeStep)}
+						disabled={[ 8 ].includes(activeStep)}
 						variant={'contained'}
 						onClick={() => onEnableMap(isJourneyMode)}
 						className={classes.journeyButton}
@@ -309,14 +411,32 @@ const Story: FC<StoryProps> = () => {
 					</Button>
 				)}
 
+
 				<Button
 					variant={'contained'}
 					onClick={onJourneyModeEdit}
 					className={classes.journeyButton}
 				>
-					{!isJourneyMode ? 'Udforsk det grønne Danmark' : 'Afslut'}
+					{!isJourneyMode ? 'Explore the Green Map of Denmark' : 'End'}
 				</Button>
 			</Box>
+
+			{
+				activeStep === 4 && (
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '3rem' }}>
+						<Legend items={legendForest2Class} />
+					</Box>
+				)
+			}
+
+			{
+				activeStep === 5 && (
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '3rem' }}>
+						<Legend items={legendForest6Class} />
+					</Box>
+				)
+			}
+
 			{isJourneyMode && (
 			<Box>
 				<Scroll
@@ -335,9 +455,7 @@ const Story: FC<StoryProps> = () => {
 										opacity: activeStep === i ? 1 : 0.2,
 										justifyContent: item.alignmentX,
 										alignItems: item.alignmentY,
-										flexDirection: item.id === 'forest-national-scale-layer' ||
-										item.id === 'herning-commune' ||
-										item.id === 'raster-forest-class' ? 'column' : 'row',
+										flexDirection: [ 1, 3, 4, 5, 7 ].includes(i) ? 'column' : 'row',
 									}}
 								>
 									{item.title && i !== 0 && activeStep !== 0 && (
@@ -346,62 +464,122 @@ const Story: FC<StoryProps> = () => {
 											{item.title}
 										</Typography>
 										{item.description && (
-										<Typography variant={'body1'} gutterBottom>
-											{item.description}
-										</Typography>
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
 										)}
-
 									</Paper>
 									)}
 									{
 										activeStep === 0 && i === 0 && (
 											<Box display={'flex'} flexDirection={'column'}>
-												<Box mb={2}>
-
+												<Box width={'50vw'} mb={1}>
 													<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-														{'Det Grønne Danmarkskort'}
+														{'The green map of Denmark'}
 													</Typography>
 													<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
 														<i>
-															{'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark'}
+															{'The gateway to an up to date and timely overview of the green Denmark'}
 														</i>
 													</Typography>
 												</Box>
-												<video autoPlay loop muted style={bannerVideo}>
+												<video autoPlay loop muted style={bannerVideo} poster={videoPoster}>
 													<source
-														src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
+														src={videoFile}
 														type={'video/mp4'}
 													/>
 												</video>
 											</Box>
 										)
-											}
+									}
 									{activeStep === 1 && i === 1 && (
-									<Box display={'flex'} flexDirection={'column'}>
-										{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-											<StatisticsCounter title={'Top 5 - Mest skovdække (km2)'} items={forestArea} />
-										</Paper>
-										)}
-										{item.id === 'forest-national-scale-layer' && (
-										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-											<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
-										</Paper>
-										)}
+										<Box display={'flex'} justifyContent={'space-between'} style={{ alignSelf: 'flex-end', justifySelf: 'center' }}>
+											<Box display={'flex'} flexDirection={'column'}>
+												{item.id === 'forest-national-scale-layer' && (
+													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+														<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
+													</Paper>
+												)}
+												{item.id === 'forest-national-scale-layer' && (
+													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+														<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
+													</Paper>
+												)}
+											</Box>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
+												<Typography variant={'body1'} gutterBottom>
+													{'With up-to-date satellite imagery and novel AI technology, national level forest cover can be mapped quickly and efficiently and updated as often as needed (monthly/yearly).'}
+												</Typography>
+												<Typography variant={'body1'} gutterBottom>
+													{'This data provides information to continuously assess carbon storage, report on national forest cover, extent assess and monitor the effect of national forest management programmes, and much more…'}
+												</Typography>
+											</Paper>
+										</Box>
+									)}
 
-									</Box>
+									{activeStep === 2 && i === 2 && (
+										<Paper className={classes.stepBoxItem} style={{
+											maxWidth: '25%', padding: '1rem', alignSelf: 'flex-end',
+										}}
+										>
+											<Typography variant={'body1'} gutterBottom>
+												{'This choropleth map indicates the amount of forest (m2) per inhabitant per municipality in 2020.'}
+											</Typography>
+											<Typography variant={'body1'} gutterBottom>
+												{'This information could for example be used to assess the effect of reforestation projects at municipal level, over time, to underpin efforts to maintain balance between population increase and access to green space.'}
+											</Typography>
+										</Paper>
 									)}
 									{activeStep === 3 && i === 3 && (
-									<Box display={'flex'} flexDirection={'column'}>
-										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-											<StatisticsCounter title={'km2'} items={herningData} />
-										</Paper>
-									</Box>
+										<Box display={'flex'} justifyContent={'space-between'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
+											<Box display={'flex'} flexDirection={'column'}>
+												<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+													<StatisticsCounter title={'km2'} items={herningData} heightScale={0.4} />
+												</Paper>
+											</Box>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
+												<Typography variant={'body1'} gutterBottom>
+													{'As an example, Aarhus municipality has a strategic goal of increasing the forest cover by 3200 hectares before 2030. Approximately 200 hectares (2 km2) of forest needs to be raised each year to reach that target. With this tool, we can calculate how much forest is raised, month by month, until 2030 (and beyond). This way, everyone can follow the progress of efforts to make Denmark greener.'}
+												</Typography>
+											</Paper>
+										</Box>
 									)}
-									{activeStep === 11 && i === 11 && (
-									<Box display={'flex'} flexDirection={'column'}>
-										<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-											<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
+
+									{
+										activeStep === 4 && i === 4 && (
+											<Box display={'flex'} justifyContent={'flex-end'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
+												<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
+													<Typography variant={'body1'} gutterBottom>
+														{'While it is important to know where the forest is, and how much there is, it is equally important to have information on the diversity of forest areas. This data illustrates the extent of coniferous and deciduous forest areas in 2020, providing important information used to underpin biodiversity conservation and habitat connectivity objectives.'}
+													</Typography>
+												</Paper>
+											</Box>
+										)
+									}
+									{activeStep === 5 && i === 5 && (
+										<Box display={'flex'} justifyContent={'flex-end'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
+												<Typography variant={'body1'} gutterBottom>
+													{'Using AI and time-series of high resolution satellite imagery, it is even possible to classify the extent of forest areas by species.'}
+												</Typography>
+												<Typography variant={'body1'} gutterBottom>
+													{'In this area, in Gribskov (Grib forest), the dominant species are Beech and Fir, followed by Oak and Birch. Small patches of Maple and Larch trees are also encountered. This information provides critical information to monitor environmental health,  habitat connectivity and biodiversity status.'}
+												</Typography>
+											</Paper>
+										</Box>
+									)}
+
+									{activeStep === 7 && i === 7 && (
+									<Box display={'flex'} justifyContent={'space-between'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
+										<Box display={'flex'} flexDirection={'column'}>
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
+											</Paper>
+										</Box>
+										<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
+											<Typography variant={'body1'} gutterBottom>
+												{'Using deep learning and very high resolution data, we can go into even greater details by mapping each individual green landscape feature. In this example, we have used a combination of LIDAR intensity data, a normalised elevation model (nDSM), GeoDK vector reference data and aerial imagery (10 cm resolution) to map and quantify the amount of green objects in Gedser, Denmark.'}
+											</Typography>
 										</Paper>
 									</Box>
 									)}
@@ -410,6 +588,7 @@ const Story: FC<StoryProps> = () => {
 						))
 					}
 				</Scroll>
+
 			</Box>
 			)}
 		</>

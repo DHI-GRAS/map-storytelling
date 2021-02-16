@@ -31,7 +31,7 @@
 		"typescript": "~3.7.2"
 	},
 	"devDependencies": {
-		"@dhi-gras/build-cfg": "^0.1.2",
+		"@dhi-gras/build-cfg": "0.1.5",
 		"@dhi-gras/eslint-config-react": "^1.0.3",
 		"@dhi-gras/eslint-config-ts": "^1.0.6",
 		"@types/d3-ease": "^2.0.0",

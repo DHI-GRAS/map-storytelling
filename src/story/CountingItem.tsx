@@ -13,18 +13,24 @@ interface Props {
 	max: number,
 	name: string,
 	duration: number,
+	scale?: number,
 }
 
-const CountingItem: FC<Props> = ({ max, name, duration }) => {
+const CountingItem: FC<Props> = ({
+	max, name, duration, scale = 1,
+}) => {
 
 	const [ value, setValue ] = useState(0)
 	const classes = useStyles()
 	useEffect(() => {
 
 		let start = 0
-
+		const isWithDecimals = max % 1 !== 0
 		// eslint-disable-next-line radix
-		const end = parseInt(String(max).substring(0, 3))
+		const decimalsAppend = isWithDecimals && Number(String(max).split('.')[ 1 ])
+		const copyMax = isWithDecimals ? Number(String(max).split('.')[ 0 ]) : max
+		const end = parseInt(String(copyMax).substring(0, 3))
+
 
 		if (start === end) return
 
@@ -32,9 +38,14 @@ const CountingItem: FC<Props> = ({ max, name, duration }) => {
 		const timer = setInterval(() => {
 
 			start += 1
-			const toCount = String(start) + String(max).substring(3)
+			const toCount = String(start) + String(copyMax).substring(3)
 			setValue(Number(toCount))
-			if (start === end) clearInterval(timer)
+			if (start === end) {
+
+				isWithDecimals && setValue(Number(`${toCount}.${String(decimalsAppend)}`))
+				clearInterval(timer)
+
+			}
 
 		}, incrementTime)
 
@@ -43,11 +54,11 @@ const CountingItem: FC<Props> = ({ max, name, duration }) => {
 	}, [ max, duration ])
 
 	return (
-		<Box p={1} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={200}>
+		<Box p={'2px'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={200}>
 			<Typography variant={'h4'} gutterBottom>
 				{value}
 			</Typography>
-			<Box className={classes.barBox} style={{ height: value / 2 }} />
+			<Box className={classes.barBox} style={{ height: value / scale }} />
 			<Typography variant={'body2'} style={{ fontSize: 12 }}>
 				{name}
 			</Typography>

@@ -8,9 +8,10 @@ import CountingItem from './CountingItem'
 interface Props {
 	items: ForestArea[],
 	title: String,
+	heightScale?: number,
 }
 
-const StatisticsCounter: FC<Props> = ({ items, title }) => {
+const StatisticsCounter: FC<Props> = ({ items, title, heightScale }) => {
 
 	const [ isExpanded, setIsExpanded ] = useState(true)
 
@@ -24,7 +25,7 @@ const StatisticsCounter: FC<Props> = ({ items, title }) => {
 					display={'flex'}
 					alignItems={'center'}
 					justifyContent={'center'}
-					p={1}
+					p={'2px'}
 					onClick={() => setIsExpanded(!isExpanded)}
 					style={{ cursor: 'pointer' }}
 				>
@@ -39,6 +40,7 @@ const StatisticsCounter: FC<Props> = ({ items, title }) => {
 							max={item.maxVal}
 							name={item.name}
 							duration={item.duration}
+							scale={heightScale}
 						/>
 					))}
 				</Box>
