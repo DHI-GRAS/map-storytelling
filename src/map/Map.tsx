@@ -51,6 +51,13 @@ const Map: FC = () => {
 					mapStyle={configFile.style}
 					// style={{ opacity: 0.1 }}
 				/>
+				<Box position={'fixed'} style={{ right: '1rem', bottom: '2rem' }}>
+					<img
+						style={{ width: 100, height: 'auto' }}
+						src={'https://grasdatastorage.blob.core.windows.net/images/DHI_GRAS_Logo_Neg_RGB.png'}
+						alt={'GRAS_logo'}
+					/>
+				</Box>
 			</DeckGL>
 		</Box>
 

@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 	paging: {
 		position: 'fixed',
 		bottom: '2rem',
-		right: '1rem',
+		right: '8rem',
 		zIndex: 10000,
 	},
 })

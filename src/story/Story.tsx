@@ -394,10 +394,10 @@ const Story: FC<StoryProps> = () => {
 					</Typography>
 					<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
 						<i>
-							{'Begin your journey by clicking the button in the upper right corner'}
+							{'Begin your journey by clicking the green button'}
 						</i>
 					</Typography>
-				</Box>
+					</Box>
 			)}
 			<Box display={'flex'} flexDirection={'column'} position={'fixed'} style={{ top: '1rem', right: '2rem', zIndex: 10000 }}>
 				{activeStep !== null && (
@@ -407,7 +407,7 @@ const Story: FC<StoryProps> = () => {
 						onClick={() => onEnableMap(isJourneyMode)}
 						className={classes.journeyButton}
 					>
-						{isJourneyMode ? 'Explore' : 'Continue story'}
+						{isJourneyMode ? 'Explore data' : 'Continue story'}
 					</Button>
 				)}
 
@@ -417,7 +417,7 @@ const Story: FC<StoryProps> = () => {
 					onClick={onJourneyModeEdit}
 					className={classes.journeyButton}
 				>
-					{!isJourneyMode ? 'Explore the Green Map of Denmark' : 'End'}
+					{!isJourneyMode && activeStep === null ? 'Explore the Green Map of Denmark' : 'End'}
 				</Button>
 			</Box>
 

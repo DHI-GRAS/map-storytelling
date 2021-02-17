@@ -29,6 +29,7 @@ const CountingItem: FC<Props> = ({
 		// eslint-disable-next-line radix
 		const decimalsAppend = isWithDecimals && Number(String(max).split('.')[ 1 ])
 		const copyMax = isWithDecimals ? Number(String(max).split('.')[ 0 ]) : max
+		// eslint-disable-next-line radix
 		const end = parseInt(String(copyMax).substring(0, 3))
 
 
