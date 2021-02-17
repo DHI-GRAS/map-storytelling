@@ -137,7 +137,7 @@ const munClorTextMarkersWElevation: TextMarkerConfig = {
 		{
 			coordinates: [ 11.128741396470142, 57.292776066803675 ],
 			text: '24019 m2',
-			elevation: 240,
+			elevation: 200,
 		},
 	],
 }
@@ -157,7 +157,7 @@ const multipleConifers: RasterConfig = {
 	opacity: 0.5,
 	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-species/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
 		JSON.stringify({
-			1: '#0D6D27', 2: '#FFFF00', 3: '#22EE5B', 4: '#7D4C05', 5: '#FF8A00', 6: '#FFFFFF',
+			1: '#0D6D27', 2: '#FFFF00', 3: '#22EE5B', 4: '#7D4C05', 5: '#FF8A00', 6: '#001BCB',
 		})
 	)}` ],
 }
@@ -286,8 +286,12 @@ const animationTextMarkersDK: TextMarkerConfig = {
 	data:
 	[
 		{
+			coordinates: [ 11.728074, 54.763481 ],
+			text: 'Flooded area',
+		},
+		{
 			coordinates: [ 9.114974, 55.208999 ],
-			text: '31 solar cells',
+			text: '5 solar cells',
 		},
 		{
 			coordinates: [ 8.279515, 55.810075 ],
@@ -305,10 +309,7 @@ const animationTextMarkersDK: TextMarkerConfig = {
 			coordinates: [ 10.734806, 56.197880 ],
 			text: 'Coastal erosion (50 cm)',
 		},
-		{
-			coordinates: [ 11.728074, 54.663481 ],
-			text: 'Flooded area',
-		},
+
 		{
 			coordinates: [ 12.293662, 55.768230 ],
 			text: 'A broken street light pole',
@@ -356,7 +357,7 @@ const config: Config = {
 			description: 'Up to date national forest map from 2020',
 			location: {
 				center: [ 10.165798, 55.513295 ],
-				zoom: 7,
+				zoom: 6.8,
 				pitch: 40,
 				bearing: -10,
 			},
@@ -383,7 +384,7 @@ const config: Config = {
 			title: 'Square Meter (m2) forest per inhabitant by municipality in 2020',
 			location: {
 				center: [ 10.165798, 55.513295 ],
-				zoom: 7,
+				zoom: 6.7,
 				pitch: 60,
 				bearing: 10,
 			},

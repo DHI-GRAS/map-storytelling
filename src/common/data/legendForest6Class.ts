@@ -21,7 +21,7 @@ const legendItems = [
 	},
 	{
 		name: 'Larch',
-		color: '#FFFFFF',
+		color: '#001BCB',
 	},
 ]
 

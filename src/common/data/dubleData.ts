@@ -1,4 +1,6 @@
-export type DoubleData = { name: string; maxVal1: number; maxVal2: number; duration: number }
+export interface DoubleData {
+ name: string, maxVal1: number, maxVal2: number, duration: number,
+}
 
 export const doubleData: DoubleData[] = [
 	{

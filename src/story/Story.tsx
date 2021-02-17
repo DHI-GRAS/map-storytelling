@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, {
 	FC, useContext, CSSProperties, useRef, MutableRefObject,
 } from 'react'
@@ -11,7 +12,6 @@ import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import { forestArea } from 'common/data/forestAreaData'
 import { doubleData } from 'common/data/dubleData'
-import { herningData } from 'common/data/herningData'
 import { forestPerInhabitant } from 'common/data/forestPerInhabitant'
 import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
@@ -26,9 +26,42 @@ import videoPoster from 'common/images/loading_video.jpg'
 import videoFile from 'common/images/story-landing-video-1.mp4'
 import legendForest2Class from 'common/data/legendForest2Class'
 import legendForest6Class from 'common/data/legendForest6Class'
+import Info from 'info/Info'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
 import Legend from './Legend'
+
+const textOnLandingInfo = [
+	'The Green map of Denmark was developed by DHI GRAS in 2021 to illustrate the potential, and opportunities, of earth observation (EO) technology to comprehensively map and monitor green features at scale. Learn how EO is used for frequent monitoring of national level forest cover, forest species mapping and see how it can be applied to map individual green objects in urban and rural landscapes',
+	'Learn more at www.dhi-gras.com or reach out to us at gras@dhigroup.com',
+]
+
+const textSlide1Info = [
+	'With up-to-date satellite imagery and novel AI technology, national level forest cover can be mapped quickly and efficiently and updated as often as needed (monthly/yearly).',
+	'This data provides information to continuously assess carbon storage, report on national forest cover, extent assess and monitor the effect of national forest management programmes, and much more…',
+]
+
+const textSlide2Info = [
+	'This choropleth map indicates the amount of forest (m2) per inhabitant per municipality in 2020.',
+	'This information could for example be used to assess the effect of reforestation projects at municipal level, over time, to underpin efforts to maintain balance between population increase and access to green space.',
+]
+
+const textSlide3Info = [
+	'As an example, Aarhus municipality has a strategic goal of increasing the forest cover by 3200 hectares before 2030. Approximately 200 hectares (2 km2) of forest needs to be raised each year to reach that target. With this tool, we can calculate how much forest is raised, month by month, until 2030 (and beyond). This way, everyone can follow the progress of efforts to make Denmark greener.',
+]
+
+const textSlide4Info = [
+	'While it is important to know where the forest is, and how much there is, it is equally important to have information on the diversity of forest areas. This data illustrates the extent of coniferous and deciduous forest areas in 2020, providing important information used to underpin biodiversity conservation and habitat connectivity objectives.',
+]
+
+const textSlide5Info = [
+	'Using AI and time-series of high resolution satellite imagery, it is even possible to classify the extent of forest areas by species.',
+	'In this area, in Gribskov (Grib forest), the dominant species are Beech and Fir, followed by Oak and Birch. Small patches of Maple and Larch trees are also encountered. This information provides critical information to monitor environmental health, habitat connectivity and biodiversity status.',
+]
+
+const textSlide7Info = [
+	'Using deep learning and very high resolution data, we can go into even greater details by mapping each individual green landscape feature. In this example, we have used a combination of LIDAR intensity data, a normalised elevation model (nDSM), GeoDK vector reference data and aerial imagery (10 cm resolution) to map and quantify the amount of green objects in Gedser, Denmark.',
+]
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -49,7 +82,6 @@ const useStyles = makeStyles(() => ({
 	},
 	stepBoxItem: {
 		padding: '2rem',
-		maxWidth: '40%',
 		backgroundColor: 'rgba(255,255,255, .7)',
 	},
 	journeyButton: {
@@ -217,7 +249,7 @@ const Story: FC<StoryProps> = () => {
 
 						counter += 1
 
-					}, 5000)
+					}, 3000)
 
 					// situation where raster is not an animation so we just add it to the state
 
@@ -389,9 +421,15 @@ const Story: FC<StoryProps> = () => {
 					left: '4rem', top: '50%', transform: 'translateY(-50%)', zIndex: 10000,
 				}}
 				>
-					<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-						{'Welcome to the Green Map of Denmark'}
-					</Typography>
+					<Box display={'flex'} alignItems={'center'}>
+						<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+							{'Welcome to the Green Map of Denmark'}
+						</Typography>
+						<Info
+							text={textOnLandingInfo}
+							popoverStyle={{ marginLeft: '1rem' }}
+						/>
+					</Box>
 					<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
 						<i>
 							{'Begin your journey by clicking the green button'}
@@ -402,7 +440,7 @@ const Story: FC<StoryProps> = () => {
 			<Box display={'flex'} flexDirection={'column'} position={'fixed'} style={{ top: '1rem', right: '2rem', zIndex: 10000 }}>
 				{activeStep !== null && (
 					<Button
-						disabled={[ 8 ].includes(activeStep)}
+						disabled={[ 0, 8 ].includes(activeStep)}
 						variant={'contained'}
 						onClick={() => onEnableMap(isJourneyMode)}
 						className={classes.journeyButton}
@@ -459,16 +497,59 @@ const Story: FC<StoryProps> = () => {
 									}}
 								>
 									{item.title && i !== 0 && activeStep !== 0 && (
-									<Paper className={classes.stepBoxItem}>
-										<Typography variant={'h3'} gutterBottom>
-											{item.title}
-										</Typography>
-										{item.description && (
-											<Typography variant={'body1'} gutterBottom>
-												{item.description}
+									<Box display={'flex'} maxWidth={'40%'}>
+										<Paper className={classes.stepBoxItem}>
+											<Typography variant={'h3'} gutterBottom>
+												{item.title}
 											</Typography>
+											{item.description && (
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
+											)}
+										</Paper>
+										{activeStep === 1 && i === 1 && (
+											<Info
+												text={textSlide1Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
 										)}
-									</Paper>
+
+										{activeStep === 2 && i === 2 && (
+											<Info
+												text={textSlide2Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 3 && i === 3 && (
+											<Info
+												text={textSlide3Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 4 && i === 4 && (
+											<Info
+												text={textSlide4Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 5 && i === 5 && (
+											<Info
+												text={textSlide5Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 7 && i === 7 && (
+											<Info
+												text={textSlide7Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+									</Box>
 									)}
 									{
 										activeStep === 0 && i === 0 && (
@@ -493,95 +574,27 @@ const Story: FC<StoryProps> = () => {
 										)
 									}
 									{activeStep === 1 && i === 1 && (
-										<Box display={'flex'} justifyContent={'space-between'} style={{ alignSelf: 'flex-end', justifySelf: 'center' }}>
-											<Box display={'flex'} flexDirection={'column'}>
-												{item.id === 'forest-national-scale-layer' && (
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
-													</Paper>
-												)}
-												{item.id === 'forest-national-scale-layer' && (
-													<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-														<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
-													</Paper>
-												)}
-											</Box>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
-												<Typography variant={'body1'} gutterBottom>
-													{'With up-to-date satellite imagery and novel AI technology, national level forest cover can be mapped quickly and efficiently and updated as often as needed (monthly/yearly).'}
-												</Typography>
-												<Typography variant={'body1'} gutterBottom>
-													{'This data provides information to continuously assess carbon storage, report on national forest cover, extent assess and monitor the effect of national forest management programmes, and much more…'}
-												</Typography>
+										<Box display={'flex'} flexDirection={'column'}>
+											{item.id === 'forest-national-scale-layer' && (
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
 											</Paper>
+											)}
+											{item.id === 'forest-national-scale-layer' && (
+											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+												<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
+											</Paper>
+											)}
 										</Box>
 									)}
 
-									{activeStep === 2 && i === 2 && (
-										<Paper className={classes.stepBoxItem} style={{
-											maxWidth: '25%', padding: '1rem', alignSelf: 'flex-end',
-										}}
-										>
-											<Typography variant={'body1'} gutterBottom>
-												{'This choropleth map indicates the amount of forest (m2) per inhabitant per municipality in 2020.'}
-											</Typography>
-											<Typography variant={'body1'} gutterBottom>
-												{'This information could for example be used to assess the effect of reforestation projects at municipal level, over time, to underpin efforts to maintain balance between population increase and access to green space.'}
-											</Typography>
-										</Paper>
-									)}
-									{activeStep === 3 && i === 3 && (
-										<Box display={'flex'} justifyContent={'space-between'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
-											<Box display={'flex'} flexDirection={'column'}>
-												<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-													<StatisticsCounter title={'km2'} items={herningData} heightScale={0.4} />
-												</Paper>
-											</Box>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
-												<Typography variant={'body1'} gutterBottom>
-													{'As an example, Aarhus municipality has a strategic goal of increasing the forest cover by 3200 hectares before 2030. Approximately 200 hectares (2 km2) of forest needs to be raised each year to reach that target. With this tool, we can calculate how much forest is raised, month by month, until 2030 (and beyond). This way, everyone can follow the progress of efforts to make Denmark greener.'}
-												</Typography>
-											</Paper>
-										</Box>
-									)}
-
-									{
-										activeStep === 4 && i === 4 && (
-											<Box display={'flex'} justifyContent={'flex-end'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
-												<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
-													<Typography variant={'body1'} gutterBottom>
-														{'While it is important to know where the forest is, and how much there is, it is equally important to have information on the diversity of forest areas. This data illustrates the extent of coniferous and deciduous forest areas in 2020, providing important information used to underpin biodiversity conservation and habitat connectivity objectives.'}
-													</Typography>
-												</Paper>
-											</Box>
-										)
-									}
-									{activeStep === 5 && i === 5 && (
-										<Box display={'flex'} justifyContent={'flex-end'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
-												<Typography variant={'body1'} gutterBottom>
-													{'Using AI and time-series of high resolution satellite imagery, it is even possible to classify the extent of forest areas by species.'}
-												</Typography>
-												<Typography variant={'body1'} gutterBottom>
-													{'In this area, in Gribskov (Grib forest), the dominant species are Beech and Fir, followed by Oak and Birch. Small patches of Maple and Larch trees are also encountered. This information provides critical information to monitor environmental health,  habitat connectivity and biodiversity status.'}
-												</Typography>
-											</Paper>
-										</Box>
-									)}
 
 									{activeStep === 7 && i === 7 && (
-									<Box display={'flex'} justifyContent={'space-between'} style={{ height: '100%', alignSelf: 'flex-end', justifySelf: 'center' }}>
 										<Box display={'flex'} flexDirection={'column'}>
 											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
 												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
 											</Paper>
 										</Box>
-										<Paper className={classes.stepBoxItem} style={{ maxWidth: '25%', height: 'fit-content', alignSelf: 'flex-end' }}>
-											<Typography variant={'body1'} gutterBottom>
-												{'Using deep learning and very high resolution data, we can go into even greater details by mapping each individual green landscape feature. In this example, we have used a combination of LIDAR intensity data, a normalised elevation model (nDSM), GeoDK vector reference data and aerial imagery (10 cm resolution) to map and quantify the amount of green objects in Gedser, Denmark.'}
-											</Typography>
-										</Paper>
-									</Box>
 									)}
 								</Box>
 							</Box>
