@@ -16,8 +16,8 @@ const StatisticsCounter: FC<Props> = ({ items, title, heightScale }) => {
 	const [ isExpanded, setIsExpanded ] = useState(true)
 
 	return (
-		<Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
-			<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+		<Box display={'flex'} justifyContent={'center'} flexDirection={'column'}>
+			<Box display={'flex'} justifyContent={'center'} alignItems={'center'} width={'100%'}>
 				<Typography variant={'h4'} align={'center'}>
 					{title}
 				</Typography>
@@ -33,7 +33,7 @@ const StatisticsCounter: FC<Props> = ({ items, title, heightScale }) => {
 				</Box>
 			</Box>
 			{isExpanded && (
-				<Box display={'flex'} p={0}>
+				<Box display={'flex'} p={0} justifyContent={'space-between'}>
 					{items.map((item, i) => (
 						<CountingItem
 							key={`county-${i}`}

@@ -29,7 +29,7 @@ const DoubleCountingItem: FC<Props> = ({
 
 	const classes = useStyles()
 
-	const divideBy = val => {
+	const divideBy = (val: number) => {
 
 		if (val < 500) return 5
 

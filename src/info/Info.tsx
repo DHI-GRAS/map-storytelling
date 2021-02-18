@@ -8,11 +8,14 @@ import { InfoOutlined as InfoOutlinedIcon, Info as InfoIcon } from '@material-ui
 const useStyles = makeStyles(theme => ({
 	icons: {
 		cursor: 'pointer',
-		fontSize: 30,
+		fontSize: 28,
 	},
-	// textWrapper: {
-	// 	maxWidth: '30vw',
-	// },
+	iconBox: {
+		backgroundColor: theme.palette.primary.main,
+		width: '20px',
+		height: '20px',
+		borderRadius: '50%',
+	},
 	tooltipBox: {
 		backgroundColor: 'rgba(255,255,255,.7)',
 		borderRadius: '4px',
@@ -31,7 +34,6 @@ interface Props {
 const Info: FC<Props> = ({
 	text,
 	color = '#FFF',
-	popoverStyle = {},
 }) => {
 
 	const [ hoverOpen, setHoverOpen ] = useState(false)
@@ -58,8 +60,10 @@ const Info: FC<Props> = ({
 					style={{ color }}
 					display={'flex'}
 					alignItems={'center'}
+					justifyContent={'center'}
 					onMouseEnter={() => setHoverOpen(!hoverOpen)}
 					onMouseLeave={() => setHoverOpen(!hoverOpen)}
+					className={classes.iconBox}
 				>
 					{!hoverOpen ? <InfoOutlinedIcon className={classes.icons} /> : <InfoIcon className={classes.icons} />}
 				</Box>

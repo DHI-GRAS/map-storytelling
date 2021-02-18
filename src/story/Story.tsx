@@ -27,41 +27,19 @@ import videoFile from 'common/images/story-landing-video-1.mp4'
 import legendForest2Class from 'common/data/legendForest2Class'
 import legendForest6Class from 'common/data/legendForest6Class'
 import Info from 'info/Info'
+import aarhusData from 'common/data/aarhusData'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
 import Legend from './Legend'
-
-const textOnLandingInfo = [
-	'The Green map of Denmark was developed by DHI GRAS in 2021 to illustrate the potential, and opportunities, of earth observation (EO) technology to comprehensively map and monitor green features at scale. Learn how EO is used for frequent monitoring of national level forest cover, forest species mapping and see how it can be applied to map individual green objects in urban and rural landscapes',
-	'Learn more at www.dhi-gras.com or reach out to us at gras@dhigroup.com',
-]
-
-const textSlide1Info = [
-	'With up-to-date satellite imagery and novel AI technology, national level forest cover can be mapped quickly and efficiently and updated as often as needed (monthly/yearly).',
-	'This data provides information to continuously assess carbon storage, report on national forest cover, extent assess and monitor the effect of national forest management programmes, and much more…',
-]
-
-const textSlide2Info = [
-	'This choropleth map indicates the amount of forest (m2) per inhabitant per municipality in 2020.',
-	'This information could for example be used to assess the effect of reforestation projects at municipal level, over time, to underpin efforts to maintain balance between population increase and access to green space.',
-]
-
-const textSlide3Info = [
-	'As an example, Aarhus municipality has a strategic goal of increasing the forest cover by 3200 hectares before 2030. Approximately 200 hectares (2 km2) of forest needs to be raised each year to reach that target. With this tool, we can calculate how much forest is raised, month by month, until 2030 (and beyond). This way, everyone can follow the progress of efforts to make Denmark greener.',
-]
-
-const textSlide4Info = [
-	'While it is important to know where the forest is, and how much there is, it is equally important to have information on the diversity of forest areas. This data illustrates the extent of coniferous and deciduous forest areas in 2020, providing important information used to underpin biodiversity conservation and habitat connectivity objectives.',
-]
-
-const textSlide5Info = [
-	'Using AI and time-series of high resolution satellite imagery, it is even possible to classify the extent of forest areas by species.',
-	'In this area, in Gribskov (Grib forest), the dominant species are Beech and Fir, followed by Oak and Birch. Small patches of Maple and Larch trees are also encountered. This information provides critical information to monitor environmental health, habitat connectivity and biodiversity status.',
-]
-
-const textSlide7Info = [
-	'Using deep learning and very high resolution data, we can go into even greater details by mapping each individual green landscape feature. In this example, we have used a combination of LIDAR intensity data, a normalised elevation model (nDSM), GeoDK vector reference data and aerial imagery (10 cm resolution) to map and quantify the amount of green objects in Gedser, Denmark.',
-]
+import {
+	textOnLandingInfo,
+	textSlide1Info,
+	textSlide2Info,
+	textSlide3Info,
+	textSlide4Info,
+	textSlide5Info,
+	textSlide7Info,
+} from './infoText'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -78,7 +56,6 @@ const useStyles = makeStyles(() => ({
 		alignItems: 'center',
 		padding: '2rem',
 		transition: 'all .3s ease-in',
-
 	},
 	stepBoxItem: {
 		padding: '2rem',
@@ -461,7 +438,7 @@ const Story: FC<StoryProps> = () => {
 
 			{
 				activeStep === 4 && (
-					<Box position={'fixed'} style={{ left: '1rem', bottom: '3rem' }}>
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
 						<Legend items={legendForest2Class} />
 					</Box>
 				)
@@ -469,7 +446,7 @@ const Story: FC<StoryProps> = () => {
 
 			{
 				activeStep === 5 && (
-					<Box position={'fixed'} style={{ left: '1rem', bottom: '3rem' }}>
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
 						<Legend items={legendForest6Class} />
 					</Box>
 				)
@@ -493,10 +470,13 @@ const Story: FC<StoryProps> = () => {
 										opacity: activeStep === i ? 1 : 0.2,
 										justifyContent: item.alignmentX,
 										alignItems: item.alignmentY,
-										flexDirection: [ 1, 3, 4, 5, 7 ].includes(i) ? 'column' : 'row',
+										flexDirection: [ 1, 4, 5, 7 ].includes(i) ? 'column' : 'row',
 									}}
 								>
-									{item.title && i !== 0 && activeStep !== 0 && (
+									{item.title &&
+									activeStep !== null &&
+									![ 0, 1, 3, 7 ].includes(i) &&
+									![ 0, 1, 3, 7 ].includes(activeStep) && (
 									<Box display={'flex'} maxWidth={'40%'}>
 										<Paper className={classes.stepBoxItem}>
 											<Typography variant={'h3'} gutterBottom>
@@ -508,13 +488,6 @@ const Story: FC<StoryProps> = () => {
 												</Typography>
 											)}
 										</Paper>
-										{activeStep === 1 && i === 1 && (
-											<Info
-												text={textSlide1Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
-
 										{activeStep === 2 && i === 2 && (
 											<Info
 												text={textSlide2Info}
@@ -574,27 +547,65 @@ const Story: FC<StoryProps> = () => {
 										)
 									}
 									{activeStep === 1 && i === 1 && (
-										<Box display={'flex'} flexDirection={'column'}>
-											{item.id === 'forest-national-scale-layer' && (
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
+										<Box display={'flex'}>
+											<Paper className={classes.stepBoxItem}>
+												<Typography variant={'h3'} gutterBottom>
+													{item.title}
+												</Typography>
+												{item.description && (
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
+												)}
+												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+													<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
+												</Box>
+												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+													<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
+												</Box>
 											</Paper>
-											)}
-											{item.id === 'forest-national-scale-layer' && (
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
-											</Paper>
-											)}
+											<Info
+												text={textSlide1Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
 										</Box>
 									)}
 
+									{activeStep === 3 && i === 3 && (
+										<Paper className={classes.stepBoxItem} style={{
+											marginTop: '1rem', display: 'flex', alignItems: 'center', flexDirection: 'column',
+										}}
+										>
+											<Box display={'flex'}>
+												<Typography variant={'h3'} gutterBottom style={{ maxWidth: 120 }}>
+													{item.title}
+												</Typography>
+											</Box>
+											{item.description && (
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
+											)}
+											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)', maxWidth: 100 }} p={0.5} mt={2}>
+												<StatisticsCounter title={'km2'} items={aarhusData} heightScale={0.4} />
+											</Box>
+										</Paper>
+									)}
 
 									{activeStep === 7 && i === 7 && (
-										<Box display={'flex'} flexDirection={'column'}>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
-											</Paper>
+									<Paper className={classes.stepBoxItem} style={{ minWidth: 450, marginTop: '1rem' }}>
+										<Typography variant={'h3'} gutterBottom>
+											{item.title}
+										</Typography>
+										{item.description && (
+										<Typography variant={'body1'} gutterBottom>
+											{item.description}
+										</Typography>
+										)}
+										<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+											<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
 										</Box>
+									</Paper>
 									)}
 								</Box>
 							</Box>

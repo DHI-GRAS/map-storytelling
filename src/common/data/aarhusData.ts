@@ -1,6 +1,6 @@
 import { ForestArea } from './forestAreaData'
 
-export const herningData: ForestArea[] = [
+const aarhusData: ForestArea[] = [
 	{
 		name: '2018',
 		maxVal: 49.9,
@@ -12,3 +12,5 @@ export const herningData: ForestArea[] = [
 		duration: 4.5,
 	},
 ]
+
+export default aarhusData

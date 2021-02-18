@@ -19,6 +19,7 @@ const generateTextMarkerLayer =
 			id: `${id}-${i}-textbox`,
 			data: [ item ],
 			getPosition: d => d.coordinates,
+			fontFamily: 'Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif',
 			getText: d => d.text,
 			getColor: () => [ 0, 0, 0, 255 ],
 			backgroundColor: [ 255, 255, 255 ],
