@@ -56,6 +56,7 @@ const DoubleCountingItem: FC<Props> = ({
 
 		// eslint-disable-next-line radix
 		const end1 = parseInt(String(max1).substring(0, 3))
+		// eslint-disable-next-line radix
 		const end2 = parseInt(String(max2).substring(0, 3))
 
 		if (start1 === end1) return

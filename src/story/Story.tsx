@@ -515,13 +515,6 @@ const Story: FC<StoryProps> = () => {
 												popoverStyle={{ marginLeft: '1rem' }}
 											/>
 										)}
-
-										{activeStep === 7 && i === 7 && (
-											<Info
-												text={textSlide7Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
 									</Box>
 									)}
 									{
@@ -593,19 +586,27 @@ const Story: FC<StoryProps> = () => {
 									)}
 
 									{activeStep === 7 && i === 7 && (
-									<Paper className={classes.stepBoxItem} style={{ minWidth: 450, marginTop: '1rem' }}>
-										<Typography variant={'h3'} gutterBottom>
-											{item.title}
-										</Typography>
-										{item.description && (
-										<Typography variant={'body1'} gutterBottom>
-											{item.description}
-										</Typography>
-										)}
-										<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-											<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
-										</Box>
-									</Paper>
+									<Box display={'flex'}>
+										<Paper className={classes.stepBoxItem} style={{ minWidth: 450 }}>
+											<Box style={{ maxWidth: 400 }}>
+												<Typography variant={'h3'} gutterBottom>
+													{item.title}
+												</Typography>
+												{item.description && (
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
+												)}
+											</Box>
+											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
+											</Box>
+										</Paper>
+										<Info
+											text={textSlide7Info}
+											popoverStyle={{ marginLeft: '1rem' }}
+										/>
+									</Box>
 									)}
 								</Box>
 							</Box>
