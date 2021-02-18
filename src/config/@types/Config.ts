@@ -1,6 +1,8 @@
-import { GeoJsonConfig, RasterConfig, MarkersConfig } from './layersConfig'
+import {
+	GeoJsonConfig, RasterConfig, MarkersConfig, TextMarkerConfig,
+} from './layersConfig'
 
-type FlexAlign = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+type FlexAlign = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch' | 'space-between'
 
 type Location = {
 	center: [number, number],
@@ -9,7 +11,7 @@ type Location = {
 	bearing: number,
 }
 
-type LayersConfig = GeoJsonConfig | RasterConfig | MarkersConfig
+type LayersConfig = GeoJsonConfig | RasterConfig | MarkersConfig | TextMarkerConfig
 
 export interface Chapter {
 	id: string,

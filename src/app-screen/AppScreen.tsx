@@ -28,8 +28,8 @@ const useStyles = makeStyles({
 	paging: {
 		position: 'fixed',
 		bottom: '2rem',
-		right: '1rem',
-		zIndex: 10000,
+		left: '2rem',
+		zIndex: 5000,
 	},
 })
 
@@ -111,13 +111,15 @@ const AppScreen: FC = () => {
 				{
 					activeStep !== null && (
 						<Box className={classes.paging}>
-							<Typography color={'secondary'} variant={'h3'}>
+							<Typography style={{ color: '#FFF' }} variant={'h3'}>
 								{`${activeStep + 1}/${configFile.chapters.length}`}
 							</Typography>
 						</Box>
 					)
 				}
 				<Map />
+
+
 				<Story />
 			</div>
 

@@ -7,7 +7,8 @@ import React, {
 	ReactElement,
 } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
+import ScrollAnimation from './ScrollAnimation'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -17,6 +18,12 @@ const useStyles = makeStyles(() => ({
 		// border: '2px dashed skyblue',
 		width: '100vw',
 		zIndex: 1000,
+	},
+	footerBar: {
+		width: '100%',
+		padding: '16px',
+		backgroundColor: 'rgba(255,255,255, .8)',
+
 	},
 }))
 
@@ -44,7 +51,7 @@ const Scroll: FC<Props> = ({
 	const classes = useStyles()
 
 	const HOCCopy = (props: any, child: ReactElement, key: number) => (
-		<Box ref={(el: HTMLDivElement | null) => {
+		<Box position={'relative'} ref={(el: HTMLDivElement | null) => {
 
 			if (el) ranges = [ ...ranges, (ranges[ ranges.length - 1 ] || 0) + el.scrollHeight ]
 
@@ -52,6 +59,14 @@ const Scroll: FC<Props> = ({
 		}} {...props} key={`scroll-item-${key}`}
 		>
 			{child}
+			{key === 0 && (
+				<Box position={'absolute'} style={{
+					bottom: '4rem', left: '50%', transform: 'translateX(-50%)', opacity: 0.8,
+				}}
+				>
+					<ScrollAnimation />
+				</Box>
+			)}
 		</Box>
 	)
 
@@ -77,7 +92,6 @@ const Scroll: FC<Props> = ({
 
 			window.requestAnimationFrame(() => {
 
-
 				setCurrentScrollTop((e.target as any)?.scrollingElement.scrollTop.toFixed())
 
 			})
@@ -96,7 +110,18 @@ const Scroll: FC<Props> = ({
 				{
 					children.map((child, i) => HOCCopy(child.props, child.props.children, i))
 				}
+				<Box className={classes.footerBar}>
+					<Typography variant={'body2'} align={'center'}>
+						{'For more information visit us at '}
+						<span >
+							<a href={'www.dhi-gras.com'} style={{ textDecoration: 'none', color: '#00a4ec' }}>
+								{'www.dhi-gras.com'}
+							</a>
+						</span>
+					</Typography>
+				</Box>
 			</div>
+
 		</Box>
 	)
 

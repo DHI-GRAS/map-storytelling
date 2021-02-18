@@ -14,6 +14,13 @@ type RasterAnimation = {
 	id: string,
 	type: 'raster',
 	url: string[],
+	opacity?: number,
+}
+
+type RasterGeojsonAnimation = {
+	id: string,
+	type: 'geojson',
+	data: GeoJsonConfig[],
 }
 
 export interface RasterConfig {
@@ -24,7 +31,7 @@ export interface RasterConfig {
 	opacity?: number,
 	animation?: boolean,
 	url?: string[],
-	rasters?: RasterAnimation[],
+	rasters?: (RasterAnimation | RasterGeojsonAnimation)[],
 }
 
 type MarkerItem = {
@@ -38,4 +45,18 @@ export interface MarkersConfig {
 	type: 'marker',
 	animation?: boolean,
 	data: MarkerItem[],
+}
+
+type TextMarkerItem = {
+	coordinates: [number, number],
+	text: string,
+	elevation?: number,
+}
+
+export interface TextMarkerConfig {
+	id: string,
+	visible: boolean,
+	type: 'text-marker',
+	animation?: boolean,
+	data: TextMarkerItem[],
 }
