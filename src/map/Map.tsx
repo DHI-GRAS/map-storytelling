@@ -8,6 +8,7 @@ import { Box } from '@material-ui/core'
 import { StaticMap } from 'react-map-gl'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
+import ScrollAnimation from 'scroll/ScrollAnimation'
 
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
@@ -58,6 +59,7 @@ const Map: FC = () => {
 						alt={'GRAS_logo'}
 					/>
 				</Box>
+
 			</DeckGL>
 		</Box>
 
