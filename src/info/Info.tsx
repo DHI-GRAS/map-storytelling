@@ -46,6 +46,7 @@ const Info: FC<Props> = ({
 			<Tooltip
 				classes={{ tooltip: classes.tooltip }}
 				placement={'right-end'}
+				enterTouchDelay={0}
 				title={(
 					<Box className={classes.tooltipBox} p={2} >
 						{text.map((t, i) => (
