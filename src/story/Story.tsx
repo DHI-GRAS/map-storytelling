@@ -1,32 +1,51 @@
+/* eslint-disable complexity */
 import React, {
-	FC, useState, useContext, useEffect, CSSProperties,
+	FC, useContext, CSSProperties, useRef, MutableRefObject,
 } from 'react'
 import {
 	Box, Typography, Paper, Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Scrollama, Step } from 'react-scrollama'
-import configFile from 'common/data/config'
+import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import { forestArea } from 'common/data/forestAreaData'
 import { doubleData } from 'common/data/dubleData'
-import { herningData } from 'common/data/herningData'
 import { forestPerInhabitant } from 'common/data/forestPerInhabitant'
 import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
+import generateTextMarkerLayer from 'common/layers/generateTextMarkerLayer'
+import Scroll from 'scroll/Scroll'
+import { Chapter } from 'config/@types/Config'
+import LayerTypes from 'common/layers/@types/LayerTypes'
+import videoPoster from 'common/images/loading_video.jpg'
+// eslint-disable-next-line import/extensions
+import videoFile from 'common/images/story-landing-video-1.mp4'
+import legendForest2Class from 'common/data/legendForest2Class'
+import legendForest6Class from 'common/data/legendForest6Class'
+import Info from 'info/Info'
+import aarhusData from 'common/data/aarhusData'
 import StatisticsCounter from './StatisticsCounter'
 import StatisticsCounterDouble from './StatisticsCounterDouble'
+import Legend from './Legend'
+import {
+	textOnLandingInfo,
+	textSlide1Info,
+	textSlide2Info,
+	textSlide3Info,
+	textSlide4Info,
+	textSlide5Info,
+	textSlide7Info,
+} from './infoText'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
 		position: 'absolute',
 		overflow: 'auto',
 		margin: '0',
-		// border: '2px dashed skyblue',
 		width: '100vw',
 		zIndex: 1000,
 	},
@@ -40,9 +59,10 @@ const useStyles = makeStyles(() => ({
 	},
 	stepBoxItem: {
 		padding: '2rem',
-		maxWidth: '40%',
+		backgroundColor: 'rgba(255,255,255, .7)',
 	},
 	journeyButton: {
+		marginTop: '1rem',
 		backgroundColor: '#188D01',
 		'&:hover': {
 			backgroundColor: '#199600',
@@ -52,11 +72,6 @@ const useStyles = makeStyles(() => ({
 		},
 	},
 }))
-
-type dataType = {
-	step: number,
-	data: any,
-}
 
 type StepIndex = number | null
 
@@ -69,83 +84,120 @@ const bannerVideo: CSSProperties = {
 	marginTop: '1rem',
 	width: '30%',
 	height: 'auto',
-	// minHeight: ' 100%',
-	// transform: 'translateX(-50%) translateY(-50%)',
 	zIndex: -1,
 }
 
-const Story: FC<StoryProps> = ({ stepIndex }) => {
+const Story: FC<StoryProps> = () => {
 
 	const classes = useStyles()
 
 	const {
-		state: { isJourneyMode },
-		actions: { setViewport, setLayers, onSetStoryMode },
+		state: {
+			isJourneyMode,
+			layers,
+			activeStep,
+		},
+		actions: {
+			setViewport,
+			setLayers,
+			onSetStoryMode,
+			onEnableMap,
+			setActiveStep,
+		},
 	} = useContext(AppContext)
 
-	const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(stepIndex ?? 0)
-	const [ isExecExit, setIsExecExit ] = useState(false)
+	// IMPROVEMENT - merge both chapterEnter & chapterExit in the same function
+
+	// const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(null)
 	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
 	// holder of the interval if we have an animation situation
-	let rasterAnim: NodeJS.Timeout
-	let markerAnim: NodeJS.Timeout
+	const rasterAnim: MutableRefObject<any> = useRef(undefined)
+	const markerAnim: MutableRefObject<any> = useRef(undefined)
 
-	const onStepEnter = ({ data }: {data: dataType}) => {
+	const chapterEnter = (data: Chapter, layersLocal: any) => {
 
-		const onEnter = data.data.onChapterEnter
-		// using the layers state from context will always return the default state value.
-		if (onEnter.length > 0) setLayers((ls: any[]) => {
+		let layersCopy = [ ...layersLocal ]
 
-			let layersCopy = [ ...ls ]
+		if (data.onChapterEnter.length > 0) data.onChapterEnter.forEach((item: any) => {
 
-			// for each layer that needs to be added
-			onEnter.forEach((item: any) => {
+			const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id || stateLayer.id.includes(item.id))
 
+			if (item.type === 'marker') {
 
-				// we check if the layer is found in the state
-				const isFound = layersCopy.findIndex(stateLayer => item.id === stateLayer.id)
-				// check the layer type
-				if (item.type === 'marker') {
+				// if we want to make the item invisible, we remove it from the state array
+				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) if (item.animation === true) {
 
-					// if we want to make the item invisible, we remove it from the state array
-					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-					else if (isFound === -1) if (item.animation === true) {
+					let counter = 0
+					// get how many raster we have to switch between
+					const markerCount = item.data.length
+					// start the interval assingning it to the global value
+					markerAnim.current = setInterval(() => {
 
-						let counter = 0
-						// get how many raster we have to switch between
-						const markerCount = item.data.length
-						// start the interval assingning it to the global value
-						markerAnim = setInterval(() => {
+						const currentMark = item.data[ counter ]
+						// build the new raster layer
+						const newLayer = generateMarkerLayer(currentMark.id, [ currentMark ], true)
+						setLayers((l: any) => [ ...l.filter((lyr: LayerTypes) => lyr.id !== currentMark.id), newLayer ])
+						// update the counter
+						if (counter === markerCount - 1 && markerAnim.current) clearInterval(markerAnim.current)
 
-							const currentMark = item.data[ counter ]
-							// build the new raster layer
-							const newLayer = generateMarkerLayer(currentMark.id, [ currentMark ], true)
-							setLayers((l: any) => [ ...l, newLayer ])
-							// update the counter
-							if (counter === markerCount - 1) clearInterval(markerAnim)
+						counter += 1
 
-							counter += 1
+					}, 2000)
 
-						}, 2000)
+				} else {
 
-					} else {
-
-						// if the layer is new aka it's not found, get the data.
-						// Propbably using only item.data is enough but don't wanna brake things.
-						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
-						// generate new layer and add it to the temporary array
-						const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
-						layersCopy = [ ...layersCopy, newLayer ]
-
-					}
-
-					return
+					// if the layer is new aka it's not found, get the data.
+					// Propbably using only item.data is enough but don't wanna brake things.
+					const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
+					// generate new layer and add it to the temporary array
+					const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
+					layersCopy = [ ...layersCopy, newLayer ]
 
 				}
 
+				return
 
-				if (item.type === 'raster') if (item.animation === true) {
+			}
+
+			if (item.type === 'text-marker') if (item.visible === false) layersCopy = layersCopy.filter(layer => !layer.id.includes(item.id))
+			else if (isFound === -1) if (item.animation === true) {
+
+				let counter = 0
+				// get how many raster we have to switch between
+				const markerCount = item.data.length
+				// start the interval assingning it to the global value
+				markerAnim.current = setInterval(() => {
+
+					const currentMark = item.data[ counter ]
+					const layerName = `${String(item.id)}${counter}`
+					const layerNamesOnMap = [ `${layerName}-0-textbox`, `${layerName}-0-marker` ]
+					// build the new raster layer
+					const newLayer = generateTextMarkerLayer(layerName, [ currentMark ])
+					setLayers((l: any) => [ ...l.filter((lyr: LayerTypes) => !layerNamesOnMap.includes(lyr.id)), ...newLayer ])
+					// update the counter
+					if (counter === markerCount - 1 && markerAnim.current) clearInterval(markerAnim.current)
+
+					counter += 1
+
+				}, 2000)
+
+			} else {
+
+				// if the layer is new aka it's not found, get the data.
+				// Propbably using only item.data is enough but don't wanna brake things.
+				const foundData = item.data
+				// generate new layer and add it to the temporary array
+				const newLayers = generateTextMarkerLayer(item.id, foundData)
+				layersCopy = [ ...layersCopy, ...newLayers ]
+
+			}
+
+
+			if (item.type === 'raster') {
+
+				if (item.animation === true) {
 
 					// setIsButtonDisabled(true)
 					// if item has animation we start a counter
@@ -153,68 +205,173 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 					// get how many raster we have to switch between
 					const rasterCount = item.rasters.length
 					// start the interval assingning it to the global value
-					rasterAnim = setInterval(() => {
+					rasterAnim.current = setInterval(() => {
 
 						// build the new raster layer
-						const newLayer = generateRasterLayer(item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.opacity)
-						setLayers((l: any) => [ ...l, newLayer ])
+						if (item.rasters[ counter ].type === 'raster') {
+
+							const newLayer = generateRasterLayer(
+								item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.rasters[ counter ].opacity
+							)
+							setLayers((l: any) => [ ...l.filter((el: any) => !el.id.includes('layers-animation-vector')), newLayer ])
+
+						} else if (item.rasters[ counter ].type === 'geojson') {
+
+							const newLayers = item.rasters[ counter ].data
+								.map((it: any) => generateGeoJsonLayer(it.id, it.data, it.visible, it.lineColor, it.fill, it.fillColor))
+							setLayers((l: any) => [ ...l, ...newLayers ])
+
+						}
 						// update the counter
-						if (counter === rasterCount - 1) clearInterval(rasterAnim)
+						if (counter === rasterCount - 1) clearInterval(rasterAnim.current)
 
 
 						counter += 1
 
-					}, 6000)
+					}, 3000)
 
 					// situation where raster is not an animation so we just add it to the state
 
-				} else {
+				} else
 
-					// if is not to be visible then filter the array
-					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-					else if (isFound === -1) {
+				// if is not to be visible then filter the array
+				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) {
 
-						const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
-						layersCopy = [ ...layersCopy, newLayer ]
-
-					}
-
-					// if the raster is not found add it to the state
-
-
-					return
-
-				}
-
-
-				// if geojson then create new geojson layer
-				if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-				else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
-
-					const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
-					layersCopy = [ ...layersCopy, newLayer ]
-
-				} else {
-
-					const foundData = item.data
-					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
+					const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
 					layersCopy = [ ...layersCopy, newLayer ]
 
 				}
 
+				// if the raster is not found add it to the state
 
-			})
+				return
 
-			// at the end return the modified array to the state
-			return [ ...layersCopy ]
+			}
+
+			// if geojson then create new geojson layer
+			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+
+				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			} else {
+
+				const foundData = item.data
+				const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			}
 
 		})
 
-		// get center
-		const dataCenter = data.data.location.center
-		const { center, ...rest } = data.data.location
+		return layersCopy
 
-		setCurrentStepIndex(data.step)
+	}
+
+	const chapterExit = (data: Chapter | undefined, layersLocal: any) => {
+
+		let layersCopy = [ ...layersLocal ]
+		if (data && data.onChapterExit.length > 0) data.onChapterExit.forEach((item: any) => {
+
+			const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id || item.id.includes(stateLayer.id))
+			if (item.type === 'marker') {
+
+				if (item.animation === true) {
+
+					clearInterval(markerAnim.current)
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+
+				} else if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+				else if (isFound === -1) {
+
+					// const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
+
+					const newLayer = generateMarkerLayer(item.id, item.data, item.visible)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				}
+
+				return
+
+			}
+
+			if (item.type === 'text-marker') {
+
+				if (item.animation === true) {
+
+					clearInterval(markerAnim.current)
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+
+				} else if (item.visible === false) layersCopy = layersCopy.filter(lr => !lr.id.includes(item.id))
+
+
+				return
+
+			}
+
+			if (item.type === 'raster') {
+
+				if (item.animation === true) {
+
+					// remove the layers and clear the interval
+					layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
+					// setLayers([ ...layersCopy ])
+					clearInterval(rasterAnim.current)
+
+				} else
+
+				if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+
+				else if (isFound === -1) {
+
+					const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
+					layersCopy = [ ...layersCopy, newLayer ]
+
+				}
+
+				return
+
+			}
+
+			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
+			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+
+				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			} else {
+
+				const foundData = item.data
+				const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
+				layersCopy = [ ...layersCopy, newLayer ]
+
+			}
+
+
+		})
+
+
+		return layersCopy
+
+	}
+
+	const handleChangeStep = async(step: number, dataAfter: Chapter, dataBefore: Chapter | undefined) => {
+
+		setActiveStep(step)
+
+		const onExitLayersRemained = chapterExit(dataBefore, layers)
+		const onEnterLayersRemained = chapterEnter(dataAfter, onExitLayersRemained)
+
+		setLayers([ ...onEnterLayersRemained ])
+		// get center
+		const dataCenter = dataAfter.location.center
+		const { center, ...rest } = dataAfter.location
+
+
 		// update the viewport
 		setViewport({
 			longitude: dataCenter[ 0 ],
@@ -227,186 +384,185 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 	}
 
-	// onStepExit is the same function as onStepEnter
-	const onStepExit = ({ data }: {data: dataType}) => {
+	const onJourneyModeEdit = () => {
 
-		setIsExecExit(true)
-		const onExit = data.data.onChapterExit
-		if (onExit.length > 0) setLayers((lrs: any) => {
-
-			// use a copy of the layers found in the state
-			let layersCopy = [ ...lrs ]
-			onExit.forEach((item: any) => {
-
-				const isFound = layersCopy.findIndex((stateLayer: any) => item.id === stateLayer.id)
-				if (item.type === 'marker') {
-
-					if (item.animation === true) {
-
-						layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
-						setLayers([ ...layersCopy ])
-						clearInterval(markerAnim)
-
-					} else
-					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-
-					else if (isFound === -1) {
-
-						const foundData = (layersCopy[ isFound ]?.props.data || item.data) ?? undefined
-
-						const newLayer = generateMarkerLayer(item.id, foundData, item.visible)
-						layersCopy = [ ...layersCopy, newLayer ]
-
-					}
-
-					return
-
-				}
-
-				if (item.type === 'raster') {
-
-					if (item.animation === true) {
-
-						// remove the layers and clear the interval
-						layersCopy = layersCopy.filter(lrsPass => !lrsPass.id.includes(item.id))
-						setLayers([ ...layersCopy ])
-						clearInterval(rasterAnim)
-
-					} else
-
-					if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-
-					else if (isFound === -1) {
-
-						const newLayer = generateRasterLayer(item.id, item.url, item.visible, item.opacity)
-						layersCopy = [ ...layersCopy, newLayer ]
-
-					}
-
-					return
-
-				}
-
-				if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-				else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
-
-					const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
-					layersCopy = [ ...layersCopy, newLayer ]
-
-				} else {
-
-					const foundData = item.data
-					const newLayer = generateGeoJsonLayer(item.id, foundData, item.visible, item.lineColor, item.fill, item.fillColor)
-					layersCopy = [ ...layersCopy, newLayer ]
-
-				}
-
-
-			})
-
-			return [ ...layersCopy ]
-
-		})
-		setIsExecExit(false)
+		clearInterval(rasterAnim.current)
+		clearInterval(markerAnim.current)
+		onSetStoryMode(isJourneyMode)
+		if (isJourneyMode) setActiveStep(null)
 
 	}
 
-	useEffect(() => {
-
-		// if (currentStepIndex === 12) setTimeout(() => setToShowLast(true), 4000)
-
-	}, [ isExecExit ])
-
 	return (
 		<>
-			<Box position={'fixed'} style={{ top: '1rem', right: '1rem', zIndex: 10000 }}>
+			{!isJourneyMode && activeStep === null && (
+				<Box width={'50vw'} position={'fixed'} style={{
+					left: '4rem', top: '50%', transform: 'translateY(-50%)', zIndex: 10000,
+				}}
+				>
+					<Box display={'flex'} alignItems={'center'}>
+						<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
+							{'Welcome to the Green Map of Denmark'}
+						</Typography>
+						<Info
+							text={textOnLandingInfo}
+							popoverStyle={{ marginLeft: '1rem' }}
+						/>
+					</Box>
+					<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
+						<i>
+							{'Begin your journey by clicking the green button'}
+						</i>
+					</Typography>
+					</Box>
+			)}
+			<Box display={'flex'} flexDirection={'column'} position={'fixed'} style={{ top: '1rem', right: '2rem', zIndex: 10000 }}>
+				{activeStep !== null && (
+					<Button
+						disabled={[ 0, 8 ].includes(activeStep)}
+						variant={'contained'}
+						onClick={() => onEnableMap(isJourneyMode)}
+						className={classes.journeyButton}
+					>
+						{isJourneyMode ? 'Explore data' : 'Continue story'}
+					</Button>
+				)}
+
+
 				<Button
-					disabled={[ 12 ].includes(currentStepIndex)}
 					variant={'contained'}
-					onClick={() => onSetStoryMode(isJourneyMode)}
+					onClick={onJourneyModeEdit}
 					className={classes.journeyButton}
 				>
-					{!isJourneyMode ? 'Udforsk det grønne Danmark' : 'Afslut'}
+					{!isJourneyMode && activeStep === null ? 'Explore the Green Map of Denmark' : 'End'}
 				</Button>
 			</Box>
+
+			{
+				activeStep === 4 && (
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
+						<Legend items={legendForest2Class} />
+					</Box>
+				)
+			}
+
+			{
+				activeStep === 5 && (
+					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
+						<Legend items={legendForest6Class} />
+					</Box>
+				)
+			}
+
 			{isJourneyMode && (
-			<Box className={classes.storiesWrapper}>
-				<Scrollama
-					onStepEnter={data => !isExecExit && onStepEnter(data)}
-					onStepExit={onStepExit}
-					debug={undefined}
+			<Box>
+				<Scroll
+					data={configFile.chapters}
+					activeStep={activeStep ?? 0}
+					onChangeStep={handleChangeStep}
+					// debug
+					topOffset={300}
 				>
 					{
-				configFile.chapters.map((item, i) => (
-					<Step
-						data={{
-							step: i,
-							data: item,
-						}}
-						key={`step-${i}`}
-					>
-						<Box
-							className={classes.stepBox}
-							style={{
-								opacity: currentStepIndex === i ? 1 : 0.2,
-								justifyContent: item.alignmentX,
-								alignItems: item.alignmentY,
-								flexDirection: item.id === 'forest-national-scale-layer' ||
-								item.id === 'herning-commune' ||
-								item.id === 'raster-forest-class' ? 'column' : 'row',
-							}}
-						>
-							{(
-								<>
-									{item.title && currentStepIndex !== 0 && (
+						configFile.chapters.map((item, i) => (
+							<Box key={`step-${i}`}>
+								<Box
+									className={classes.stepBox}
+									style={{
+										opacity: activeStep === i ? 1 : 0.2,
+										justifyContent: item.alignmentX,
+										alignItems: item.alignmentY,
+										flexDirection: [ 1, 4, 5, 7 ].includes(i) ? 'column' : 'row',
+									}}
+								>
+									{item.title &&
+									activeStep !== null &&
+									![ 0, 1, 3, 7 ].includes(i) &&
+									![ 0, 1, 3, 7 ].includes(activeStep) && (
+									<Box display={'flex'} maxWidth={'40%'}>
 										<Paper className={classes.stepBoxItem}>
 											<Typography variant={'h3'} gutterBottom>
 												{item.title}
 											</Typography>
 											{item.description && (
-											<Typography variant={'body1'} gutterBottom>
-												{item.description}
-											</Typography>
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
 											)}
-
 										</Paper>
+										{activeStep === 2 && i === 2 && (
+											<Info
+												text={textSlide2Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 3 && i === 3 && (
+											<Info
+												text={textSlide3Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 4 && i === 4 && (
+											<Info
+												text={textSlide4Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+
+										{activeStep === 5 && i === 5 && (
+											<Info
+												text={textSlide5Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
+										)}
+									</Box>
 									)}
 									{
-										currentStepIndex === 0 && (
+										activeStep === 0 && i === 0 && (
 											<Box display={'flex'} flexDirection={'column'}>
-												<Box mb={2}>
-
+												<Box width={'50vw'} mb={1}>
 													<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-														{'Det Grønne Danmarkskort'}
+														{'The green map of Denmark'}
 													</Typography>
 													<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
 														<i>
-															{'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark'}
+															{'The gateway to an up to date and timely overview of the green Denmark'}
 														</i>
 													</Typography>
 												</Box>
-												<video autoPlay loop muted style={bannerVideo}>
+												<video autoPlay loop muted style={bannerVideo} poster={videoPoster}>
 													<source
-														src={'https://grasdatastorage.blob.core.windows.net/images/story_landing_video.mp4'}
+														src={videoFile}
 														type={'video/mp4'}
 													/>
 												</video>
 											</Box>
 										)
 									}
-									{currentStepIndex === 1 && (
-										<Box display={'flex'} flexDirection={'column'}>
-											{item.id === 'forest-national-scale-layer' && (
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'Top 5 - Mest skovdække (km2)'} items={forestArea} />
+									{activeStep === 1 && i === 1 && (
+										<Box display={'flex'}>
+											<Paper className={classes.stepBoxItem}>
+												<Typography variant={'h3'} gutterBottom>
+													{item.title}
+												</Typography>
+												{item.description && (
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
+												)}
+												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+													<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
+												</Box>
+												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
+													<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
+												</Box>
 											</Paper>
-											)}
-											{item.id === 'forest-national-scale-layer' && (
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'m2 skov/indbygger'} items={forestPerInhabitant} />
-											</Paper>
-											)}
-
+											<Info
+												text={textSlide1Info}
+												popoverStyle={{ marginLeft: '1rem' }}
+											/>
 										</Box>
 									)}
 
@@ -436,20 +592,36 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 										/>
 									</Box>
 									)}
-									{currentStepIndex === 11 && (
-										<Box display={'flex'} flexDirection={'column'}>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
+
+									{activeStep === 7 && i === 7 && (
+									<Box display={'flex'}>
+										<Paper className={classes.stepBoxItem} style={{ minWidth: 450 }}>
+											<Box style={{ maxWidth: 400 }}>
+												<Typography variant={'h3'} gutterBottom>
+													{item.title}
+												</Typography>
+												{item.description && (
+												<Typography variant={'body1'} gutterBottom>
+													{item.description}
+												</Typography>
+												)}
+											</Box>
+											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
 												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
-											</Paper>
-										</Box>
+											</Box>
+										</Paper>
+										<Info
+											text={textSlide7Info}
+											popoverStyle={{ marginLeft: '1rem' }}
+										/>
+									</Box>
 									)}
-								</>
-							)}
-						</Box>
-					</Step>
-				))
-			}
-				</Scrollama>
+								</Box>
+							</Box>
+						))
+					}
+				</Scroll>
+
 			</Box>
 			)}
 		</>
