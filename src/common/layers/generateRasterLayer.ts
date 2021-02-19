@@ -10,7 +10,7 @@ const generateRasterLayer = (id: string, url: string, visible = true, opacity = 
 	tileSize: 512,
 	visible,
 	opacity,
-	refinementStrategy: 'no-overlap',
+	refinementStrategy: 'best-available',
 	renderSubLayers: props => {
 
 		const {

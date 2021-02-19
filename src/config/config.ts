@@ -87,7 +87,7 @@ const rasterNationalForestCover: RasterConfig = {
 	type: 'raster',
 	opacity: 1,
 	url: [ `https://eyxf13ux54.execute-api.eu-central-1.amazonaws.com/production/singleband/sdfe-hack/forest-2class-s2-2020/2020/forest/{z}/{x}/{y}.png?colormap=explicit&explicit_color_map=${encodeURIComponent(
-		JSON.stringify({ 0: '#FFFFFF', 1: '#22EE5B' })
+		JSON.stringify({ 0: '#FFFFFF', 1: '#22EE5B', 2: '#22EE5B' })
 	)}` ],
 }
 
