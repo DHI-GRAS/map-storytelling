@@ -587,7 +587,7 @@ const Story: FC<StoryProps> = () => {
 											</Box>
 										</Paper>
 										<Info
-											text={textSlide2Info}
+											text={textSlide3Info}
 											popoverStyle={{ marginLeft: '1rem' }}
 										/>
 									</Box>
