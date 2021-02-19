@@ -65,11 +65,9 @@ interface StoryProps {
 }
 
 const bannerVideo: CSSProperties = {
-	// position: 'absolute',
-	// top: ' 50%',
-	// left: '50%',
-	width: '40%',
-	// minWidth: ' 100%',
+	minWidth: 150,
+	marginTop: '1rem',
+	width: '30%',
 	height: 'auto',
 	// minHeight: ' 100%',
 	// transform: 'translateX(-50%) translateY(-50%)',
@@ -411,12 +409,32 @@ const Story: FC<StoryProps> = ({ stepIndex }) => {
 
 										</Box>
 									)}
-									{currentStepIndex === 3 && (
-										<Box display={'flex'} flexDirection={'column'}>
-											<Paper className={classes.stepBoxItem} style={{ maxWidth: 'unset', marginTop: '1rem', padding: 1 }}>
-												<StatisticsCounter title={'km2'} items={herningData} />
-											</Paper>
-										</Box>
+
+									{activeStep === 3 && i === 3 && (
+									<Box display={'flex'}>
+										<Paper className={classes.stepBoxItem} style={{
+											display: 'flex', alignItems: 'center', flexDirection: 'column',
+										}}
+										>
+											<Box display={'flex'}>
+												<Typography variant={'h3'} gutterBottom style={{ maxWidth: 120 }}>
+													{item.title}
+												</Typography>
+											</Box>
+											{item.description && (
+											<Typography variant={'body1'} gutterBottom>
+												{item.description}
+											</Typography>
+											)}
+											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)', maxWidth: 100 }} p={0.5} mt={2}>
+												<StatisticsCounter title={'km2'} items={aarhusData} heightScale={0.4} />
+											</Box>
+										</Paper>
+										<Info
+											text={textSlide2Info}
+											popoverStyle={{ marginLeft: '1rem' }}
+										/>
+									</Box>
 									)}
 									{currentStepIndex === 11 && (
 										<Box display={'flex'} flexDirection={'column'}>
