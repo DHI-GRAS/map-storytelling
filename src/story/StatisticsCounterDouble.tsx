@@ -46,6 +46,7 @@ const StatisticsCounter: FC<Props> = ({ items, title, heightScale }) => {
 					))}
 				</Box>
 			)}
+
 		</Box>
 	)
 

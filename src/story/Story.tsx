@@ -71,6 +71,13 @@ const useStyles = makeStyles(() => ({
 			backgroundColor: '#B7F9A2',
 		},
 	},
+	colorBox: {
+		width: 16,
+		height: 16,
+	},
+	legendText: {
+		fontSize: '12px',
+	},
 }))
 
 type StepIndex = number | null
@@ -605,9 +612,32 @@ const Story: FC<StoryProps> = () => {
 													{item.description}
 												</Typography>
 												)}
+												<Typography variant={'body2'}>
+													<i>
+														{'(In this example, we have quantified all green features in 2019 and 2020, in a 1 km2 area of interest in Gedser, Denmark)'}
+													</i>
+												</Typography>
 											</Box>
 											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
 												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} heightScale={3} />
+											</Box>
+											<Box mt={1} display={'flex'}>
+												<Box mx={1} display={'flex'}>
+													<Box className={classes.colorBox} style={{ backgroundColor: '#FF8A00' }} />
+													<Box ml={0.5}>
+														<Typography variant={'body1'} className={classes.legendText}>
+															{'2019'}
+														</Typography>
+													</Box>
+												</Box>
+												<Box mx={1} display={'flex'}>
+													<Box className={classes.colorBox} style={{ backgroundColor: '#00A4EC' }} />
+													<Box ml={0.5}>
+														<Typography variant={'body1'} className={classes.legendText}>
+															{'2020'}
+														</Typography>
+													</Box>
+												</Box>
 											</Box>
 										</Paper>
 										<Info
