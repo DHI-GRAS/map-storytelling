@@ -9,6 +9,7 @@ import { StaticMap } from 'react-map-gl'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import ScrollAnimation from 'scroll/ScrollAnimation'
+import ViewState from '@deck.gl/core/controllers/view-state'
 
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
@@ -19,6 +20,7 @@ const Map: FC = () => {
 		state: {
 			viewport,
 			layers,
+			activeStep,
 		},
 		actions: {
 			setViewport,
@@ -29,6 +31,13 @@ const Map: FC = () => {
 	// 	data: 'https://k0zyvx2wa6.execute-api.eu-central-1.amazonaws.com/production/geoserver/sdfehack/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sdfehack:block_trees&outputFormat=application/json',
 	// 	onDataLoad: f => console.log(f),
 	// })
+
+	const onSetViewport = (vst: any) => {
+
+		if (activeStep === 1 && vst.zoom > 9) vst.zoom = 9
+		setViewport(vst)
+
+	}
 
 	return (
 		<Box
@@ -41,7 +50,7 @@ const Map: FC = () => {
 				controller
 				width={'100%'}
 				height={'100%'}
-				onViewStateChange={arg => setViewport(arg.viewState)}
+				onViewStateChange={arg => onSetViewport(arg.viewState)}
 				layers={[ ...layers ]}
 			>
 

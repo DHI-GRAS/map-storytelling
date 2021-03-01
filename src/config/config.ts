@@ -363,7 +363,10 @@ const config: Config = {
 			},
 			onChapterEnter: [
 				{
-					...denmarkCountryBorder, fill: true, lineColor: [ 255, 255, 255, 0 ], fillColor: [ 134, 162, 179, 100 ],
+					...denmarkCountryBorder,
+					fill: true,
+					lineColor: [ 255, 255, 255, 0 ],
+					fillColor: [ 134, 162, 179, 100 ],
 				},
 				rasterNationalForestCover,
 			],
