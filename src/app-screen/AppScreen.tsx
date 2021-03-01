@@ -10,6 +10,7 @@ import { easeCubicInOut } from 'd3-ease'
 import LayerTypes from 'common/layers/@types/LayerTypes'
 import configFile from 'config/config'
 import ProgressBar from 'scroll/ProgressBar'
+import ScrollAnimation from 'scroll/ScrollAnimation'
 import { Viewport, Context } from './@types/context'
 
 const useStyles = makeStyles({
@@ -29,6 +30,13 @@ const useStyles = makeStyles({
 	paging: {
 		position: 'fixed',
 		top: '2rem',
+		left: '50%',
+		transform: 'translateX(-50%)',
+		zIndex: 5000,
+	},
+	scrollBox: {
+		position: 'fixed',
+		bottom: '4rem',
 		left: '50%',
 		transform: 'translateX(-50%)',
 		zIndex: 5000,
@@ -114,6 +122,15 @@ const AppScreen: FC = () => {
 					activeStep !== null && (
 						<Box className={classes.paging}>
 							<ProgressBar step={activeStep + 1} totalSteps={configFile.chapters.length} />
+						</Box>
+					)
+				}
+				{
+					activeStep !== null && isJourneyMode && (
+						<Box className={classes.scrollBox}>
+							<ScrollAnimation
+								text={'You can navigate through the story by scrolling with your mouse or using the up and down keys on your keyboard'}
+							/>
 						</Box>
 					)
 				}
