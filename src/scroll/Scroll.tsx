@@ -59,14 +59,6 @@ const Scroll: FC<Props> = ({
 		}} {...props} key={`scroll-item-${key}`}
 		>
 			{child}
-			{key === 0 && (
-				<Box position={'absolute'} style={{
-					bottom: '4rem', left: '50%', transform: 'translateX(-50%)', opacity: 0.8,
-				}}
-				>
-					<ScrollAnimation />
-				</Box>
-			)}
 		</Box>
 	)
 
@@ -121,7 +113,6 @@ const Scroll: FC<Props> = ({
 					</Typography>
 				</Box>
 			</div>
-
 		</Box>
 	)
 
