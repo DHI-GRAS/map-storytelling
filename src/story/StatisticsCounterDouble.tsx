@@ -8,15 +8,16 @@ import CountingItemDouble from './CountingItemDouble'
 interface Props {
 	items: DoubleData[],
 	title: String,
+	heightScale?: number,
 }
 
-const StatisticsCounter: FC<Props> = ({ items, title }) => {
+const StatisticsCounter: FC<Props> = ({ items, title, heightScale }) => {
 
 	const [ isExpanded, setIsExpanded ] = useState(true)
 
 	return (
 		<Box display={'flex'} justifyContent={'center'} flexDirection={'column'}>
-			<Box display={'flex'} justifyContent={'center'} alignItems={'center'} width={1}>
+			<Box display={'flex'} justifyContent={'center'} alignItems={'center'} width={'100%'}>
 				<Typography variant={'h4'} align={'center'}>
 					{title}
 				</Typography>
@@ -24,7 +25,7 @@ const StatisticsCounter: FC<Props> = ({ items, title }) => {
 					display={'flex'}
 					alignItems={'center'}
 					justifyContent={'center'}
-					p={1}
+					p={'2px'}
 					onClick={() => setIsExpanded(!isExpanded)}
 					style={{ cursor: 'pointer' }}
 				>
@@ -40,6 +41,7 @@ const StatisticsCounter: FC<Props> = ({ items, title }) => {
 							max2={item.maxVal2}
 							name={item.name}
 							duration={item.duration}
+							scale={heightScale}
 						/>
 					))}
 				</Box>
