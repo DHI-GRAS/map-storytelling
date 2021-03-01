@@ -218,7 +218,12 @@ const Story: FC<StoryProps> = () => {
 						if (item.rasters[ counter ].type === 'raster') {
 
 							const newLayer = generateRasterLayer(
-								item.rasters[ counter ].id, item.rasters[ counter ].url, true, item.rasters[ counter ].opacity
+								item.rasters[ counter ].id,
+								item.rasters[ counter ].url,
+								true,
+								item.rasters[ counter ].opacity,
+								item.minZoom,
+								item.maxZoom
 							)
 							setLayers((l: any) => [ ...l.filter((el: any) => !el.id.includes('layers-animation-vector')), newLayer ])
 
