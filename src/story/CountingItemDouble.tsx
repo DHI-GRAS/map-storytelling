@@ -18,10 +18,11 @@ interface Props {
 	max2: number,
 	name: string,
 	duration: number,
+	scale?: number,
 }
 
 const DoubleCountingItem: FC<Props> = ({
-	max1, max2, name, duration,
+	max1, max2, name, duration, scale = 1,
 }) => {
 
 	const [ value1, setValue1 ] = useState(0)
@@ -93,20 +94,19 @@ const DoubleCountingItem: FC<Props> = ({
 	}, [ max1, max2, duration ])
 
 	return (
-		<Box p={1} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={200}>
-
+		<Box p={1} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={100}>
 			<Box display={'flex'} alignItems={'flex-end'} justifyContent={'center'} >
 				<Box mr={0.2} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'}>
 					<Typography variant={'body1'} gutterBottom>
 						{value1}
 					</Typography>
-					<Box className={classes.barBox2} style={{ height: value1 / divideBymax1 }} />
+					<Box className={classes.barBox2} style={{ height: (value1 / divideBymax1) / scale }} />
 				</Box>
 				<Box ml={0.2} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'}>
 					<Typography variant={'body1'} gutterBottom>
 						{value2}
 					</Typography>
-					<Box className={classes.barBox1} style={{ height: value2 / divideBymax2 }} />
+					<Box className={classes.barBox1} style={{ height: (value2 / divideBymax2) / scale }} />
 				</Box>
 			</Box>
 			<Typography variant={'body2'} style={{ fontSize: 12 }}>

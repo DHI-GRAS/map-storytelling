@@ -553,10 +553,10 @@ const Story: FC<StoryProps> = () => {
 												</Typography>
 												)}
 												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-													<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={2} />
+													<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={6} />
 												</Box>
 												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-													<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={2} />
+													<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={6} />
 												</Box>
 											</Paper>
 											<Info
@@ -583,7 +583,7 @@ const Story: FC<StoryProps> = () => {
 											</Typography>
 											)}
 											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)', maxWidth: 100 }} p={0.5} mt={2}>
-												<StatisticsCounter title={'km2'} items={aarhusData} heightScale={0.4} />
+												<StatisticsCounter title={'km2'} items={aarhusData} heightScale={1} />
 											</Box>
 										</Paper>
 										<Info
@@ -607,7 +607,7 @@ const Story: FC<StoryProps> = () => {
 												)}
 											</Box>
 											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} />
+												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} heightScale={3} />
 											</Box>
 										</Paper>
 										<Info

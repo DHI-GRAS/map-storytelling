@@ -55,7 +55,7 @@ const CountingItem: FC<Props> = ({
 	}, [ max, duration ])
 
 	return (
-		<Box p={'2px'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={200}>
+		<Box p={'2px'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-end'} height={100}>
 			<Typography variant={'h4'} gutterBottom>
 				{value}
 			</Typography>
