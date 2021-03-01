@@ -9,7 +9,8 @@ import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
 import LayerTypes from 'common/layers/@types/LayerTypes'
 import configFile from 'config/config'
-import { Viewport, Context } from './@types/Context'
+import ProgressBar from 'scroll/ProgressBar'
+import { Viewport, Context } from './@types/context'
 
 const useStyles = makeStyles({
 	root: {
@@ -27,8 +28,9 @@ const useStyles = makeStyles({
 	},
 	paging: {
 		position: 'fixed',
-		bottom: '2rem',
-		left: '2rem',
+		top: '2rem',
+		left: '50%',
+		transform: 'translateX(-50%)',
 		zIndex: 5000,
 	},
 })
@@ -111,15 +113,11 @@ const AppScreen: FC = () => {
 				{
 					activeStep !== null && (
 						<Box className={classes.paging}>
-							<Typography style={{ color: '#FFF' }} variant={'h3'}>
-								{`${activeStep + 1}/${configFile.chapters.length}`}
-							</Typography>
+							<ProgressBar step={activeStep + 1} totalSteps={configFile.chapters.length} />
 						</Box>
 					)
 				}
 				<Map />
-
-
 				<Story />
 			</div>
 
