@@ -12,7 +12,7 @@ type Location = {
 	bearing: number,
 }
 
-type LayersConfig = GeoJsonConfig | RasterConfig | MarkersConfig | TextMarkerConfig
+export type LayersConfig = GeoJsonConfig | RasterConfig | MarkersConfig | TextMarkerConfig
 
 interface BasicContent {
 	type: 'basic',
