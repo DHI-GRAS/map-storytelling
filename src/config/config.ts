@@ -5,11 +5,19 @@ import blockTreesJson from 'common/data/vector-files/block_trees.json'
 import blockTreesFences from 'common/data/vector-files/block_trees_fences.json'
 import blockTreesGroups from 'common/data/vector-files/block_trees_groups.json'
 import blockTreesForest from 'common/data/vector-files/block_trees_forest.json'
-
+import ContentStory0 from 'story-components/ContentStory0'
+import ContentStory1 from 'story-components/ContentStory1'
+import ContentStory3 from 'story-components/ContentStory3'
+import ContentStory7 from 'story-components/ContentStory7'
+import {
+	textSlide2Info,
+	textSlide4Info,
+	textSlide5Info,
+} from './infoText'
 import {
 	GeoJsonConfig, RasterConfig, MarkersConfig, TextMarkerConfig,
-} from './@types/layersConfig'
-import Config from './@types/Config'
+} from './types/layersConfig'
+import Config from './types/Config'
 
 const allMarkers: MarkersConfig = 	{
 	id: 'all-mark-lr',
@@ -323,10 +331,10 @@ const config: Config = {
 	chapters: [
 		{
 			id: 'denmark-layer',
-			alignmentX: 'flex-start',
-			alignmentY: 'center',
-			// title: 'Det grønne dynamiske Danmarkskort',
-			// description: 'Genvejen til et opdateret og tidsligt overblik over det Grønne Danmark',
+			content: {
+				type: 'component',
+				component: ContentStory0,
+			},
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 6,
@@ -351,10 +359,10 @@ const config: Config = {
 		},
 		{
 			id: 'forest-national-scale-layer',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'Updated national forest map',
-			description: 'Up to date national forest map from 2020',
+			content: {
+				type: 'component',
+				component: ContentStory1,
+			},
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 6.8,
@@ -382,9 +390,13 @@ const config: Config = {
 		},
 		{
 			id: 'forest-national-scale-layer-2',
-			alignmentX: 'space-between',
-			alignmentY: 'flex-start',
-			title: 'Square Meter (m2) forest per inhabitant by municipality in 2020',
+			content: {
+				type: 'basic',
+				title: 'Square Meter (m2) forest per inhabitant by municipality in 2020',
+				alignmentX: 'space-between',
+				alignmentY: 'flex-start',
+				info: textSlide2Info,
+			},
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 6.7,
@@ -420,9 +432,10 @@ const config: Config = {
 		},
 		{
 			id: 'aarhus-commune',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'Forest cover in Aarhus municipality',
+			content: {
+				type: 'component',
+				component: ContentStory3,
+			},
 			location: {
 				center: [ 10.205449, 56.131740 ],
 				zoom: 9,
@@ -456,9 +469,13 @@ const config: Config = {
 		},
 		{
 			id: 'raster-national-forest-class',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'How is the diversity of forest looking?',
+			content: {
+				type: 'basic',
+				title: 'How is the diversity of forest looking?',
+				alignmentX: 'flex-start',
+				alignmentY: 'flex-start',
+				info: textSlide4Info,
+			},
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 7,
@@ -484,10 +501,14 @@ const config: Config = {
 		},
 		{
 			id: 'multi-coniferous-class',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'When further details are needed',
-			description: 'Mapping individual tree species',
+			content: {
+				type: 'basic',
+				title: 'When further details are needed',
+				description: 'Mapping individual tree species',
+				alignmentX: 'flex-start',
+				alignmentY: 'flex-start',
+				info: textSlide5Info,
+			},
 			location: {
 				center: [ 12.325160, 55.981134 ],
 				zoom: 12,
@@ -507,10 +528,13 @@ const config: Config = {
 		},
 		{
 			id: 'animation-raster-layer',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'The dynamic green Denmark in even greater details',
-			description: 'All the small green objects in our cities and rural areas',
+			content: {
+				type: 'basic',
+				title: 'The dynamic green Denmark in even greater details',
+				description: 'All the small green objects in our cities and rural areas',
+				alignmentX: 'flex-start',
+				alignmentY: 'flex-start',
+			},
 			location: {
 				center: [ 11.931931451403903, 54.575430797189625 ],
 				zoom: 15,
@@ -529,10 +553,10 @@ const config: Config = {
 		},
 		{
 			id: 'raster-forest-class',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'The dynamic green Denmark in even greater details',
-			description: 'All the small green objects in our cities and rural areas',
+			content: {
+				type: 'component',
+				component: ContentStory7,
+			},
 			location: {
 				center: [ 11.931931451403903, 54.575430797189625 ],
 				zoom: 14.5,
@@ -565,10 +589,13 @@ const config: Config = {
 		},
 		{
 			id: 'final-step',
-			alignmentX: 'flex-start',
-			alignmentY: 'flex-start',
-			title: 'Imagine the potential of intelligent and automated mapping solutions to map and monitor landscape dynamics at scale',
-			description: 'With novel AI technology and earth observation data, this is the reality of today.',
+			content: {
+				type: 'basic',
+				title: 'Imagine the potential of intelligent and automated mapping solutions to map and monitor landscape dynamics at scale',
+				description: 'With novel AI technology and earth observation data, this is the reality of today.',
+				alignmentX: 'flex-start',
+				alignmentY: 'flex-start',
+			},
 			location: {
 				center: [ 10.165798, 55.513295 ],
 				zoom: 7,

@@ -2,7 +2,7 @@ export interface DoubleData {
  name: string, maxVal1: number, maxVal2: number, duration: number,
 }
 
-export const doubleData: DoubleData[] = [
+const doubleData: DoubleData[] = [
 	{
 		name: 'Trees',
 		maxVal1: 332,
@@ -28,3 +28,5 @@ export const doubleData: DoubleData[] = [
 		duration: 0.5,
 	},
 ]
+
+export default doubleData

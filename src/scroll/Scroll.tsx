@@ -55,7 +55,6 @@ const Scroll: FC<Props> = ({
 
 			if (el) ranges = [ ...ranges, (ranges[ ranges.length - 1 ] || 0) + el.scrollHeight ]
 
-
 		}} {...props} key={`scroll-item-${key}`}
 		>
 			{child}
