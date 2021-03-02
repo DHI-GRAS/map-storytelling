@@ -40,6 +40,7 @@ import {
 	textSlide5Info,
 	textSlide7Info,
 } from './infoText'
+import ActionButtons from './ActionButtons'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -60,16 +61,6 @@ const useStyles = makeStyles(() => ({
 	stepBoxItem: {
 		padding: '2rem',
 		backgroundColor: 'rgba(255,255,255, .7)',
-	},
-	journeyButton: {
-		marginTop: '1rem',
-		backgroundColor: '#188D01',
-		'&:hover': {
-			backgroundColor: '#199600',
-		},
-		'&:disabled': {
-			backgroundColor: '#B7F9A2',
-		},
 	},
 	colorBox: {
 		width: 16,
@@ -222,8 +213,6 @@ const Story: FC<StoryProps> = () => {
 								item.rasters[ counter ].url,
 								true,
 								item.rasters[ counter ].opacity,
-								item.minZoom,
-								item.maxZoom
 							)
 							setLayers((l: any) => [ ...l.filter((el: any) => !el.id.includes('layers-animation-vector')), newLayer ])
 
@@ -428,27 +417,14 @@ const Story: FC<StoryProps> = () => {
 					</Typography>
 					</Box>
 			)}
-			<Box display={'flex'} flexDirection={'column'} position={'fixed'} style={{ top: '1rem', right: '2rem', zIndex: 10000 }}>
-				{activeStep !== null && (
-					<Button
-						disabled={[ 0, 8 ].includes(activeStep)}
-						variant={'contained'}
-						onClick={() => onEnableMap(isJourneyMode)}
-						className={classes.journeyButton}
-					>
-						{isJourneyMode ? 'Explore data' : 'Continue story'}
-					</Button>
-				)}
+			<ActionButtons
+				activeStep={activeStep}
+				isJourneyMode={isJourneyMode}
+				onEnableMap={(is: boolean) => onEnableMap(is)}
+				onJourneyModeEdit={onJourneyModeEdit}
+				storyButtonDisabled={[ 0, 8 ].includes(Number(activeStep))}
 
-
-				<Button
-					variant={'contained'}
-					onClick={onJourneyModeEdit}
-					className={classes.journeyButton}
-				>
-					{!isJourneyMode && activeStep === null ? 'Explore the Green Map of Denmark' : 'End'}
-				</Button>
-			</Box>
+			/>
 
 			{
 				activeStep === 4 && (
