@@ -106,7 +106,12 @@ const Scroll: FC<Props> = ({
 					<Typography variant={'body2'} align={'center'}>
 						{'For more information visit us at '}
 						<span >
-							<a href={'www.dhi-gras.com'} style={{ textDecoration: 'none', color: '#00a4ec' }}>
+							<a
+								href={'https://www.dhi-gras.com/'}
+								style={{ textDecoration: 'none', color: '#00a4ec' }}
+								target={'_blank'}
+								rel={'noopener noreferrer'}
+							>
 								{'www.dhi-gras.com'}
 							</a>
 						</span>
