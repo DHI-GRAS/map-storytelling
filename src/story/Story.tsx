@@ -1,45 +1,31 @@
 /* eslint-disable complexity */
 import React, {
-	FC, useContext, CSSProperties, useRef, MutableRefObject,
+	FC, useContext, useRef, MutableRefObject, createElement,
 } from 'react'
 import {
-	Box, Typography, Paper, Button,
+	Box, Typography, Paper,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
-import { forestArea } from 'common/data/forestAreaData'
-import { doubleData } from 'common/data/dubleData'
-import { forestPerInhabitant } from 'common/data/forestPerInhabitant'
 import generateMarkerLayer from 'common/layers/generateMarkerLayer'
 import generateRasterLayer from 'common/layers/generateRasterLayer'
 import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
 import generateClorLayer from 'common/layers/generateClorLayer'
 import generateTextMarkerLayer from 'common/layers/generateTextMarkerLayer'
 import Scroll from 'scroll/Scroll'
-import { Chapter } from 'config/@types/Config'
+import { Chapter } from 'config/types/Config'
 import LayerTypes from 'common/layers/@types/LayerTypes'
-import videoPoster from 'common/images/loading_video.jpg'
 // eslint-disable-next-line import/extensions
-import videoFile from 'common/images/story-landing-video-1.mp4'
 import legendForest2Class from 'common/data/legendForest2Class'
 import legendForest6Class from 'common/data/legendForest6Class'
 import Info from 'info/Info'
-import aarhusData from 'common/data/aarhusData'
-import StatisticsCounter from './StatisticsCounter'
-import StatisticsCounterDouble from './StatisticsCounterDouble'
-import Legend from './Legend'
 import {
 	textOnLandingInfo,
-	textSlide1Info,
-	textSlide2Info,
-	textSlide3Info,
-	textSlide4Info,
-	textSlide5Info,
-	textSlide7Info,
-} from './infoText'
+} from 'config/infoText'
+import Legend from './Legend'
 import ActionButtons from './ActionButtons'
 
 const useStyles = makeStyles(() => ({
@@ -62,27 +48,12 @@ const useStyles = makeStyles(() => ({
 		padding: '2rem',
 		backgroundColor: 'rgba(255,255,255, .7)',
 	},
-	colorBox: {
-		width: 16,
-		height: 16,
-	},
-	legendText: {
-		fontSize: '12px',
-	},
 }))
 
 type StepIndex = number | null
 
 interface StoryProps {
 	stepIndex?: StepIndex,
-}
-
-const bannerVideo: CSSProperties = {
-	minWidth: 150,
-	marginTop: '1rem',
-	width: '30%',
-	height: 'auto',
-	zIndex: -1,
 }
 
 const Story: FC<StoryProps> = () => {
@@ -458,175 +429,41 @@ const Story: FC<StoryProps> = () => {
 									className={classes.stepBox}
 									style={{
 										opacity: activeStep === i ? 1 : 0.2,
-										justifyContent: item.alignmentX,
-										alignItems: item.alignmentY,
-										flexDirection: [ 1, 4, 5, 7 ].includes(i) ? 'column' : 'row',
+										justifyContent: item.content?.type === 'basic' ? item.content.alignmentX : '',
+										alignItems: item.content?.type === 'basic' ? item.content.alignmentY : '',
 									}}
 								>
-									{item.title &&
+
+									{item.content?.type === 'basic' &&
 									activeStep !== null &&
-									![ 0, 1, 3, 7 ].includes(i) &&
-									![ 0, 1, 3, 7 ].includes(activeStep) && (
-									<Box display={'flex'} maxWidth={'40%'}>
-										<Paper className={classes.stepBoxItem}>
-											<Typography variant={'h3'} gutterBottom>
-												{item.title}
-											</Typography>
-											{item.description && (
-												<Typography variant={'body1'} gutterBottom>
-													{item.description}
-												</Typography>
-											)}
-										</Paper>
-										{activeStep === 2 && i === 2 && (
-											<Info
-												text={textSlide2Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
-
-										{activeStep === 3 && i === 3 && (
-											<Info
-												text={textSlide3Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
-
-										{activeStep === 4 && i === 4 && (
-											<Info
-												text={textSlide4Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
-
-										{activeStep === 5 && i === 5 && (
-											<Info
-												text={textSlide5Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										)}
-									</Box>
-									)}
-									{
-										activeStep === 0 && i === 0 && (
-											<Box display={'flex'} flexDirection={'column'}>
-												<Box width={'50vw'} mb={1}>
-													<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-														{'The green map of Denmark'}
-													</Typography>
-													<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
-														<i>
-															{'The gateway to an up to date and timely overview of the green Denmark'}
-														</i>
-													</Typography>
-												</Box>
-												<video autoPlay loop muted style={bannerVideo} poster={videoPoster}>
-													<source
-														src={videoFile}
-														type={'video/mp4'}
+										(
+											<Box display={'flex'} maxWidth={'40%'}>
+												<Paper className={classes.stepBoxItem}>
+													{item.content.title && (
+														<Typography variant={'h3'} gutterBottom>
+															{item.content.title}
+														</Typography>
+													)}
+													{item.content.description && (
+														<Typography variant={'body1'} gutterBottom>
+															{item.content.description}
+														</Typography>
+													)}
+												</Paper>
+												{item.content.info && (
+													<Info
+														text={item.content.info}
+														popoverStyle={{ marginLeft: '1rem' }}
 													/>
-												</video>
+												)}
 											</Box>
-										)
+										)}
+									{
+										item.content?.type === 'component' &&
+										activeStep !== null &&
+										item.content.component &&
+											createElement(item.content.component)
 									}
-									{activeStep === 1 && i === 1 && (
-										<Box display={'flex'}>
-											<Paper className={classes.stepBoxItem}>
-												<Typography variant={'h3'} gutterBottom>
-													{item.title}
-												</Typography>
-												{item.description && (
-												<Typography variant={'body1'} gutterBottom>
-													{item.description}
-												</Typography>
-												)}
-												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-													<StatisticsCounter title={'Most forest cover (km2)'} items={forestArea} heightScale={6} />
-												</Box>
-												<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-													<StatisticsCounter title={'m2 forest/inhabitant'} items={forestPerInhabitant} heightScale={6} />
-												</Box>
-											</Paper>
-											<Info
-												text={textSlide1Info}
-												popoverStyle={{ marginLeft: '1rem' }}
-											/>
-										</Box>
-									)}
-
-									{activeStep === 3 && i === 3 && (
-									<Box display={'flex'}>
-										<Paper className={classes.stepBoxItem} style={{
-											display: 'flex', alignItems: 'center', flexDirection: 'column',
-										}}
-										>
-											<Box display={'flex'}>
-												<Typography variant={'h3'} gutterBottom style={{ maxWidth: 120 }}>
-													{item.title}
-												</Typography>
-											</Box>
-											{item.description && (
-											<Typography variant={'body1'} gutterBottom>
-												{item.description}
-											</Typography>
-											)}
-											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)', maxWidth: 100 }} p={0.5} mt={2}>
-												<StatisticsCounter title={'km2'} items={aarhusData} heightScale={1} />
-											</Box>
-										</Paper>
-										<Info
-											text={textSlide3Info}
-											popoverStyle={{ marginLeft: '1rem' }}
-										/>
-									</Box>
-									)}
-
-									{activeStep === 7 && i === 7 && (
-									<Box display={'flex'}>
-										<Paper className={classes.stepBoxItem} style={{ minWidth: 450 }}>
-											<Box style={{ maxWidth: 400 }}>
-												<Typography variant={'h3'} gutterBottom>
-													{item.title}
-												</Typography>
-												{item.description && (
-												<Typography variant={'body1'} gutterBottom>
-													{item.description}
-												</Typography>
-												)}
-												<Typography variant={'body2'}>
-													<i>
-														{'(In this example, we have quantified all green features in 2019 and 2020, in a 1 km2 area of interest in Gedser, Denmark)'}
-													</i>
-												</Typography>
-											</Box>
-											<Box style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} p={0.5} width={1} mt={2}>
-												<StatisticsCounterDouble title={'2019 - 2020'} items={doubleData} heightScale={3} />
-											</Box>
-											<Box mt={1} display={'flex'}>
-												<Box mx={1} display={'flex'}>
-													<Box className={classes.colorBox} style={{ backgroundColor: '#FF8A00' }} />
-													<Box ml={0.5}>
-														<Typography variant={'body1'} className={classes.legendText}>
-															{'2019'}
-														</Typography>
-													</Box>
-												</Box>
-												<Box mx={1} display={'flex'}>
-													<Box className={classes.colorBox} style={{ backgroundColor: '#00A4EC' }} />
-													<Box ml={0.5}>
-														<Typography variant={'body1'} className={classes.legendText}>
-															{'2020'}
-														</Typography>
-													</Box>
-												</Box>
-											</Box>
-										</Paper>
-										<Info
-											text={textSlide7Info}
-											popoverStyle={{ marginLeft: '1rem' }}
-										/>
-									</Box>
-									)}
 								</Box>
 							</Box>
 						))

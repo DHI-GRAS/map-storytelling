@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react'
 import {
 	GeoJsonConfig, RasterConfig, MarkersConfig, TextMarkerConfig,
 } from './layersConfig'
@@ -13,12 +14,23 @@ type Location = {
 
 type LayersConfig = GeoJsonConfig | RasterConfig | MarkersConfig | TextMarkerConfig
 
-export interface Chapter {
-	id: string,
-	alignmentX: FlexAlign,
-	alignmentY: FlexAlign,
+interface BasicContent {
+	type: 'basic',
 	title?: string,
 	description?: string,
+	alignmentX?: FlexAlign,
+	alignmentY?: FlexAlign,
+	info?: string[],
+}
+
+interface ComponentContent {
+	type: 'component',
+	component: FunctionComponent | null,
+}
+
+export interface Chapter {
+	id: string,
+	content?: ComponentContent | BasicContent,
 	location: Location,
 	onChapterEnter: LayersConfig[],
 	onChapterExit: LayersConfig[],
