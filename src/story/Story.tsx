@@ -28,6 +28,7 @@ import {
 import Legend from './Legend'
 import ActionButtons from './ActionButtons'
 
+
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
 		position: 'absolute',
@@ -394,7 +395,6 @@ const Story: FC<StoryProps> = () => {
 				onEnableMap={(is: boolean) => onEnableMap(is)}
 				onJourneyModeEdit={onJourneyModeEdit}
 				storyButtonDisabled={[ 0, 8 ].includes(Number(activeStep))}
-
 			/>
 
 			{
@@ -433,7 +433,6 @@ const Story: FC<StoryProps> = () => {
 										alignItems: item.content?.type === 'basic' ? item.content.alignmentY : '',
 									}}
 								>
-
 									{item.content?.type === 'basic' &&
 									activeStep !== null &&
 										(
