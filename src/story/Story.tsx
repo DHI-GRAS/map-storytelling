@@ -19,8 +19,6 @@ import Scroll from 'scroll/Scroll'
 import { Chapter } from 'config/types/Config'
 import LayerTypes from 'common/layers/@types/LayerTypes'
 // eslint-disable-next-line import/extensions
-import legendForest2Class from 'common/data/legendForest2Class'
-import legendForest6Class from 'common/data/legendForest6Class'
 import Info from 'info/Info'
 import {
 	textOnLandingInfo,
@@ -396,19 +394,14 @@ const Story: FC<StoryProps> = () => {
 				onJourneyModeEdit={onJourneyModeEdit}
 				storyButtonDisabled={[ 0, 8 ].includes(Number(activeStep))}
 			/>
-
 			{
-				activeStep === 4 && (
+				activeStep && configFile.chapters[ activeStep ].legend && (
 					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
-						<Legend items={legendForest2Class} />
-					</Box>
-				)
-			}
-
-			{
-				activeStep === 5 && (
-					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
-						<Legend items={legendForest6Class} />
+						<Legend
+							items={configFile.chapters[ activeStep ].legend?.items || []}
+							title={configFile.chapters[ activeStep ].legend?.title}
+							unit={configFile.chapters[ activeStep ].legend?.unit}
+						/>
 					</Box>
 				)
 			}

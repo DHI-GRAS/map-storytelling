@@ -1,7 +1,7 @@
 import React, {
 	FC, useState, createContext,
 } from 'react'
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Map from 'map/Map'
 import Story from 'story/Story'
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 	},
 	paging: {
 		position: 'fixed',
-		top: '2rem',
+		top: '0.5rem',
 		left: '50%',
 		transform: 'translateX(-50%)',
 		zIndex: 5000,
