@@ -4,6 +4,7 @@ import ContentStory3 from 'story-components/ContentStory3'
 import ContentStory7 from 'story-components/ContentStory7'
 import legendForest2Class from 'common/data/legendForest2Class'
 import legendForest6Class from 'common/data/legendForest6Class'
+import Footer from 'story/Footer'
 import {
 	textSlide2Info,
 	textSlide4Info,
@@ -29,6 +30,10 @@ import Config from './types/Config'
 
 const config: Config = {
 	style: 'mapbox://styles/mapbox/satellite-v9',
+	footer: {
+		type: 'component',
+		component: Footer,
+	},
 	chapters: [
 		{
 			id: 'denmark-layer',

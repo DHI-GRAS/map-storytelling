@@ -5,10 +5,11 @@ import React, {
 	useEffect,
 	useRef,
 	ReactElement,
+	createElement,
 } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Typography } from '@material-ui/core'
-import ScrollAnimation from './ScrollAnimation'
+import configFile from 'config/config'
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -23,7 +24,6 @@ const useStyles = makeStyles(() => ({
 		width: '100%',
 		padding: '16px',
 		backgroundColor: 'rgba(255,255,255, .8)',
-
 	},
 }))
 
@@ -101,21 +101,18 @@ const Scroll: FC<Props> = ({
 				{
 					children.map((child, i) => HOCCopy(child.props, child.props.children, i))
 				}
-				<Box className={classes.footerBar}>
-					<Typography variant={'body2'} align={'center'}>
-						{'For more information visit us at '}
-						<span >
-							<a
-								href={'https://www.dhi-gras.com/'}
-								style={{ textDecoration: 'none', color: '#00a4ec' }}
-								target={'_blank'}
-								rel={'noopener noreferrer'}
-							>
-								{'www.dhi-gras.com'}
-							</a>
-						</span>
-					</Typography>
-				</Box>
+				{
+					configFile.footer?.type === 'text' && (
+						<Box className={classes.footerBar}>
+							<Typography variant={'body2'} align={'center'}>
+								{configFile.footer.text}
+							</Typography>
+						</Box>
+					)
+				}
+				{
+					configFile.footer?.type === 'component' && createElement(configFile.footer.component)
+				}
 			</div>
 		</Box>
 	)

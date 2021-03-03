@@ -36,6 +36,16 @@ interface Legend {
 	items: LegendItem[],
 }
 
+interface FooterText {
+	type: 'text',
+	text: string,
+}
+
+interface FooterComponent {
+	type: 'component',
+	component: FunctionComponent,
+}
+
 export interface Chapter {
 	id: string,
 	content?: ComponentContent | BasicContent,
@@ -47,5 +57,6 @@ export interface Chapter {
 
 export default interface Config {
 	style: string,
+	footer?: FooterText | FooterComponent,
 	chapters: Chapter[],
 }
