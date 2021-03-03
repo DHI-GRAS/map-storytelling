@@ -102,7 +102,8 @@ const Scroll: FC<Props> = ({
 					children.map((child, i) => HOCCopy(child.props, child.props.children, i))
 				}
 				{
-					configFile.footer?.type === 'text' && (
+					configFile.footer &&
+					configFile.footer.type === 'text' && (
 						<Box className={classes.footerBar}>
 							<Typography variant={'body2'} align={'center'}>
 								{configFile.footer.text}
@@ -111,7 +112,9 @@ const Scroll: FC<Props> = ({
 					)
 				}
 				{
-					configFile.footer?.type === 'component' && createElement(configFile.footer.component)
+					configFile.footer &&
+					configFile.footer.type === 'component' &&
+					createElement(configFile.footer.component)
 				}
 			</div>
 		</Box>

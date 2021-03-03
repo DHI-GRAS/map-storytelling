@@ -1,5 +1,5 @@
 import React, {
-	FC, useState, createContext,
+	FC, useState, createContext, createElement,
 } from 'react'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -133,10 +133,28 @@ const AppScreen: FC = () => {
 					)
 				}
 				{
-					activeStep !== null && isJourneyMode && (
+					activeStep !== null &&
+					isJourneyMode &&
+					configFile.scrollIndicator && (
 						<Box className={classes.scrollBox}>
-							<ScrollAnimation
-								text={'You can navigate through the story by scrolling with your mouse or using the up and down keys on your keyboard'}
+							{configFile.scrollIndicator.type === 'component' ?
+								createElement(configFile.scrollIndicator.component) :
+								(
+									<ScrollAnimation
+										text={configFile.scrollIndicator.text}
+									/>
+								)}
+
+						</Box>
+					)
+				}
+				{
+					activeStep !== null && configFile.chapters[ activeStep ].legend && (
+						<Box className={classes.legendBox}>
+							<Legend
+								items={configFile.chapters[ activeStep ].legend?.items || []}
+								title={configFile.chapters[ activeStep ].legend?.title}
+								unit={configFile.chapters[ activeStep ].legend?.unit}
 							/>
 						</Box>
 					)

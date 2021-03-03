@@ -27,7 +27,6 @@ export interface RasterConfig {
 	id: string,
 	visible: boolean,
 	type: 'raster',
-	// animation === true ? rasters key : url key
 	opacity?: number,
 	animation?: boolean,
 	url?: string[],
