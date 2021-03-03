@@ -28,9 +28,18 @@ interface ComponentContent {
 	component: FunctionComponent | null,
 }
 
+type LegendItem = { name: string; color: string }
+
+interface Legend {
+	title?: string,
+	unit?: string,
+	items: LegendItem[],
+}
+
 export interface Chapter {
 	id: string,
 	content?: ComponentContent | BasicContent,
+	legend?: Legend,
 	location: Location,
 	onChapterEnter: LayersConfig[],
 	onChapterExit: LayersConfig[],

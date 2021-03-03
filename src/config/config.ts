@@ -2,6 +2,8 @@ import ContentStory0 from 'story-components/ContentStory0'
 import ContentStory1 from 'story-components/ContentStory1'
 import ContentStory3 from 'story-components/ContentStory3'
 import ContentStory7 from 'story-components/ContentStory7'
+import legendForest2Class from 'common/data/legendForest2Class'
+import legendForest6Class from 'common/data/legendForest6Class'
 import {
 	textSlide2Info,
 	textSlide4Info,
@@ -181,6 +183,9 @@ const config: Config = {
 				pitch: 60,
 				bearing: 10,
 			},
+			legend: {
+				items: legendForest2Class,
+			},
 			onChapterEnter: [
 				{
 					...denmarkCountryBorder, fill: true, lineColor: [ 255, 255, 255, 0 ], fillColor: [ 134, 162, 179, 100 ],
@@ -213,6 +218,9 @@ const config: Config = {
 				zoom: 12,
 				pitch: 60,
 				bearing: -10,
+			},
+			legend: {
+				items: legendForest6Class,
 			},
 			onChapterEnter: [
 				multipleConifers,
