@@ -1,3 +1,4 @@
+import Component from '@deck.gl/core/lifecycle/component'
 import { FunctionComponent } from 'react'
 import {
 	GeoJsonConfig, RasterConfig, MarkersConfig, TextMarkerConfig,
@@ -36,6 +37,26 @@ interface Legend {
 	items: LegendItem[],
 }
 
+interface FooterText {
+	type: 'text',
+	text: string,
+}
+
+interface FooterComponent {
+	type: 'component',
+	component: FunctionComponent,
+}
+
+interface ComponentScroll {
+	type: 'component',
+	component: FunctionComponent,
+}
+
+interface BasicScroll {
+	type: 'basic',
+	text: string,
+}
+
 export interface Chapter {
 	id: string,
 	content?: ComponentContent | BasicContent,
@@ -47,5 +68,7 @@ export interface Chapter {
 
 export default interface Config {
 	style: string,
+	footer?: FooterText | FooterComponent,
+	scrollIndicator?: ComponentScroll | BasicScroll,
 	chapters: Chapter[],
 }

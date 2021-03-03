@@ -23,9 +23,7 @@ import Info from 'info/Info'
 import {
 	textOnLandingInfo,
 } from 'config/infoText'
-import Legend from './Legend'
 import ActionButtons from './ActionButtons'
-
 
 const useStyles = makeStyles(() => ({
 	storiesWrapper: {
@@ -394,17 +392,6 @@ const Story: FC<StoryProps> = () => {
 				onJourneyModeEdit={onJourneyModeEdit}
 				storyButtonDisabled={[ 0, 8 ].includes(Number(activeStep))}
 			/>
-			{
-				activeStep && configFile.chapters[ activeStep ].legend && (
-					<Box position={'fixed'} style={{ left: '1rem', bottom: '4rem' }}>
-						<Legend
-							items={configFile.chapters[ activeStep ].legend?.items || []}
-							title={configFile.chapters[ activeStep ].legend?.title}
-							unit={configFile.chapters[ activeStep ].legend?.unit}
-						/>
-					</Box>
-				)
-			}
 
 			{isJourneyMode && (
 			<Box>

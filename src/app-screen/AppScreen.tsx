@@ -1,5 +1,5 @@
 import React, {
-	FC, useState, createContext,
+	FC, useState, createContext, createElement,
 } from 'react'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,6 +11,7 @@ import LayerTypes from 'common/layers/@types/LayerTypes'
 import configFile from 'config/config'
 import ProgressBar from 'scroll/ProgressBar'
 import ScrollAnimation from 'scroll/ScrollAnimation'
+import Legend from 'story/Legend'
 import { Viewport, Context } from './@types/context'
 
 const useStyles = makeStyles({
@@ -39,6 +40,12 @@ const useStyles = makeStyles({
 		bottom: '4rem',
 		left: '50%',
 		transform: 'translateX(-50%)',
+		zIndex: 5000,
+	},
+	legendBox: {
+		position: 'fixed',
+		left: '1rem',
+		bottom: '4rem',
 		zIndex: 5000,
 	},
 })
@@ -126,10 +133,39 @@ const AppScreen: FC = () => {
 					)
 				}
 				{
-					activeStep !== null && isJourneyMode && (
+					activeStep !== null &&
+					isJourneyMode &&
+					configFile.scrollIndicator && (
 						<Box className={classes.scrollBox}>
-							<ScrollAnimation
-								text={'You can navigate through the story by scrolling with your mouse or using the up and down keys on your keyboard'}
+							{configFile.scrollIndicator.type === 'component' ?
+								createElement(configFile.scrollIndicator.component) :
+								(
+									<ScrollAnimation
+										text={configFile.scrollIndicator.text}
+									/>
+								)}
+
+						</Box>
+					)
+				}
+				{
+					activeStep !== null && configFile.chapters[ activeStep ].legend && (
+						<Box className={classes.legendBox}>
+							<Legend
+								items={configFile.chapters[ activeStep ].legend?.items || []}
+								title={configFile.chapters[ activeStep ].legend?.title}
+								unit={configFile.chapters[ activeStep ].legend?.unit}
+							/>
+						</Box>
+					)
+				}
+				{
+					activeStep !== null && configFile.chapters[ activeStep ].legend && (
+						<Box className={classes.legendBox}>
+							<Legend
+								items={configFile.chapters[ activeStep ].legend?.items || []}
+								title={configFile.chapters[ activeStep ].legend?.title}
+								unit={configFile.chapters[ activeStep ].legend?.unit}
 							/>
 						</Box>
 					)
