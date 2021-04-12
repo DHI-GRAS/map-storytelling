@@ -5,7 +5,6 @@ import ContentStory7 from 'story-components/ContentStory7'
 import legendForest2Class from 'common/data/legendForest2Class'
 import legendForest6Class from 'common/data/legendForest6Class'
 import Footer from 'story/Footer'
-import ScrollAnimation from 'scroll/ScrollAnimation'
 import {
 	textSlide2Info,
 	textSlide4Info,
@@ -30,6 +29,7 @@ import {
 import Config from './types/Config'
 
 const config: Config = {
+	id: 'greendenmark',
 	style: 'mapbox://styles/mapbox/satellite-v9',
 	footer: {
 		type: 'component',
@@ -41,7 +41,7 @@ const config: Config = {
 	},
 	chapters: [
 		{
-			id: 'denmark-layer',
+			id: 'greendenmark-denmark-layer',
 			content: {
 				type: 'component',
 				component: ContentStory0,
@@ -69,7 +69,7 @@ const config: Config = {
 			onChapterExit: [],
 		},
 		{
-			id: 'forest-national-scale-layer',
+			id: 'greendenmark-forest-national-scale-layer',
 			content: {
 				type: 'component',
 				component: ContentStory1,
@@ -100,7 +100,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'forest-national-scale-layer-2',
+			id: 'greendenmark-forest-national-scale-layer-2',
 			content: {
 				type: 'basic',
 				title: 'Square Meter (m2) forest per inhabitant by municipality in 2020',
@@ -142,7 +142,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'aarhus-commune',
+			id: 'greendenmark-aarhus-commune',
 			content: {
 				type: 'component',
 				component: ContentStory3,
@@ -179,7 +179,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'raster-national-forest-class',
+			id: 'greendenmark-raster-national-forest-class',
 			content: {
 				type: 'basic',
 				title: 'How is the diversity of forest looking?',
@@ -214,7 +214,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'multi-coniferous-class',
+			id: 'greendenmark-multi-coniferous-class',
 			content: {
 				type: 'basic',
 				title: 'When further details are needed',
@@ -244,7 +244,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'animation-raster-layer',
+			id: 'greendenmark-animation-raster-layer',
 			content: {
 				type: 'basic',
 				title: 'The dynamic green Denmark in even greater details',
@@ -269,7 +269,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'raster-forest-class',
+			id: 'greendenmark-raster-forest-class',
 			content: {
 				type: 'component',
 				component: ContentStory7,
@@ -305,7 +305,7 @@ const config: Config = {
 			],
 		},
 		{
-			id: 'final-step',
+			id: 'greendenmark-final-step-animation',
 			content: {
 				type: 'basic',
 				title: 'Imagine the potential of intelligent and automated mapping solutions to map and monitor landscape dynamics at scale',

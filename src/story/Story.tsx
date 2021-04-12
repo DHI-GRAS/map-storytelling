@@ -75,7 +75,6 @@ const Story: FC<StoryProps> = () => {
 	// IMPROVEMENT - merge both chapterEnter & chapterExit in the same function
 
 	// const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(null)
-	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
 	// holder of the interval if we have an animation situation
 	const rasterAnim: MutableRefObject<any> = useRef(undefined)
@@ -220,7 +219,7 @@ const Story: FC<StoryProps> = () => {
 
 			// if geojson then create new geojson layer
 			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+			else if (isFound === -1) if (item.id.includes('cloropeth')) {
 
 				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
 				layersCopy = [ ...layersCopy, newLayer ]
@@ -307,7 +306,7 @@ const Story: FC<StoryProps> = () => {
 			}
 
 			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+			else if (isFound === -1) if (item.id.includes('cloropeth')) {
 
 				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
 				layersCopy = [ ...layersCopy, newLayer ]
