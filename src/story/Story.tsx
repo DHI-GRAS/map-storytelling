@@ -3,23 +3,22 @@ import React, {
 	FC, useContext, useRef, MutableRefObject, createElement,
 } from 'react'
 import {
-	Box, Typography, Paper,
+	Box,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
-import generateMarkerLayer from 'common/layers/generateMarkerLayer'
-import generateRasterLayer from 'common/layers/generateRasterLayer'
-import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
-import generateClorLayer from 'common/layers/generateClorLayer'
-import generateTextMarkerLayer from 'common/layers/generateTextMarkerLayer'
+import generateMarkerLayer from 'layers/generateMarkerLayer'
+import generateRasterLayer from 'layers/generateRasterLayer'
+import generateGeoJsonLayer from 'layers/generateGeoJsonLayer'
+import generateClorLayer from 'layers/generateClorLayer'
+import generateTextMarkerLayer from 'layers/generateTextMarkerLayer'
 import Scroll from 'scroll/Scroll'
 import { Chapter } from 'config/types/Config'
-import LayerTypes from 'common/layers/@types/LayerTypes'
+import LayerTypes from 'layers/types/LayerTypes'
 // eslint-disable-next-line import/extensions
-import Info from 'info/Info'
 import BasicStoryTemplate from 'story-components/BasicStoryTemplate'
 import PresentationPage from './PresentationPage'
 import ActionButtons from './ActionButtons'
