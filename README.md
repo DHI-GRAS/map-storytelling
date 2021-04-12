@@ -41,11 +41,9 @@ This feature represents the custom stories that appear on each step, in case a c
 
 The layers feature contains the functions that create the deck.gl layers. At the moment, the current application uses 5 different types of layers - `cloropeth`, `geojson`, `raster`, `marker` and `marker-text`.
 
-* The `cloropeth` layer is of type `geojson` with the condition that the id of the layer must contain the `cloropeth` string.
-
 If you need other types of layers and/or want to change the currently existing layer configurations you can find other layers in the [deck.gl API reference](https://deck.gl/docs/api-reference/layers)
 
-Dependeble on the complexity of the layers that must be added, it will require changes in the `config`, `layers` and `story` features. 
+Depending on the complexity of the layers that must be added, it will require changes in the `config`, `layers` and `story` features. 
 
 - marker layer
 
@@ -67,10 +65,11 @@ The XYZ raster layer must be of type `raster` and include the `url` key as an ar
 
 The cloropeth layer is of type `geojson` and it must include in its id the `cloropeth` string. It follows the same specifications as the `geojson` layer.
 
-* If you are aiming for removing any layer from the active state, the `visible` key must be set to `false`, either if it's in the `onStepEnter` or `onStepExit` key of the chapter.
+**Note:** If you are aiming for removing any layer from the active state, the `visible` key must be set to `false`, either if it's in the `onStepEnter` or `onStepExit` key of the chapter.
 
-* Only one animation type of layer can be added per story step.
+**Note:** Only one animation type of layer can be added per story step.
 
+**Note:** Each layer must have a unique id. Based on this id, the filtering functions know what layer to add and what layer to remove
 ### Config
 
 The config feature is the most important one as the stories and the map layers are being rendered based on its specifications. The config file is strongly typed, therefore, following the types from the `config/types` should give you a good enough overview of what is expected for each key.
@@ -86,9 +85,10 @@ The config file is structured as it follows:
 	- `id` - the id of the chapter following the string template `{configId}-name-of-the-chapter`.
 	- `content` - the component that gets displayed on the current story step. It can be of type `component` or `basic`. If a component must be bigger than `100vh`, using `vh` units will help the scroll HOC calculate its height easier.
 	- `location` - the location of where the map should move its viewport when the step changes and it includes the `center`, `zoom`, `pitch` and the `bearing`.
-	- `onChapterEnter` - an array of layers that are desired to be added on the current story step. The types of layers that can be added here are found under the `config/types/layersConfig` file and based on the `visible` key, the app knows if it must remove it or add it. * All the layers active on the map must have a unique id.
+	- `onChapterEnter` - an array of layers that are desired to be added on the current story step. The types of layers that can be added here are found under the `config/types/layersConfig` file and based on the `visible` key, the app knows if it must remove it or add it. 
 	- `onChapterExit` - an array of layers that are meant to be removed from the map based on the `visible: false` value and the previously added layers with their ids.
  
+
 
 ### Contributing
 
