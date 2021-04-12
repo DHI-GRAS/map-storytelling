@@ -17,7 +17,7 @@ Under the hood it uses the following technologies:
 - Clone the current repository and install the dependencies through `npm` or `yarn`.
 - Run the `start` script and see the app on [http://localhost:3000/](http://localhost:3000/)
 
-## Code structure
+## Folder structure
 
 The current folder structure implements a package-by-feature approach with a flat structure which separates the features of the application. I will refer to the most important features to get you going easily.
 
@@ -25,13 +25,13 @@ The main components that take care of the stories are the `config`, `layers`, `s
 
 ### Scroll
 
-The scroll feature renders the chapters found within the `config` and creates the story steps based on each chapter. It calculates the height of the scrolling element in order to indicate which step is currently active and therefore, render the right layers on the map.
+The scroll feature renders the chapters found within the `config` and it creates the story steps based on each chapter. It calculates the height of the scrolling element in order to indicate which step is currently active and therefore, render the right layers on the map.
 
 ### Story
 
-The story feature takes care of displaying the content found in the `content` key of each chapter and filtering/removing the layers that need to be added to the map. 
+The story feature takes care of displaying the content found in the `content` key of each chapter and filter/remove the layers that need to be added/removed to/from the map. 
 
-The functions that take care of the layers work based on the `onStepEnter` and `onStepExit` of each chapter and the layer types `geojson`, `marker`, `text-marker` and `raster`.
+The functions that take care of the layers are working based on the `onStepEnter` and `onStepExit` of each chapter and the layer types `geojson`, `marker`, `text-marker` and `raster`.
 
 ### Story components
 
@@ -39,7 +39,7 @@ This feature represents the custom stories that appear on each step, in case a c
 
 ### Layers
 
-The layers feature contains the functions that create deck.gl layers. At the moment, the current application uses 5 different types of layers - `cloropeth`, `geojson`, `raster`, `marker` and `marker-text`.
+The layers feature contains the functions that create the deck.gl layers. At the moment, the current application uses 5 different types of layers - `cloropeth`, `geojson`, `raster`, `marker` and `marker-text`.
 
 * The `cloropeth` layer is of type `geojson` with the condition that the id of the layer must contain the `cloropeth` string.
 
@@ -53,7 +53,7 @@ The marker layer must be of type `marker` and in order to be visible, the `visib
 
 - marker text layer
 
-The marker text layer must have the type `text-marker` and include in the `data` key an array of markers having `coordinates`, `text` and `elevation`. For it to be visible on the map, the `visible` key must be set to true.
+The marker text layer must have the type `text-marker` and include in the `data` key an array of markers having `coordinates`, `text` and `elevation`. For it to be visible on the map, the `visible` key must be set to true. This layer has the option of animating the appearance through a delay of 2s by using the `animation` key which must be set to `true`.
 
 - geojson layer
 
@@ -86,3 +86,6 @@ The config file is structured as it follows:
 	- `onChapterExit` - an array of layers that are meant to be removed from the map based on the `visible: false` value and the previously added layers with their ids.
  
 
+### Contributing
+
+If you encounter any problems or have any feature suggestions, feel free to open an Issue and eventually propose a PR.
