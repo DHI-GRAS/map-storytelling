@@ -7,8 +7,8 @@
 	"scripts": {
 		"lint": "eslint --ext ts,tsx ./src --cache",
 		"lint:fix": "eslint --ext ts,tsx ./src --fix --cache",
-		"start": "env-cmd -f .env build-cfg start --max-old-space-size=4096",
-		"build": "build-cfg build"
+		"start": "env-cmd -f .env build-cfg start",
+		"build": "env-cmd -f .env build-cfg build"
 	},
 	"eslintConfig": {
 		"extends": [

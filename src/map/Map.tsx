@@ -9,7 +9,7 @@ import { StaticMap } from 'react-map-gl'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
+const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN
 
 const Map: FC = () => {
 
