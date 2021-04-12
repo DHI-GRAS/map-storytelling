@@ -53,7 +53,7 @@ The marker layer must be of type `marker` and in order to be visible, the `visib
 
 - marker text layer
 
-The marker text layer must have the type `text-marker` and include in the `data` key an array of markers having `coordinates`, `text` and `elevation`. For it to be visible on the map, the `visible` key must be set to true. This layer has the option of animating the appearance through a delay of 2s by using the `animation` key which must be set to `true`.
+The marker text layer must have the type `text-marker` and include in the `data` key an array of markers having `coordinates`, `text` and/or `elevation`. For it to be visible on the map, the `visible` key must be set to `true`. This layer has the option of animating the appearance through a delay of 2s by using the `animation` key which must be set to `true`.
 
 - geojson layer
 
@@ -61,15 +61,19 @@ The geojson layer must be of type `geojson` and include in the `data` key either
 
 - raster layer
 
-The XYZ raster layer must be of type `raster` and include the `url` key as an array of strings - for only one layer, it can have only one item in the array, or more items for multiple rasters under the same layer. For it to be displayed the `visible` key must be set to `true`. This layer can also have the `animation` key set to trye which basically adds one layer on top of another at an interval of 2 seconds. At the moment we can have only one animation type of layer per story step.
+The XYZ raster layer must be of type `raster` and include the `url` key as an array of strings - for only one layer, it can have only one item in the array, or more items for multiple rasters under the same layer. For it to be displayed, the `visible` key must be set to `true`. This layer can also have the `animation` key set to `true` which basically adds one layer on top of another at an interval of 2 seconds. 
 
 - cloropeth layer
 
 The cloropeth layer is of type `geojson` and it must include in its id the `cloropeth` string. It follows the same specifications as the `geojson` layer.
 
+* If you are aiming for removing any layer from the active state, the `visible` key must be set to `false`, either if it's in the `onStepEnter` or `onStepExit` key of the chapter.
+
+* Only one animation type of layer can be added per story step.
+
 ### Config
 
-The config feature is the most important one as the stories and the map based layers are being rendered based on its specifications. The config file is strongly typed, therefore, following the types from the `config/types` should give you a good enough overview of what is expected for each key.
+The config feature is the most important one as the stories and the map layers are being rendered based on its specifications. The config file is strongly typed, therefore, following the types from the `config/types` should give you a good enough overview of what is expected for each key.
 
 For consitency, the chapter ids must use the string template `{configId}-name-of-the-chapter`. This helps if you plan on building an app that contains multiple stories. This way, you can build up a logic based on this string template. 
 
