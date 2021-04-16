@@ -8,7 +8,7 @@ Under the hood it uses the following technologies:
 
 - Frontend tech: React, Deck.gl, Typescript
 - Linting: Eslint configs we use within GRAS ([@dhi-gras/eslint-config-react](https://www.npmjs.com/package/@dhi-gras/eslint-config-react) and [@dhi-gras/eslint-config-ts](https://www.npmjs.com/package/@dhi-gras/eslint-config-ts))
-- Rasters: It implements the raster layers through a [TERRACOTTA](https://github.com/DHI-GRAS/terracotta) deployment rather than through layers provided by Mapbox. 
+- Rasters: Raster layers are XYZ map tiles, in our case served with [Terracotta](https://github.com/DHI-GRAS/terracotta), but any source can be used.
 - Vector layers: Some layers are big and therefore must be optimized. The deployed vector layers are found on a [GeoServer](http://geoserver.org/)
 
 ## Setting up
