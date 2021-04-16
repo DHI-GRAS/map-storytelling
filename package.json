@@ -7,8 +7,8 @@
 	"scripts": {
 		"lint": "eslint --ext ts,tsx ./src --cache",
 		"lint:fix": "eslint --ext ts,tsx ./src --fix --cache",
-		"start": "env-cmd -f .env build-cfg start --max-old-space-size=4096",
-		"build": "build-cfg build"
+		"start": "env-cmd -f .env build-cfg start",
+		"build": "env-cmd -f .env build-cfg build"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -31,7 +31,7 @@
 		"typescript": "^4.1.5"
 	},
 	"devDependencies": {
-		"@dhi-gras/build-cfg": "0.1.5",
+		"@dhi-gras/build-cfg": "^0.1.11",
 		"@dhi-gras/eslint-config-react": "^1.0.3",
 		"@dhi-gras/eslint-config-ts": "^1.0.6",
 		"@types/d3-ease": "^2.0.0",

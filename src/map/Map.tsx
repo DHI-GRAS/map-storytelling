@@ -9,8 +9,7 @@ import { StaticMap } from 'react-map-gl'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 
-
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYmVydGVhcmF6dmFuIiwiYSI6ImNrN3J6YmQ4NzBicGozZ3NmMmdidXp1Y2IifQ.ooMmIXF9bxQtXDIfcj8HvA'
+const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN
 
 const Map: FC = () => {
 
@@ -24,11 +23,6 @@ const Map: FC = () => {
 			setViewport,
 		},
 	} = useContext(AppContext)
-
-	// const layer = new MVTLayer({
-	// 	data: 'https://k0zyvx2wa6.execute-api.eu-central-1.amazonaws.com/production/geoserver/sdfehack/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sdfehack:block_trees&outputFormat=application/json',
-	// 	onDataLoad: f => console.log(f),
-	// })
 
 	const onSetViewport = (vst: any) => {
 

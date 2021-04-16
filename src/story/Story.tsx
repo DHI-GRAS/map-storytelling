@@ -3,26 +3,24 @@ import React, {
 	FC, useContext, useRef, MutableRefObject, createElement,
 } from 'react'
 import {
-	Box, Typography, Paper,
+	Box,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import configFile from 'config/config'
 import { AppContext } from 'app-screen/AppScreen'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
-import generateMarkerLayer from 'common/layers/generateMarkerLayer'
-import generateRasterLayer from 'common/layers/generateRasterLayer'
-import generateGeoJsonLayer from 'common/layers/generateGeoJsonLayer'
-import generateClorLayer from 'common/layers/generateClorLayer'
-import generateTextMarkerLayer from 'common/layers/generateTextMarkerLayer'
+import generateMarkerLayer from 'layers/generateMarkerLayer'
+import generateRasterLayer from 'layers/generateRasterLayer'
+import generateGeoJsonLayer from 'layers/generateGeoJsonLayer'
+import generateClorLayer from 'layers/generateClorLayer'
+import generateTextMarkerLayer from 'layers/generateTextMarkerLayer'
 import Scroll from 'scroll/Scroll'
 import { Chapter } from 'config/types/Config'
-import LayerTypes from 'common/layers/@types/LayerTypes'
+import LayerTypes from 'layers/types/LayerTypes'
 // eslint-disable-next-line import/extensions
-import Info from 'info/Info'
-import {
-	textOnLandingInfo,
-} from 'config/infoText'
+import BasicStoryTemplate from 'story-components/BasicStoryTemplate'
+import PresentationPage from './PresentationPage'
 import ActionButtons from './ActionButtons'
 
 const useStyles = makeStyles(() => ({
@@ -41,10 +39,7 @@ const useStyles = makeStyles(() => ({
 		padding: '2rem',
 		transition: 'all .3s ease-in',
 	},
-	stepBoxItem: {
-		padding: '2rem',
-		backgroundColor: 'rgba(255,255,255, .7)',
-	},
+
 }))
 
 type StepIndex = number | null
@@ -75,7 +70,6 @@ const Story: FC<StoryProps> = () => {
 	// IMPROVEMENT - merge both chapterEnter & chapterExit in the same function
 
 	// const [ currentStepIndex, setCurrentStepIndex ] = useState<StepIndex>(null)
-	const cloropathLayers = [ 'communes-cloropeth-layer-opacity', 'communes-cloropeth-layer' ]
 
 	// holder of the interval if we have an animation situation
 	const rasterAnim: MutableRefObject<any> = useRef(undefined)
@@ -220,7 +214,7 @@ const Story: FC<StoryProps> = () => {
 
 			// if geojson then create new geojson layer
 			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+			else if (isFound === -1) if (item.id.includes('cloropeth')) {
 
 				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
 				layersCopy = [ ...layersCopy, newLayer ]
@@ -307,7 +301,7 @@ const Story: FC<StoryProps> = () => {
 			}
 
 			if (item.type === 'geojson') if (item.visible === false) layersCopy = layersCopy.filter(layer => layer.id !== item.id)
-			else if (isFound === -1) if (cloropathLayers.includes(item.id)) {
+			else if (isFound === -1) if (item.id.includes('cloropeth')) {
 
 				const newLayer = generateClorLayer(item.id, item.visible, item.data, item.opacity, item.extruded)
 				layersCopy = [ ...layersCopy, newLayer ]
@@ -365,25 +359,7 @@ const Story: FC<StoryProps> = () => {
 	return (
 		<>
 			{!isJourneyMode && activeStep === null && (
-				<Box width={'50vw'} position={'fixed'} style={{
-					left: '4rem', top: '50%', transform: 'translateY(-50%)', zIndex: 10000,
-				}}
-				>
-					<Box display={'flex'} alignItems={'center'}>
-						<Typography variant={'h1'} style={{ color: '#FFFFFF' }}>
-							{'Welcome to the Green Map of Denmark'}
-						</Typography>
-						<Info
-							text={textOnLandingInfo}
-							popoverStyle={{ marginLeft: '1rem' }}
-						/>
-					</Box>
-					<Typography variant={'h2'} style={{ color: '#FFFFFF' }}>
-						<i>
-							{'Begin your journey by clicking the green button'}
-						</i>
-					</Typography>
-					</Box>
+				<PresentationPage />
 			)}
 			<ActionButtons
 				activeStep={activeStep}
@@ -416,26 +392,12 @@ const Story: FC<StoryProps> = () => {
 									{item.content?.type === 'basic' &&
 									activeStep !== null &&
 										(
-											<Box display={'flex'} maxWidth={'40%'}>
-												<Paper className={classes.stepBoxItem}>
-													{item.content.title && (
-														<Typography variant={'h3'} gutterBottom>
-															{item.content.title}
-														</Typography>
-													)}
-													{item.content.description && (
-														<Typography variant={'body1'} gutterBottom>
-															{item.content.description}
-														</Typography>
-													)}
-												</Paper>
-												{item.content.info && (
-													<Info
-														text={item.content.info}
-														popoverStyle={{ marginLeft: '1rem' }}
-													/>
-												)}
-											</Box>
+											<BasicStoryTemplate
+												title={item.content.title}
+												description={item.content.description}
+												info={item.content.info}
+											/>
+
 										)}
 									{
 										item.content?.type === 'component' &&

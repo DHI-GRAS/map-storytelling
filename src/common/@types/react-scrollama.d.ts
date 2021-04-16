@@ -1,1 +1,1 @@
-declare module 'react-scrollama';
+declare module 'react-animated-number';

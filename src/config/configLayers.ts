@@ -113,7 +113,7 @@ export const munClorLayerOpacity: GeoJsonConfig = {
 }
 
 export const munClorTextMarkersWElevation: TextMarkerConfig = {
-	id: 'kommunes-cloropeth-layer-text-markers',
+	id: 'kommunes-layer-text-markers',
 	type: 'text-marker',
 	visible: true,
 	data: [

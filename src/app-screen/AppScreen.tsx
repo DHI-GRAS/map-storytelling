@@ -7,12 +7,12 @@ import Map from 'map/Map'
 import Story from 'story/Story'
 import { FlyToInterpolator } from 'react-map-gl'
 import { easeCubicInOut } from 'd3-ease'
-import LayerTypes from 'common/layers/@types/LayerTypes'
+import LayerTypes from 'layers/types/LayerTypes'
 import configFile from 'config/config'
 import ProgressBar from 'scroll/ProgressBar'
 import ScrollAnimation from 'scroll/ScrollAnimation'
 import Legend from 'story/Legend'
-import { Viewport, Context } from './@types/context'
+import { Viewport, Context } from './types/context'
 
 const useStyles = makeStyles({
 	root: {
