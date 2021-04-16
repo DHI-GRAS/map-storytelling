@@ -9,7 +9,7 @@ Under the hood it uses the following technologies:
 - Frontend tech: React, Deck.gl, Typescript
 - Linting: Eslint configs we use within GRAS ([@dhi-gras/eslint-config-react](https://www.npmjs.com/package/@dhi-gras/eslint-config-react) and [@dhi-gras/eslint-config-ts](https://www.npmjs.com/package/@dhi-gras/eslint-config-ts))
 - Rasters: Raster layers are XYZ map tiles, in our case served with [Terracotta](https://github.com/DHI-GRAS/terracotta), but any source can be used.
-- Vector layers: Some layers are big and therefore must be optimized. The deployed vector layers are found on a [GeoServer](http://geoserver.org/)
+- Vector layers: Large (many megabytes) vector data should be hosted in some server that either renders or otherwise optimizes the data served to the client. We often use [GeoServer](http://geoserver.org/) for this.
 
 ## Setting up
 
